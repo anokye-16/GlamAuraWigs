@@ -1,175 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cart | GlamAura Wigs</title>
-
+<link rel="stylesheet" href="shared.css">
+<link rel="stylesheet" href="navbar.css">
 <style>
-
-body{
-background:black;
-color:white;
-font-family:Arial;
-margin:0;
-}
-
-header{
-display:flex;
-justify-content:space-between;
-padding:20px 60px;
-border-bottom:2px solid #ff4fa3;
-}
-
-.logo{
-color:#ff4fa3;
-font-size:26px;
-font-weight:bold;
-}
-
-nav a{
-color:white;
-margin-left:20px;
-text-decoration:none;
-}
-
-nav a:hover{
-color:#ff4fa3;
-}
-
-h1{
-text-align:center;
-margin-top:40px;
-color:#ff4fa3;
-}
-
-.cart-container{
-width:85%;
-margin:auto;
-margin-top:40px;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-}
-
-th, td{
-padding:15px;
-border-bottom:1px solid #333;
-text-align:center;
-}
-
-th{
-color:#ff4fa3;
-}
-
-.cart-img{
-width:70px;
-border-radius:6px;
-}
-
-.qty-box{
-display:flex;
-justify-content:center;
-align-items:center;
-gap:10px;
-}
-
-.qty-btn{
-background:#ff4fa3;
-border:none;
-color:white;
-width:30px;
-height:30px;
-cursor:pointer;
-border-radius:4px;
-}
-
-.qty{
-min-width:20px;
-}
-
-.remove-btn{
-background:#ff4fa3;
-border:none;
-color:white;
-padding:6px 12px;
-cursor:pointer;
-border-radius:5px;
-}
-
-.remove-btn:hover{
-background:#ff2f90;
-}
-
-.quality-select{
-background:#222;
-color:white;
-border:none;
-padding:6px;
-border-radius:5px;
-}
-
-.total{
-text-align:right;
-font-size:20px;
-margin-top:20px;
-}
-
-.buttons{
-display:flex;
-justify-content:space-between;
-margin-top:30px;
-}
-
-.clear-btn{
-background:#444;
-color:white;
-border:none;
-padding:10px 20px;
-cursor:pointer;
-border-radius:5px;
-}
-
-.clear-btn:hover{
-background:#666;
-}
-
-.checkout-btn{
-background:#ff4fa3;
-padding:12px 25px;
-color:white;
-text-decoration:none;
-border-radius:5px;
-}
-
-.checkout-btn:hover{
-background:#ff2f90;
-}
-
-footer{
-text-align:center;
-padding:20px;
-border-top:2px solid #ff4fa3;
-margin-top:50px;
-}
-
+body{margin:0;background:#000;color:white;font-family:Arial,Helvetica,sans-serif;}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 60px;border-bottom:2px solid #ff4fa3;}
+.logo{color:#ff4fa3;font-size:26px;font-weight:bold;}
+.cart-container{width:90%;max-width:1100px;margin:40px auto;}
+table{width:100%;border-collapse:collapse;}
+th,td{padding:15px;border-bottom:1px solid #333;text-align:center;}
+th{color:#ff4fa3;}
+.cart-img{width:70px;border-radius:6px;}
+.qty-box{display:flex;justify-content:center;align-items:center;gap:10px;}
+.qty-btn{background:#ff4fa3;border:none;color:white;width:30px;height:30px;cursor:pointer;border-radius:4px;}
+.qty{min-width:20px;}
+.remove-btn{background:#ff4fa3;border:none;color:white;padding:6px 12px;cursor:pointer;border-radius:5px;}
+.remove-btn:hover{background:#ff2f90;}
+.quality-select{background:#222;color:white;border:none;padding:6px;border-radius:5px;}
+.total{text-align:right;font-size:20px;margin-top:20px;}
+.buttons{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:30px;}
+.clear-btn{background:#444;color:white;border:none;padding:10px 20px;cursor:pointer;border-radius:5px;}
+.clear-btn:hover{background:#666;}
+.checkout-btn{background:#ff4fa3;padding:12px 25px;color:white;text-decoration:none;border-radius:5px;}
+.checkout-btn:hover{background:#ff2f90;}
+footer{text-align:center;padding:20px;border-top:2px solid #ff4fa3;margin-top:50px;color:#aaa;}
+@media(max-width:768px){header{flex-direction:column;align-items:flex-start;} .cart-container{width:95%;} .buttons{justify-content:flex-start;}}
 </style>
 </head>
-
 <body>
-
 <header>
-
-<div class="logo">GlamAura Wigs</div>
-
-<div id="navbar-container"></div>
-<script>
-	fetch('navbar.html').then(r => r.text()).then(html => {
-		document.getElementById('navbar-container').innerHTML = html;
-	});
-</script>
-
+  <div class="logo">GlamAura Wigs</div>
+  <div id="navbar-container"></div>
 </header>
+<script>
+  fetch('navbar.html').then(r => r.text()).then(html => {
+    document.getElementById('navbar-container').innerHTML = html;
+    const script = document.createElement('script');
+    script.src = 'navbar.js';
+    document.body.appendChild(script);
+  });
+</script>
 
 <h1>Your Shopping Cart</h1>
 

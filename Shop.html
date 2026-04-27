@@ -1,364 +1,433 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop | GlamAura Wigs</title>
+<link rel="stylesheet" href="shared.css">
 <link rel="stylesheet" href="navbar.css">
 <style>
-body{
-margin:0;
-font-family:Arial, Helvetica, sans-serif;
-background:#000;
-color:white;
-}
-text-decoration:none;
-font-size:16px;
-}
+	body {
+		margin: 0;
+		font-family: Arial, Helvetica, sans-serif;
+		background: #000;
+		color: white;
+	}
 
-nav a:hover{
-color:#ff4fa3;
-}
+	nav a {
+		text-decoration: none;
+		font-size: 16px;
+	}
 
-/* CART BADGE */
+	nav a:hover {
+		color: #ff4fa3;
+	}
 
-.cart-count{
-background:#ff4fa3;
-padding:3px 8px;
-border-radius:20px;
-font-size:12px;
-margin-left:5px;
-}
+	.cart-count {
+		background: #ff4fa3;
+		padding: 3px 8px;
+		border-radius: 20px;
+		font-size: 12px;
+		margin-left: 5px;
+	}
 
-/* TITLE */
+	h1 {
+		text-align: center;
+		margin-top: 40px;
+		color: #ff4fa3;
+		font-size: 36px;
+	}
 
-h1{
-text-align:center;
-margin-top:40px;
-color:#ff4fa3;
-font-size:36px;
-}
+	.controls {
+		display: flex;
+		justify-content: center;
+		gap: 20px;
+		margin-top: 20px;
+	}
 
-/* SEARCH + FILTER */
+	.controls input,
+	.controls select {
+		padding: 10px;
+		border-radius: 5px;
+		border: none;
+		font-size: 14px;
+	}
 
-.controls{
-display:flex;
-justify-content:center;
-gap:20px;
-margin-top:20px;
-}
+	.products {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 35px;
+		padding: 60px;
+	}
 
-.controls input,
-.controls select{
-padding:10px;
-border-radius:5px;
-border:none;
-font-size:14px;
-}
+	.card {
+		background: #111;
+		border-radius: 12px;
+		text-align: center;
+		padding-bottom: 20px;
+		transition: 0.3s;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+	}
 
-/* PRODUCTS GRID */
+	.card:hover {
+		transform: translateY(-8px);
+		box-shadow: 0 0 20px rgba(255, 79, 163, 0.4);
+	}
 
-.products{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:35px;
-padding:60px;
-}
+	.card img {
+		width: 100%;
+		height: 280px;
+		object-fit: cover;
+		border-radius: 12px 12px 0 0;
+	}
 
-/* PRODUCT CARD */
+	.card h3 {
+		margin: 15px 0 5px 0;
+	}
 
-.card{
-background:#111;
-border-radius:12px;
-text-align:center;
-padding-bottom:20px;
-transition:0.3s;
-box-shadow:0 0 10px rgba(0,0,0,0.4);
-}
+	.price {
+		color: #ff4fa3;
+		font-size: 20px;
+		margin-bottom: 10px;
+	}
 
-.card:hover{
-transform:translateY(-8px);
-box-shadow:0 0 20px rgba(255,79,163,0.4);
-}
+	.details {
+		font-size: 14px;
+		color: #ccc;
+		line-height: 1.6;
+		padding: 0 20px;
+		margin-bottom: 15px;
+	}
 
-.card img{
-width:100%;
-height:280px;
-object-fit:cover;
-border-radius:12px 12px 0 0;
-}
+	button {
+		background: #ff4fa3;
+		border: none;
+		padding: 12px 25px;
+		color: white;
+		cursor: pointer;
+		border-radius: 5px;
+		font-size: 15px;
+		transition: 0.3s;
+	}
 
-.card h3{
-margin:15px 0 5px 0;
-}
+	button:hover {
+		background: #ff2f90;
+	}
 
-.price{
-color:#ff4fa3;
-font-size:20px;
-margin-bottom:10px;
-}
+	footer {
+		text-align: center;
+		padding: 20px;
+		border-top: 2px solid #ff4fa3;
+		margin-top: 40px;
+		font-size: 14px;
+	}
 
-.details{
-font-size:14px;
-color:#ccc;
-line-height:1.6;
-padding:0 20px;
-margin-bottom:15px;
-}
+	.toast {
+		position: fixed;
+		bottom: 25px;
+		right: 25px;
+		background: #ff4fa3;
+		padding: 14px 22px;
+		border-radius: 6px;
+		opacity: 0;
+		transform: translateY(20px);
+		transition: 0.4s;
+	}
 
-button{
-background:#ff4fa3;
-border:none;
-padding:12px 25px;
-color:white;
-cursor:pointer;
-border-radius:5px;
-font-size:15px;
-transition:0.3s;
-}
-
-button:hover{
-background:#ff2f90;
-}
-
-/* FOOTER */
-
-footer{
-text-align:center;
-padding:20px;
-border-top:2px solid #ff4fa3;
-margin-top:40px;
-font-size:14px;
-}
-
-/* TOAST */
-
-.toast{
-position:fixed;
-bottom:25px;
-right:25px;
-background:#ff4fa3;
-padding:14px 22px;
-border-radius:6px;
-opacity:0;
-transform:translateY(20px);
-transition:0.4s;
-}
-
-.toast.show{
-opacity:1;
-transform:translateY(0);
-}
-
+	.toast.show {
+		opacity: 1;
+		transform: translateY(0);
+	}
 </style>
 </head>
 
 <body>
 
-<header>
-
-<div class="logo">GlamAura Wigs</div>
-
-<div id="navbar-container"></div>
-<script>
-	fetch('navbar.html').then(r => r.text()).then(html => {
-		document.getElementById('navbar-container').innerHTML = html;
-	});
-</script>
-
-</header>
-
-<h1>Shop Our Wigs</h1>
-
-<div class="controls">
-<input type="text" id="search" placeholder="Search wigs...">
-<select id="filter">
-<option value="all">All Textures</option>
-<option value="Straight">Straight</option>
-<option value="Curly">Curly</option>
-<option value="Body Wave">Body Wave</option>
-<option value="Deep Wave">Deep Wave</option>
-<option value="Kinky Curly">Kinky Curly</option>
-</select>
-</div>
-
-<div class="products" id="products">
-
-<!-- YOUR PRODUCTS REMAIN THE SAME -->
-
-<!-- Example Product -->
-
-<div class="card"><img src="images/Brazilian Body Wave Wig.jfif"><h3>Brazilian Body Wave</h3><p class="price">GH¢ 1500</p><div class="details">Length: 12",16",20"<br>Lace Type: HD Lace<br>Hair Texture: Body Wave</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Silky Straight Wig.jfif"><h3>Silky Straight Wig</h3><p class="price">GH¢ 2000</p><div class="details">Length: 14",18",22"<br>Lace Type: Transparent Lace<br>Hair Texture: Straight</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Curly Wig.jfif"><h3>Luxury Curly Wig</h3><p class="price">GH¢ 1900</p><div class="details">Length: 16",20",24"<br>Lace Type: HD Lace<br>Hair Texture: Curly</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Classic Bob Wig.jfif"><h3>Classic Bob Wig</h3><p class="price">GH¢ 1400</p><div class="details">Length: 10",12",14"<br>Lace Type: Lace Front<br>Hair Texture: Straight</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Deep Wave Wig.jfif"><h3>Deep Wave Wig</h3><p class="price">GH¢ 2300</p><div class="details">Length: 16",20",24"<br>Lace Type: HD Lace<br>Hair Texture: Deep Wave</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Highlight Wig.jfif"><h3>Highlight Wig</h3><p class="price">GH¢ 3400</p><div class="details">Length: 18",22",26"<br>Lace Type: Lace Front<br>Hair Texture: Body Wave</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Blonde Lace Wig.jfif"><h3>Blonde Lace Wig</h3><p class="price">GH¢ 4600</p><div class="details">Length: 16",20",24"<br>Lace Type: HD Lace<br>Hair Texture: Straight</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Burgundy Wig.jfif"><h3>Burgundy Wig</h3><p class="price">GH¢ 3800</p><div class="details">Length: 18",22",26"<br>Lace Type: Transparent Lace<br>Hair Texture: Body Wave</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Headband wig.jfif"><h3>Headband Wig</h3><p class="price">GH¢ 1500</p><div class="details">Length: 14",18",22"<br>Lace Type: None<br>Hair Texture: Straight</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Kinky Curly Wig.jfif"><h3>Kinky Curly Wig</h3><p class="price">GH¢ 2200</p><div class="details">Length: 16",20",24"<br>Lace Type: Lace Front<br>Hair Texture: Kinky Curly</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Soft Wave Wig.jfif"><h3>Soft Wave Wig</h3><p class="price">GH¢ 1950</p><div class="details">Length: 14",18",22"<br>Lace Type: HD Lace<br>Hair Texture: Wave</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Glueless Wig.webp"><h3>Glueless Wig</h3><p class="price">GH¢ 1600</p><div class="details">Length: 16",20",24"<br>Lace Type: Glueless Lace<br>Hair Texture: Straight</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Loose Wave Wig.jfif"><h3>Loose Wave Wig</h3><p class="price">GH¢ 1950</p><div class="details">Length: 16",20",24"<br>Lace Type: HD Lace<br>Hair Texture: Loose Wave</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Chocolate Brown Wig.jfif"><h3>Chocolate Brown Wig</h3><p class="price">GH¢ 2500</p><div class="details">Length: 18",22",26"<br>Lace Type: Lace Front<br>Hair Texture: Body Wave</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Layered Wig.jfif"><h3>Layered Wig</h3><p class="price">GH¢ 1980</p><div class="details">Length: 16",20",24"<br>Lace Type: Transparent Lace<br>Hair Texture: Straight</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Silk Straight Wig 2.jfif"><h3>Silk Straight Wig</h3><p class="price">GH¢ 2600</p><div class="details">Length: 18",22",26"<br>Lace Type: HD Lace<br>Hair Texture: Straight</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Curly Bob Wig.jfif"><h3>Curly Bob Wig</h3><p class="price">GH¢ 1750</p><div class="details">Length: 10",12",14"<br>Lace Type: Lace Front<br>Hair Texture: Curly</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Deep Curly Wig.jfif"><h3>Deep Curly Wig</h3><p class="price">GH¢ 2200</p><div class="details">Length: 18",22",26"<br>Lace Type: HD Lace<br>Hair Texture: Deep Curly</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Ombre Wig.jfif"><h3>Ombre Wig</h3><p class="price">GH¢ 3000</p><div class="details">Length: 18",22",26"<br>Lace Type: Lace Front<br>Hair Texture: Body Wave</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Platinum Blonde Wig.jfif"><h3>Platinum Blonde Wig</h3><p class="price">GH¢ 5000</p><div class="details">Length: 20",24",28"<br>Lace Type: HD Lace<br>Hair Texture: Straight</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Extra Curly Wig.jfif"><h3>Extra Curly Wig</h3><p class="price">GH¢ 3000</p><div class="details">Length: 16",20",24"<br>Lace Type: Transparent Lace<br>Hair Texture: Curly</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Wig Cap.jfif"><h3>Wig Cap</h3><p class="price">GH¢ 80</p><div class="details">Material: Breathable Nylon<br>Color: Nude / Black<br>Size: Stretch Fit</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Lace Wig Glue.jfif"><h3>Lace Wig Glue</h3><p class="price">GH¢ 100</p><div class="details">Type: Waterproof Lace Adhesive<br>Hold: 2–3 Weeks</div><button>Add to Cart</button></div>
-
-<div class="card"><img src="images/Wig Styling Comb.avif"><h3>Wig Styling Comb</h3><p class="price">GH¢ 30</p><div class="details">Wide Tooth Comb<br>Anti-static</div><button>Add to Cart</button></div>
-
-</div>
-
-
-
-</div>
-
-<footer>© 2026 GlamAura Wigs</footer>
-
-<div id="toast" class="toast"></div>
-
-<script>
-
-/* UPDATE CART COUNT */
-
-function updateCart(){
-
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-let total = 0;
-
-cart.forEach(i => total += i.qty);
-
-document.getElementById("cartCount").innerText = total;
-
-}
-
-updateCart();
-
-/* ADD TO CART */
-
-document.querySelectorAll(".card button").forEach(btn=>{
-
-btn.addEventListener("click",function(){
-
-let card = this.parentElement;
-
-let name = card.querySelector("h3").innerText;
-
-let basePrice = parseFloat(
-card.querySelector(".price").innerText.replace("GH¢","").trim()
-);
-
-let image = card.querySelector("img").getAttribute("src");
-
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-let existing = cart.find(p => p.name === name);
-
-if(existing){
-
-existing.qty++;
-
-}else{
-
-cart.push({
-name:name,
-basePrice:basePrice,
-image:image,
-qty:1,
-quality:'12"'
-});
-
-}
-
-localStorage.setItem("cart", JSON.stringify(cart));
-
-updateCart();
-
-toast(name + " added to cart");
-
-});
-
-});
-
-/* TOAST */
-
-function toast(msg){
-
-let t=document.getElementById("toast");
-
-t.innerText=msg;
-
-t.classList.add("show");
-
-setTimeout(()=>t.classList.remove("show"),2000);
-
-}
-
-/* SEARCH */
-
-document.getElementById("search").addEventListener("keyup",function(){
-
-let value=this.value.toLowerCase();
-
-document.querySelectorAll(".card").forEach(card=>{
-
-let name=card.querySelector("h3").innerText.toLowerCase();
-
-card.style.display=name.includes(value)?"block":"none";
-
-});
-
-});
-
-/* FILTER */
-
-document.getElementById("filter").addEventListener("change",function(){
-
-let val=this.value;
-
-document.querySelectorAll(".card").forEach(card=>{
-
-let text=card.querySelector(".details").innerText;
-
-if(val==="all" || text.includes(val)){
-
-card.style.display="block";
-
-}else{
-
-card.style.display="none";
-
-}
-
-});
-
-});
-
-</script>
+	<header>
+
+
+		<div class="logo" style="text-align:center;font-size:28px;letter-spacing:2px;">GlamAura Wigs</div>
+		<div id="navbar-container"></div>
+	</header>
+	<script>
+		fetch('navbar.html').then(r => r.text()).then(html => {
+			document.getElementById('navbar-container').innerHTML = html;
+			const script = document.createElement('script');
+			script.src = 'navbar.js';
+			document.body.appendChild(script);
+			setTimeout(updateCart, 100);
+		});
+	</script>
+
+	<h1>Shop Our Wigs</h1>
+
+	<div class="controls">
+		<input type="text" id="search" placeholder="Search wigs...">
+		<select id="filter">
+			<option value="all">All Textures</option>
+			<option value="Straight">Straight</option>
+			<option value="Curly">Curly</option>
+			<option value="Body Wave">Body Wave</option>
+			<option value="Deep Wave">Deep Wave</option>
+			<option value="Kinky Curly">Kinky Curly</option>
+		</select>
+	</div>
+
+	<div class="products" id="products">
+
+		<div class="card"><img src="images/Brazilian Body Wave Wig.jfif">
+			<h3>Brazilian Body Wave</h3>
+			<p class="price">GH¢ 1500</p>
+			<div class="details">Length: 12",16",20"<br>Lace Type: HD Lace<br>Hair Texture: Body Wave</div><button>Add
+				to Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Silky Straight Wig.jfif">
+			<h3>Silky Straight Wig</h3>
+			<p class="price">GH¢ 2000</p>
+			<div class="details">Length: 14",18",22"<br>Lace Type: Transparent Lace<br>Hair Texture: Straight</div>
+			<button>Add to Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Curly Wig.jfif">
+			<h3>Luxury Curly Wig</h3>
+			<p class="price">GH¢ 1900</p>
+			<div class="details">Length: 16",20",24"<br>Lace Type: HD Lace<br>Hair Texture: Curly</div><button>Add to
+				Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Classic Bob Wig.jfif">
+			<h3>Classic Bob Wig</h3>
+			<p class="price">GH¢ 1400</p>
+			<div class="details">Length: 10",12",14"<br>Lace Type: Lace Front<br>Hair Texture: Straight</div><button>Add
+				to Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Deep Wave Wig.jfif">
+			<h3>Deep Wave Wig</h3>
+			<p class="price">GH¢ 2300</p>
+			<div class="details">Length: 16",20",24"<br>Lace Type: HD Lace<br>Hair Texture: Deep Wave</div><button>Add
+				to Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Highlight Wig.jfif">
+			<h3>Highlight Wig</h3>
+			<p class="price">GH¢ 3400</p>
+			<div class="details">Length: 18",22",26"<br>Lace Type: Lace Front<br>Hair Texture: Body Wave</div>
+			<button>Add to Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Blonde Lace Wig.jfif">
+			<h3>Blonde Lace Wig</h3>
+			<p class="price">GH¢ 4600</p>
+			<div class="details">Length: 16",20",24"<br>Lace Type: HD Lace<br>Hair Texture: Straight</div><button>Add to
+				Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Burgundy Wig.jfif">
+			<h3>Burgundy Wig</h3>
+			<p class="price">GH¢ 3800</p>
+			<div class="details">Length: 18",22",26"<br>Lace Type: Transparent Lace<br>Hair Texture: Body Wave</div>
+			<button>Add to Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Headband wig.jfif">
+			<h3>Headband Wig</h3>
+			<p class="price">GH¢ 1500</p>
+			<div class="details">Length: 14",18",22"<br>Lace Type: None<br>Hair Texture: Straight</div><button>Add to
+				Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Kinky Curly Wig.jfif">
+			<h3>Kinky Curly Wig</h3>
+			<p class="price">GH¢ 2200</p>
+			<div class="details">Length: 16",20",24"<br>Lace Type: Lace Front<br>Hair Texture: Kinky Curly</div>
+			<button>Add to Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Soft Wave Wig.jfif">
+			<h3>Soft Wave Wig</h3>
+			<p class="price">GH¢ 1950</p>
+			<div class="details">Length: 14",18",22"<br>Lace Type: HD Lace<br>Hair Texture: Wave</div><button>Add to
+				Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Glueless Wig.webp">
+			<h3>Glueless Wig</h3>
+			<p class="price">GH¢ 1600</p>
+			<div class="details">Length: 16",20",24"<br>Lace Type: Glueless Lace<br>Hair Texture: Straight</div>
+			<button>Add to Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Loose Wave Wig.jfif">
+			<h3>Loose Wave Wig</h3>
+			<p class="price">GH¢ 1950</p>
+			<div class="details">Length: 16",20",24"<br>Lace Type: HD Lace<br>Hair Texture: Loose Wave</div><button>Add
+				to Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Chocolate Brown Wig.jfif">
+			<h3>Chocolate Brown Wig</h3>
+			<p class="price">GH¢ 2500</p>
+			<div class="details">Length: 18",22",26"<br>Lace Type: Lace Front<br>Hair Texture: Body Wave</div>
+			<button>Add to Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Layered Wig.jfif">
+			<h3>Layered Wig</h3>
+			<p class="price">GH¢ 1980</p>
+			<div class="details">Length: 16",20",24"<br>Lace Type: Transparent Lace<br>Hair Texture: Straight</div>
+			<button>Add to Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Silk Straight Wig 2.jfif">
+			<h3>Silk Straight Wig</h3>
+			<p class="price">GH¢ 2600</p>
+			<div class="details">Length: 18",22",26"<br>Lace Type: HD Lace<br>Hair Texture: Straight</div><button>Add to
+				Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Curly Bob Wig.jfif">
+			<h3>Curly Bob Wig</h3>
+			<p class="price">GH¢ 1750</p>
+			<div class="details">Length: 10",12",14"<br>Lace Type: Lace Front<br>Hair Texture: Curly</div><button>Add to
+				Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Deep Curly Wig.jfif">
+			<h3>Deep Curly Wig</h3>
+			<p class="price">GH¢ 2200</p>
+			<div class="details">Length: 18",22",26"<br>Lace Type: HD Lace<br>Hair Texture: Deep Curly</div><button>Add
+				to Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Ombre Wig.jfif">
+			<h3>Ombre Wig</h3>
+			<p class="price">GH¢ 3000</p>
+			<div class="details">Length: 18",22",26"<br>Lace Type: Lace Front<br>Hair Texture: Body Wave</div>
+			<button>Add to Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Platinum Blonde Wig.jfif">
+			<h3>Platinum Blonde Wig</h3>
+			<p class="price">GH¢ 5000</p>
+			<div class="details">Length: 20",24",28"<br>Lace Type: HD Lace<br>Hair Texture: Straight</div><button>Add to
+				Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Extra Curly Wig.jfif">
+			<h3>Extra Curly Wig</h3>
+			<p class="price">GH¢ 3000</p>
+			<div class="details">Length: 16",20",24"<br>Lace Type: Transparent Lace<br>Hair Texture: Curly</div>
+			<button>Add to Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Wig Cap.jfif">
+			<h3>Wig Cap</h3>
+			<p class="price">GH¢ 80</p>
+			<div class="details">Material: Breathable Nylon<br>Color: Nude / Black<br>Size: Stretch Fit</div><button>Add
+				to Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Lace Wig Glue.jfif">
+			<h3>Lace Wig Glue</h3>
+			<p class="price">GH¢ 100</p>
+			<div class="details">Type: Waterproof Lace Adhesive<br>Hold: 2–3 Weeks</div><button>Add to Cart</button>
+		</div>
+
+		<div class="card"><img src="images/Wig Styling Comb.avif">
+			<h3>Wig Styling Comb</h3>
+			<p class="price">GH¢ 30</p>
+			<div class="details">Wide Tooth Comb<br>Anti-static</div><button>Add to Cart</button>
+		</div>
+
+	</div>
+
+
+
+	</div>
+
+	<footer>© 2026 GlamAura Wigs</footer>
+
+	<div id="toast" class="toast"></div>
+
+	<script>
+
+
+		// UPDATE CART COUNT
+		function updateCart() {
+			let cart = JSON.parse(localStorage.getItem("cart")) || [];
+			let total = 0;
+			cart.forEach(i => total += i.qty);
+			// Only update if cartCount element exists
+			let badge = document.getElementById("cartCount");
+			if (badge) badge.innerText = total;
+		}
+		// Try to update immediately in case navbar is already loaded
+		updateCart();
+
+
+		// ADD TO CART
+		document.querySelectorAll(".card button").forEach(btn => {
+			btn.addEventListener("click", function () {
+				let card = this.parentElement;
+				let name = card.querySelector("h3").innerText;
+				let basePrice = parseFloat(card.querySelector(".price").innerText.replace("GH¢", "").trim());
+				let image = card.querySelector("img").getAttribute("src");
+				let cart = JSON.parse(localStorage.getItem("cart")) || [];
+				let existing = cart.find(p => p.name === name);
+				if (existing) {
+					existing.qty++;
+				} else {
+					cart.push({
+						name: name,
+						basePrice: basePrice,
+						image: image,
+						qty: 1,
+						quality: '12"'
+					});
+				}
+				localStorage.setItem("cart", JSON.stringify(cart));
+				updateCart();
+				toast(name + " added to cart");
+			});
+		});
+
+
+		// TOAST
+		function toast(msg) {
+			let t = document.getElementById("toast");
+			t.innerText = msg;
+			t.classList.add("show");
+			setTimeout(() => t.classList.remove("show"), 2000);
+		}
+
+
+		// SEARCH
+		document.getElementById("search").addEventListener("keyup", function () {
+			let value = this.value.toLowerCase();
+			document.querySelectorAll(".card").forEach(card => {
+				let name = card.querySelector("h3").innerText.toLowerCase();
+				card.style.display = name.includes(value) ? "block" : "none";
+			});
+		});
+
+
+		// FILTER
+		document.getElementById("filter").addEventListener("change", function () {
+			let val = this.value;
+			document.querySelectorAll(".card").forEach(card => {
+				let text = card.querySelector(".details").innerText;
+				if (val === "all" || text.includes(val)) {
+					card.style.display = "block";
+				} else {
+					card.style.display = "none";
+				}
+			});
+		});
+
+	</script>
 
 </body>
+
 </html>

@@ -160,6 +160,13 @@ if(res.status){
 // SAVE USER
 localStorage.setItem("customer_name", res.full_name);
 localStorage.setItem("customer_email", res.email);
+localStorage.setItem("customer_id", res.user_id);
+localStorage.setItem("user", JSON.stringify({
+  user_id: res.user_id,
+  full_name: res.full_name,
+  email: res.email,
+  is_admin: false
+}));
 
 // AUTO REDIRECT TO DASHBOARD
 window.location.href = "customer_dashboard.html";
@@ -192,6 +199,13 @@ if(res.status){
 // SAVE USER DATA
 localStorage.setItem("customer_name", res.full_name);
 localStorage.setItem("customer_email", res.email);
+localStorage.setItem("customer_id", res.user_id);
+localStorage.setItem("user", JSON.stringify({
+  user_id: res.user_id,
+  full_name: res.full_name,
+  email: res.email,
+  is_admin: false
+}));
 
 // REDIRECT TO DASHBOARD
 window.location.href = "customer_dashboard.html";

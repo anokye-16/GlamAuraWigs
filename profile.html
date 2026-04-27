@@ -1,20 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Profile | GlamAura Wigs</title>
-
+<link rel="stylesheet" href="shared.css">
+<link rel="stylesheet" href="navbar.css">
 <style>
 
 body{
 background:#000;
 color:white;
-font-family:Arial;
+font-family:Arial,Helvetica,sans-serif;
 margin:0;
 }
 
 header{
 display:flex;
 justify-content:space-between;
+align-items:center;
 padding:20px 60px;
 border-bottom:2px solid #ff4fa3;
 }
@@ -113,17 +117,17 @@ margin-top:50px;
 <body>
 
 <header>
-
-<div class="logo">GlamAura Wigs</div>
-
-<nav>
-<a href="Home.html">Home</a>
-<a href="Shop.html">Shop</a>
-<a href="cart.html">Cart</a>
-<a href="track.html">Track Order</a>
-</nav>
-
+  <div class="logo">GlamAura Wigs</div>
+  <div id="navbar-container"></div>
 </header>
+<script>
+  fetch('navbar.html').then(r => r.text()).then(html => {
+    document.getElementById('navbar-container').innerHTML = html;
+    const script = document.createElement('script');
+    script.src = 'navbar.js';
+    document.body.appendChild(script);
+  });
+</script>
 
 <h1>Customer Profile</h1>
 
