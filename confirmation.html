@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Order Confirmed | GlamAura Wigs</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#000;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+text-align:center;
+}
+
+.container{
+background:#111;
+padding:50px;
+border-radius:15px;
+width:400px;
+animation: pop 0.6s ease;
+}
+
+/* SUCCESS ANIMATION */
+.checkmark{
+width:100px;
+height:100px;
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+margin:0 auto 20px;
+background:#ff4fa3;
+animation: pulse 1.2s infinite;
+}
+
+.checkmark:after{
+content:"✔";
+font-size:50px;
+color:white;
+}
+
+/* TEXT */
+h1{
+color:#ff4fa3;
+margin-bottom:10px;
+}
+
+p{
+font-size:14px;
+color:#ccc;
+}
+
+/* BUTTON */
+button{
+margin-top:20px;
+padding:12px 20px;
+background:#ff4fa3;
+border:none;
+color:white;
+cursor:pointer;
+border-radius:5px;
+}
+
+button:hover{
+background:#ff2f90;
+}
+
+/* ANIMATIONS */
+@keyframes pop{
+from{transform:scale(0.6);opacity:0;}
+to{transform:scale(1);opacity:1;}
+}
+
+@keyframes pulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.1);}
+100%{transform:scale(1);}
+}
+
+.small{
+margin-top:10px;
+font-size:13px;
+color:#aaa;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="checkmark"></div>
+
+<h1>Order Confirmed!</h1>
+
+<p>Your order has been placed successfully.</p>
+
+<p class="small">Order ID: <span id="orderId">Loading...</span></p>
+
+<button onclick="window.location.href='Shop.html'">
+Continue Shopping
+</button>
+
+</div>
+
+<script>
+
+// get order id from URL
+const params = new URLSearchParams(window.location.search);
+const orderId = params.get("order_id");
+
+document.getElementById("orderId").innerText = orderId ? "#"+orderId : "N/A";
+
+</script>
+
+</body>
+</html>

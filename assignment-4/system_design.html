@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assignment 4 — System Design & Architecture | GlamAura Wigs</title>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .idea-hero { background: linear-gradient(135deg, #0a0a0a 0%, #1a0010 100%); padding: 60px; text-align: center; border-bottom: 2px solid var(--pink); }
+  .idea-hero h1 { color: var(--white); margin-bottom: 8px; }
+  .idea-hero p { color: var(--muted); max-width: 680px; margin: 12px auto 0; }
+  .assign-tag { display: inline-block; background: var(--pink); color: #fff; font-size: 12px; padding: 4px 14px; border-radius: 3px; margin-bottom: 16px; }
+  .content-wrap { max-width: 1020px; margin: 0 auto; padding: 50px 30px; }
+  .q-block { background: var(--card); border-radius: 10px; padding: 32px; margin-bottom: 24px; border-left: 4px solid var(--pink); }
+  .q-block h2 { color: var(--pink); font-size: 20px; margin-bottom: 6px; }
+  .q-block .q-label { color: var(--muted); font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 20px; }
+
+  /* Architecture Diagram */
+  .arch-diagram { background: var(--dark); border-radius: 10px; padding: 30px; margin-top: 14px; position: relative; overflow: hidden; }
+  .arch-layer { margin-bottom: 20px; }
+  .arch-layer-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+  .arch-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .arch-box { background: var(--card2); border: 1px solid var(--border); border-radius: 7px; padding: 12px 16px; font-size: 13px; color: var(--text); display: flex; align-items: center; gap: 8px; flex: 1; min-width: 130px; text-align: center; justify-content: center; }
+  .arch-box.pink { border-color: var(--pink); color: var(--pink); }
+  .arch-box.db { border-color: #3b82f6; color: #93c5fd; }
+  .arch-box.server { border-color: #22c55e; color: #86efac; }
+  .arch-arrow { display: flex; justify-content: center; margin: 6px 0; color: var(--pink); font-size: 1.4rem; }
+
+  /* Wireframes */
+  .wireframes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-top: 14px; }
+  .wireframe { background: var(--dark); border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
+  .wireframe h4 { color: var(--pink); font-size: 13px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .wf-bar { background: #1a1a1a; height: 30px; border-radius: 4px; margin-bottom: 8px; display: flex; align-items: center; padding: 0 10px; gap: 8px; }
+  .wf-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pink); }
+  .wf-line { background: var(--border); height: 8px; border-radius: 3px; margin-bottom: 6px; }
+  .wf-line.short { width: 60%; }
+  .wf-line.shorter { width: 40%; }
+  .wf-block { background: var(--border); border-radius: 4px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 11px; }
+  .wf-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; }
+  .wf-card { background: #1a1a1a; border-radius: 4px; padding: 8px; }
+
+  /* DB Design */
+  .db-schema { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-top: 14px; }
+  .db-table { background: var(--dark); border: 1px solid #3b82f6; border-radius: 8px; overflow: hidden; }
+  .db-table-head { background: #1e3a5f; padding: 10px 14px; color: #93c5fd; font-size: 13px; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+  .db-table-head .db-icon { font-size: 1rem; }
+  .db-field { padding: 7px 14px; border-bottom: 1px solid #1a1a1a; font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; }
+  .db-field .field-type { color: #60a5fa; font-size: 11px; }
+  .db-field.pk { color: var(--white); }
+  .db-field.fk { color: #86efac; }
+  .db-rel { background: var(--card2); border-radius: 8px; padding: 14px; margin-top: 14px; font-size: 13px; color: var(--text); }
+  .db-rel h4 { color: var(--white); font-size: 14px; margin-bottom: 10px; }
+  .db-rel li { color: var(--muted); margin-bottom: 5px; }
+  .db-rel li span { color: var(--pink); }
+
+  /* Tech Stack */
+  .stack-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-top: 14px; }
+  .stack-card { background: var(--card2); border-radius: 8px; padding: 18px; border: 1px solid var(--border); text-align: center; }
+  .stack-icon { font-size: 2rem; margin-bottom: 10px; }
+  .stack-card h4 { color: var(--white); font-size: 14px; margin-bottom: 4px; }
+  .stack-card p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .stack-card .layer { font-size: 10px; color: var(--pink); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<nav class="assign-nav">
+  <span class="logo">💇‍♀️ GlamAura Wigs</span>
+  <a href="../Home.html">Home</a>
+  <a href="../assignment-1/ebusiness_idea.html">A1</a>
+  <a href="../assignment-2/ebusiness_strategy.html">A2</a>
+  <a href="../assignment-3/system_requirements.html">A3</a>
+  <a href="system_design.html" class="active">Assignment 4 <span class="assign-badge">A4</span></a>
+  <a href="../assignment-5/frontend_overview.html">A5</a>
+  <a href="../assignment-6/backend_system.html">A6</a>
+  <a href="../assignment-7/integration_report.html">A7</a>
+</nav>
+
+<div class="idea-hero">
+  <span class="assign-tag">BACHELOR OF ICT — E-BUSINESS COURSE</span>
+  <h1>Assignment 4: System Design & Architecture</h1>
+  <p>Guiding Question: How will the complete e-business system be designed?</p>
+</div>
+
+<div class="content-wrap">
+
+  <!-- ARCHITECTURE DIAGRAM -->
+  <div class="q-block">
+    <h2>1. System Architecture Diagram</h2>
+    <div class="q-label">Three-tier web application architecture</div>
+    <div class="arch-diagram">
+      <div class="arch-layer">
+        <div class="arch-layer-title">👤 Client / Presentation Layer</div>
+        <div class="arch-row">
+          <div class="arch-box pink">🌐 Web Browser</div>
+          <div class="arch-box pink">📱 Mobile Browser</div>
+        </div>
+      </div>
+      <div class="arch-arrow">↓ HTTP/HTTPS Requests ↓</div>
+      <div class="arch-layer">
+        <div class="arch-layer-title">⚙️ Front-End Layer (HTML / CSS / JavaScript)</div>
+        <div class="arch-row">
+          <div class="arch-box">🏠 Home.html</div>
+          <div class="arch-box">🛍️ Shop.html</div>
+          <div class="arch-box">🛒 cart.html</div>
+          <div class="arch-box">💳 checkout.html</div>
+          <div class="arch-box">👤 dashboard</div>
+          <div class="arch-box">🎨 Collection.html</div>
+          <div class="arch-box">📞 Contact.html</div>
+          <div class="arch-box">🔐 login.html</div>
+        </div>
+      </div>
+      <div class="arch-arrow">↕ AJAX / Form POST ↕</div>
+      <div class="arch-layer">
+        <div class="arch-layer-title">🖥️ Back-End Layer (PHP Server)</div>
+        <div class="arch-row">
+          <div class="arch-box server">🔐 login.php / signup.php / logout.php</div>
+          <div class="arch-box server">📦 fetch_products.php / place_order.php</div>
+          <div class="arch-box server">🧾 checkout.php / get_order.php</div>
+          <div class="arch-box server">⚙️ CRM / Finance / Supply Chain Modules</div>
+        </div>
+      </div>
+      <div class="arch-arrow">↕ SQL Queries ↕</div>
+      <div class="arch-layer">
+        <div class="arch-layer-title">🗄️ Data Layer (MySQL Database)</div>
+        <div class="arch-row">
+          <div class="arch-box db">👥 users table</div>
+          <div class="arch-box db">💇 products table</div>
+          <div class="arch-box db">📋 orders table</div>
+          <div class="arch-box db">🧾 order_items table</div>
+          <div class="arch-box db">💬 feedback table</div>
+          <div class="arch-box db">🏭 suppliers table</div>
+        </div>
+      </div>
+    </div>
+    <p style="color:var(--muted);font-size:13px;margin-top:14px;">
+      The system follows a standard <strong style="color:var(--white)">3-tier web architecture</strong>: the <em>presentation layer</em> (HTML/CSS/JS in the browser), the <em>application layer</em> (PHP on the server), and the <em>data layer</em> (MySQL database). The admin dashboard communicates directly with all back-end modules.
+    </p>
+  </div>
+
+  <!-- DATABASE DESIGN -->
+  <div class="q-block">
+    <h2>2. Database Design</h2>
+    <div class="q-label">Tables, fields, and relationships</div>
+    <div class="db-schema">
+      <div class="db-table">
+        <div class="db-table-head"><span class="db-icon">👥</span> users</div>
+        <div class="db-field pk"><span>id</span><span class="field-type">INT PK AUTO</span></div>
+        <div class="db-field"><span>full_name</span><span class="field-type">VARCHAR(100)</span></div>
+        <div class="db-field"><span>email</span><span class="field-type">VARCHAR(100) UNIQUE</span></div>
+        <div class="db-field"><span>password</span><span class="field-type">VARCHAR(255)</span></div>
+        <div class="db-field"><span>phone</span><span class="field-type">VARCHAR(20)</span></div>
+        <div class="db-field"><span>address</span><span class="field-type">TEXT</span></div>
+        <div class="db-field"><span>role</span><span class="field-type">ENUM(customer,admin)</span></div>
+        <div class="db-field"><span>created_at</span><span class="field-type">TIMESTAMP</span></div>
+      </div>
+      <div class="db-table">
+        <div class="db-table-head"><span class="db-icon">💇</span> products</div>
+        <div class="db-field pk"><span>id</span><span class="field-type">INT PK AUTO</span></div>
+        <div class="db-field"><span>name</span><span class="field-type">VARCHAR(100)</span></div>
+        <div class="db-field"><span>description</span><span class="field-type">TEXT</span></div>
+        <div class="db-field"><span>texture</span><span class="field-type">VARCHAR(50)</span></div>
+        <div class="db-field"><span>image</span><span class="field-type">VARCHAR(255)</span></div>
+        <div class="db-field"><span>base_price</span><span class="field-type">DECIMAL(10,2)</span></div>
+        <div class="db-field fk"><span>supplier_id</span><span class="field-type">INT FK → suppliers</span></div>
+        <div class="db-field"><span>stock</span><span class="field-type">INT</span></div>
+      </div>
+      <div class="db-table">
+        <div class="db-table-head"><span class="db-icon">📋</span> orders</div>
+        <div class="db-field pk"><span>id</span><span class="field-type">INT PK AUTO</span></div>
+        <div class="db-field fk"><span>customer_id</span><span class="field-type">INT FK → users</span></div>
+        <div class="db-field"><span>customer_name</span><span class="field-type">VARCHAR(100)</span></div>
+        <div class="db-field"><span>customer_email</span><span class="field-type">VARCHAR(100)</span></div>
+        <div class="db-field"><span>address</span><span class="field-type">TEXT</span></div>
+        <div class="db-field"><span>subtotal</span><span class="field-type">DECIMAL(10,2)</span></div>
+        <div class="db-field"><span>vat</span><span class="field-type">DECIMAL(10,2)</span></div>
+        <div class="db-field"><span>shipping</span><span class="field-type">DECIMAL(10,2)</span></div>
+        <div class="db-field"><span>total</span><span class="field-type">DECIMAL(10,2)</span></div>
+        <div class="db-field"><span>payment_method</span><span class="field-type">VARCHAR(50)</span></div>
+        <div class="db-field"><span>status</span><span class="field-type">ENUM(Pending,Processing,Shipped,Delivered,Cancelled)</span></div>
+        <div class="db-field"><span>created_at</span><span class="field-type">TIMESTAMP</span></div>
+      </div>
+      <div class="db-table">
+        <div class="db-table-head"><span class="db-icon">🧾</span> order_items</div>
+        <div class="db-field pk"><span>id</span><span class="field-type">INT PK AUTO</span></div>
+        <div class="db-field fk"><span>order_id</span><span class="field-type">INT FK → orders</span></div>
+        <div class="db-field fk"><span>product_id</span><span class="field-type">INT FK → products</span></div>
+        <div class="db-field"><span>quantity</span><span class="field-type">INT</span></div>
+        <div class="db-field"><span>length</span><span class="field-type">VARCHAR(10)</span></div>
+        <div class="db-field"><span>price</span><span class="field-type">DECIMAL(10,2)</span></div>
+      </div>
+      <div class="db-table">
+        <div class="db-table-head"><span class="db-icon">💬</span> feedback</div>
+        <div class="db-field pk"><span>id</span><span class="field-type">INT PK AUTO</span></div>
+        <div class="db-field fk"><span>customer_id</span><span class="field-type">INT FK → users</span></div>
+        <div class="db-field"><span>customer_name</span><span class="field-type">VARCHAR(100)</span></div>
+        <div class="db-field"><span>email</span><span class="field-type">VARCHAR(100)</span></div>
+        <div class="db-field"><span>message</span><span class="field-type">TEXT</span></div>
+        <div class="db-field"><span>type</span><span class="field-type">ENUM(Feedback,Complaint,Query)</span></div>
+        <div class="db-field"><span>status</span><span class="field-type">ENUM(Open,Resolved)</span></div>
+        <div class="db-field"><span>created_at</span><span class="field-type">TIMESTAMP</span></div>
+      </div>
+      <div class="db-table">
+        <div class="db-table-head"><span class="db-icon">🏭</span> suppliers</div>
+        <div class="db-field pk"><span>id</span><span class="field-type">INT PK AUTO</span></div>
+        <div class="db-field"><span>name</span><span class="field-type">VARCHAR(100)</span></div>
+        <div class="db-field"><span>location</span><span class="field-type">VARCHAR(100)</span></div>
+        <div class="db-field"><span>contact</span><span class="field-type">VARCHAR(100)</span></div>
+        <div class="db-field"><span>product_types</span><span class="field-type">VARCHAR(200)</span></div>
+        <div class="db-field"><span>reliability_score</span><span class="field-type">DECIMAL(3,1)</span></div>
+        <div class="db-field"><span>status</span><span class="field-type">ENUM(Active,Inactive)</span></div>
+      </div>
+    </div>
+    <div class="db-rel" style="margin-top:16px;">
+      <h4>Table Relationships</h4>
+      <ul style="padding-left:20px;">
+        <li><span>users → orders</span>: One user can place many orders (1:N)</li>
+        <li><span>orders → order_items</span>: One order contains many items (1:N)</li>
+        <li><span>products → order_items</span>: One product can appear in many orders (1:N)</li>
+        <li><span>users → feedback</span>: One user can submit many feedback records (1:N)</li>
+        <li><span>suppliers → products</span>: One supplier can supply many products (1:N)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- WIREFRAMES -->
+  <div class="q-block">
+    <h2>3. Wireframes for Front-End Pages</h2>
+    <div class="q-label">Layout sketches for each major page</div>
+    <div class="wireframes-grid">
+
+      <div class="wireframe">
+        <h4>🏠 Homepage</h4>
+        <div class="wf-bar"><div class="wf-dot"></div><div class="wf-dot" style="background:#333"></div><div class="wf-dot" style="background:#333"></div><div class="wf-line" style="width:60%;height:6px;margin:0"></div></div>
+        <div class="wf-block" style="height:90px;">HERO BANNER + CTA BUTTONS</div>
+        <div class="wf-line short"></div>
+        <div class="wf-grid-2"><div class="wf-card" style="height:60px;"></div><div class="wf-card" style="height:60px;"></div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:8px;"><div class="wf-card" style="height:50px;"></div><div class="wf-card" style="height:50px;"></div><div class="wf-card" style="height:50px;"></div></div>
+        <div class="wf-line"></div>
+        <div class="wf-block" style="height:30px;">FOOTER</div>
+      </div>
+
+      <div class="wireframe">
+        <h4>🛍️ Shop Page</h4>
+        <div class="wf-bar"><div class="wf-dot"></div></div>
+        <div style="display:flex;gap:5px;margin-bottom:8px;"><div class="wf-block" style="flex:1;height:26px;margin:0;">SEARCH</div><div class="wf-block" style="width:70px;height:26px;margin:0;">FILTER</div><div class="wf-block" style="width:70px;height:26px;margin:0;">SORT</div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+          <div class="wf-card" style="height:100px;display:flex;align-items:flex-end;padding-bottom:8px;"><div class="wf-line" style="margin:0;width:80%;"></div></div>
+          <div class="wf-card" style="height:100px;display:flex;align-items:flex-end;padding-bottom:8px;"><div class="wf-line" style="margin:0;width:80%;"></div></div>
+          <div class="wf-card" style="height:100px;display:flex;align-items:flex-end;padding-bottom:8px;"><div class="wf-line" style="margin:0;width:80%;"></div></div>
+          <div class="wf-card" style="height:100px;display:flex;align-items:flex-end;padding-bottom:8px;"><div class="wf-line" style="margin:0;width:80%;"></div></div>
+        </div>
+      </div>
+
+      <div class="wireframe">
+        <h4>🛒 Shopping Cart</h4>
+        <div class="wf-bar"><div class="wf-dot"></div></div>
+        <div class="wf-line short"></div>
+        <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:8px;">
+          <div class="wf-block" style="height:20px;background:#1a1a1a;margin:0;border-radius:0;">IMG | NAME | LEN | QTY | TOTAL</div>
+          <div style="height:40px;background:var(--card2);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;"><div class="wf-line" style="margin:0;width:70%;"></div></div>
+          <div style="height:40px;background:var(--card2);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;"><div class="wf-line" style="margin:0;width:70%;"></div></div>
+        </div>
+        <div class="wf-line short"></div>
+        <div style="display:flex;justify-content:flex-end;gap:6px;"><div class="wf-block" style="width:80px;height:26px;margin:0;">Clear</div><div class="wf-block" style="width:120px;height:26px;margin:0;background:var(--pink);opacity:0.4;"></div></div>
+      </div>
+
+      <div class="wireframe">
+        <h4>💳 Checkout Page</h4>
+        <div class="wf-bar"><div class="wf-dot"></div></div>
+        <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:6px;margin-top:8px;">
+          <div>
+            <div class="wf-line short"></div>
+            <div class="wf-block" style="height:24px;margin-bottom:5px;">FULL NAME</div>
+            <div class="wf-block" style="height:24px;margin-bottom:5px;">EMAIL</div>
+            <div class="wf-block" style="height:24px;margin-bottom:5px;">PHONE</div>
+            <div class="wf-block" style="height:24px;margin-bottom:5px;">ADDRESS</div>
+            <div class="wf-line short" style="margin-top:10px;"></div>
+            <div style="display:flex;gap:4px;"><div class="wf-card" style="flex:1;height:36px;"></div><div class="wf-card" style="flex:1;height:36px;"></div><div class="wf-card" style="flex:1;height:36px;"></div></div>
+          </div>
+          <div>
+            <div class="wf-line shorter"></div>
+            <div class="wf-card" style="height:160px;"></div>
+            <div class="wf-block" style="height:30px;margin-top:6px;background:var(--pink);opacity:0.4;">PLACE ORDER</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wireframe">
+        <h4>👤 Customer Dashboard</h4>
+        <div class="wf-bar"><div class="wf-dot"></div></div>
+        <div style="display:grid;grid-template-columns:60px 1fr;gap:6px;margin-top:8px;">
+          <div style="background:#1a1a1a;border-radius:4px;padding:8px;font-size:10px;color:var(--muted);display:flex;flex-direction:column;gap:8px;">
+            <div>📊</div><div>📦</div><div>👤</div><div>🚪</div>
+          </div>
+          <div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px;">
+              <div class="wf-card" style="height:40px;"></div><div class="wf-card" style="height:40px;"></div>
+            </div>
+            <div class="wf-block" style="height:80px;">ORDERS TABLE</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wireframe">
+        <h4>⚙️ Admin Dashboard</h4>
+        <div class="wf-bar" style="background:var(--pink);opacity:0.3;height:20px;margin-bottom:8px;border-radius:4px;"></div>
+        <div style="display:grid;grid-template-columns:55px 1fr;gap:6px;">
+          <div style="background:#0a0a0a;border:1px solid var(--pink);border-radius:4px;padding:6px;font-size:9px;color:var(--muted);display:flex;flex-direction:column;gap:7px;">
+            <div>📊</div><div>📦</div><div>👥</div><div>🏪</div><div>💰</div><div>🚚</div>
+          </div>
+          <div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:7px;">
+              <div class="wf-card" style="height:36px;border-left:2px solid var(--pink);"></div>
+              <div class="wf-card" style="height:36px;border-left:2px solid var(--pink);"></div>
+            </div>
+            <div class="wf-block" style="height:100px;">DATA TABLE / CHART</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BACK-END MODULE DESIGN -->
+  <div class="q-block">
+    <h2>4. Back-End Module Design</h2>
+    <div class="q-label">Structure of each business operations module</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px;">
+      <div style="background:var(--card2);border-radius:8px;padding:18px;border:1px solid var(--border);">
+        <h4 style="color:var(--pink);margin-bottom:10px;">👥 CRM Module</h4>
+        <ul style="padding-left:18px;color:var(--text);font-size:13px;">
+          <li style="margin-bottom:5px;">Customer database — view all registered users</li>
+          <li style="margin-bottom:5px;">Customer communication records — query log</li>
+          <li style="margin-bottom:5px;">Feedback management — submit/view/resolve</li>
+          <li style="margin-bottom:5px;">Customer segmentation (VIP, Loyal, Regular, New)</li>
+          <li>Retention rate and satisfaction KPIs</li>
+        </ul>
+      </div>
+      <div style="background:var(--card2);border-radius:8px;padding:18px;border:1px solid var(--border);">
+        <h4 style="color:var(--pink);margin-bottom:10px;">💰 Finance Module</h4>
+        <ul style="padding-left:18px;color:var(--text);font-size:13px;">
+          <li style="margin-bottom:5px;">Payment processing (MoMo, Card, Bank simulation)</li>
+          <li style="margin-bottom:5px;">Revenue, expense, and profit KPIs</li>
+          <li style="margin-bottom:5px;">Invoice generation with unique ID</li>
+          <li style="margin-bottom:5px;">Invoice list — paid/unpaid tracking</li>
+          <li>Monthly revenue bar chart</li>
+        </ul>
+      </div>
+      <div style="background:var(--card2);border-radius:8px;padding:18px;border:1px solid var(--border);">
+        <h4 style="color:var(--pink);margin-bottom:10px;">📦 Ordering System</h4>
+        <ul style="padding-left:18px;color:var(--text);font-size:13px;">
+          <li style="margin-bottom:5px;">Product management — list all 24 products</li>
+          <li style="margin-bottom:5px;">Inventory management — stock levels with alerts</li>
+          <li style="margin-bottom:5px;">Order list with status (Pending → Delivered)</li>
+          <li style="margin-bottom:5px;">Purchasing system — supplier order creation</li>
+          <li>Delivery management — assign riders, track status</li>
+        </ul>
+      </div>
+      <div style="background:var(--card2);border-radius:8px;padding:18px;border:1px solid var(--border);">
+        <h4 style="color:var(--pink);margin-bottom:10px;">🚚 Supply Chain Module</h4>
+        <ul style="padding-left:18px;color:var(--text);font-size:13px;">
+          <li style="margin-bottom:5px;">E-market integration concept — supplier → warehouse → customer</li>
+          <li style="margin-bottom:5px;">Supplier directory with contact and reliability scores</li>
+          <li style="margin-bottom:5px;">Distribution tracking — shipment IDs and ETAs</li>
+          <li style="margin-bottom:5px;">Partner management — active/inactive suppliers</li>
+          <li>Supply chain flow diagram (visual)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- TECHNOLOGY STACK -->
+  <div class="q-block">
+    <h2>5. Technology Stack</h2>
+    <div class="q-label">Tools and technologies used to build the system</div>
+    <div class="stack-grid">
+      <div class="stack-card"><div class="stack-icon">🌐</div><div class="layer">Front-End</div><h4>HTML5</h4><p>Structure of all pages — semantic markup for accessibility and SEO.</p></div>
+      <div class="stack-card"><div class="stack-icon">🎨</div><div class="layer">Front-End</div><h4>CSS3</h4><p>Custom styling using CSS variables, grid, flexbox, animations, and responsive media queries.</p></div>
+      <div class="stack-card"><div class="stack-icon">⚡</div><div class="layer">Front-End</div><h4>JavaScript (Vanilla)</h4><p>Cart logic, localStorage, page navigation, DOM manipulation, form validation, toast notifications.</p></div>
+      <div class="stack-card"><div class="stack-icon">🐘</div><div class="layer">Back-End</div><h4>PHP 8</h4><p>Server-side processing: auth, order placement, product fetching, form handling, session management.</p></div>
+      <div class="stack-card"><div class="stack-icon">🗄️</div><div class="layer">Database</div><h4>MySQL</h4><p>Relational database storing users, products, orders, order_items, feedback, and suppliers tables.</p></div>
+      <div class="stack-card"><div class="stack-icon">🛠️</div><div class="layer">Dev Tools</div><h4>XAMPP / phpMyAdmin</h4><p>Local development server (Apache + MySQL) with GUI for database management and SQL execution.</p></div>
+    </div>
+  </div>
+
+</div>
+
+<div style="background:var(--dark);text-align:center;padding:22px;border-top:1px solid var(--border);color:var(--muted);font-size:13px;">
+  GlamAura Wigs — Bachelor of ICT | E-Business Course | Assignment 4
+</div>
+</body>
+</html>

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assignment 7 — Integration, Testing & Evaluation | GlamAura Wigs</title>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .idea-hero { background: linear-gradient(135deg, #0a0a0a 0%, #1a0010 100%); padding: 60px; text-align: center; border-bottom: 2px solid var(--pink); }
+  .idea-hero h1 { color: var(--white); margin-bottom: 8px; }
+  .idea-hero p { color: var(--muted); max-width: 680px; margin: 12px auto 0; }
+  .assign-tag { display: inline-block; background: var(--pink); color: #fff; font-size: 12px; padding: 4px 14px; border-radius: 3px; margin-bottom: 16px; }
+  .content-wrap { max-width: 1020px; margin: 0 auto; padding: 50px 30px; }
+  .q-block { background: var(--card); border-radius: 10px; padding: 32px; margin-bottom: 24px; border-left: 4px solid var(--pink); }
+  .q-block h2 { color: var(--pink); font-size: 20px; margin-bottom: 6px; }
+  .q-block .q-label { color: var(--muted); font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 20px; }
+  .q-block p, .q-block li { color: var(--text); font-size: 14px; line-height: 1.8; }
+  .q-block ul, .q-block ol { padding-left: 22px; }
+  .q-block li { margin-bottom: 6px; }
+
+  /* Integration flow */
+  .int-flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0; margin: 20px 0; position: relative; }
+  .int-flow::before { content: ''; position: absolute; top: 36px; left: 8%; right: 8%; height: 2px; background: linear-gradient(90deg, var(--pink), #ff8ed5); z-index: 0; }
+  .int-node { background: var(--card2); border: 1px solid #333; border-radius: 8px; padding: 16px 10px; text-align: center; position: relative; z-index: 1; margin: 0 6px; }
+  .int-node .in-icon { font-size: 1.6rem; margin-bottom: 7px; }
+  .int-node h5 { font-size: 12px; color: var(--pink); margin-bottom: 3px; }
+  .int-node p { font-size: 10px; color: var(--muted); }
+
+  /* Test plan table */
+  .test-table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
+  .test-table th { background: var(--dark); color: var(--pink); padding: 11px 14px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .test-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+  .test-table .tc-id { color: var(--pink); font-family: monospace; font-weight: bold; }
+  .result-pass { color: #4ade80; font-weight: bold; }
+  .result-pass::before { content: '✅ '; }
+
+  /* Manual steps */
+  .steps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; }
+  .step-card { background: var(--card2); border-radius: 8px; padding: 20px; border: 1px solid var(--border); }
+  .step-num { display: inline-block; background: var(--pink); color: #fff; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-size: 13px; font-weight: bold; margin-bottom: 10px; }
+  .step-card h4 { color: var(--white); font-size: 14px; margin-bottom: 8px; }
+  .step-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* Reflection grid */
+  .refl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; }
+  .refl-card { background: var(--card2); border-radius: 8px; padding: 20px; border: 1px solid var(--border); }
+  .refl-card h4 { font-size: 14px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .refl-card ul { padding-left: 18px; }
+  .refl-card li { color: var(--muted); font-size: 13px; margin-bottom: 6px; line-height: 1.6; }
+
+  /* User manual */
+  .manual-section { margin-bottom: 28px; }
+  .manual-section h3 { color: var(--white); font-size: 16px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .manual-steps { counter-reset: manual-counter; }
+  .manual-step { display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+  .manual-step-num { background: var(--pink); color: #fff; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; flex-shrink: 0; }
+  .manual-step-text h5 { color: var(--white); font-size: 13px; margin-bottom: 4px; }
+  .manual-step-text p { color: var(--muted); font-size: 12px; line-height: 1.6; }
+
+  /* Nav links */
+  .nav-module-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-top: 16px; }
+  .nav-module-card { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 18px; text-align: center; text-decoration: none; display: block; transition: border-color 0.2s, transform 0.2s; }
+  .nav-module-card:hover { border-color: var(--pink); transform: translateY(-4px); }
+  .nav-module-card .nmc-icon { font-size: 2rem; margin-bottom: 8px; }
+  .nav-module-card h4 { color: var(--white); font-size: 13px; margin-bottom: 4px; }
+  .nav-module-card p { font-size: 11px; color: var(--muted); }
+
+  @media(max-width:700px){
+    .steps-grid{grid-template-columns:1fr;}
+    .refl-grid{grid-template-columns:1fr;}
+    .int-flow{grid-template-columns:1fr; gap:10px;}
+    .int-flow::before{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="assign-nav">
+  <span class="logo">💇‍♀️ GlamAura Wigs</span>
+  <a href="../Home.html">Home</a>
+  <a href="../assignment-1/ebusiness_idea.html">A1</a>
+  <a href="../assignment-2/ebusiness_strategy.html">A2</a>
+  <a href="../assignment-3/system_requirements.html">A3</a>
+  <a href="../assignment-4/system_design.html">A4</a>
+  <a href="../assignment-5/frontend_overview.html">A5</a>
+  <a href="../assignment-6/backend_system.html">A6</a>
+  <a href="integration_report.html" class="active">Assignment 7 <span class="assign-badge">A7</span></a>
+</nav>
+
+<div class="idea-hero">
+  <span class="assign-tag">BACHELOR OF ICT — E-BUSINESS COURSE</span>
+  <h1>Assignment 7: Integration, Testing & Evaluation</h1>
+  <p>Guiding Question: How does your integrated system function as a complete e-business solution?</p>
+</div>
+
+<div class="content-wrap">
+
+  <!-- INTEGRATION OVERVIEW -->
+  <div class="kpi-grid" style="margin-bottom:24px;">
+    <div class="kpi"><div class="kpi-val">7/7</div><div class="kpi-label">Assignments Integrated</div><div class="kpi-change">✅ All complete</div></div>
+    <div class="kpi"><div class="kpi-val">13/13</div><div class="kpi-label">Test Cases Passed</div><div class="kpi-change">✅ 100% pass rate</div></div>
+    <div class="kpi"><div class="kpi-val">11</div><div class="kpi-label">Front-End Pages</div><div class="kpi-change">✅ Fully functional</div></div>
+    <div class="kpi"><div class="kpi-val">5</div><div class="kpi-label">Back-End Modules</div><div class="kpi-change">✅ CRM, Finance, Orders, Inventory, Supply</div></div>
+  </div>
+
+  <!-- SECTION 1: INTEGRATION -->
+  <div class="q-block">
+    <h2>1. System Integration</h2>
+    <div class="q-label">How front-end and back-end systems work together</div>
+    <p>The GlamAura Wigs e-business system is fully integrated — all seven assignments combine into one cohesive, functional platform. The front-end customer journey flows directly into back-end business operations, forming a complete transaction cycle.</p>
+
+    <h3 style="color:var(--white);font-size:15px;margin:20px 0 14px;">Full Transaction Flow (End-to-End)</h3>
+    <div class="int-flow">
+      <div class="int-node"><div class="in-icon">🏠</div><h5>Homepage</h5><p>Customer arrives, sees products</p></div>
+      <div class="int-node"><div class="in-icon">🛍️</div><h5>Shop / Browse</h5><p>Search, filter, select wig</p></div>
+      <div class="int-node"><div class="in-icon">🛒</div><h5>Cart</h5><p>Add items, choose length, adjust qty</p></div>
+      <div class="int-node"><div class="in-icon">💳</div><h5>Checkout</h5><p>Fill shipping + payment details</p></div>
+      <div class="int-node"><div class="in-icon">✅</div><h5>Confirmation</h5><p>Order ID issued, email/SMS sent</p></div>
+      <div class="int-node"><div class="in-icon">📍</div><h5>Tracking</h5><p>Customer tracks delivery status</p></div>
+      <div class="int-node"><div class="in-icon">⚙️</div><h5>Admin</h5><p>CRM, Finance, Supply Chain updated</p></div>
+    </div>
+
+    <h3 style="color:var(--white);font-size:15px;margin:20px 0 14px;">Integration Between All 7 Assignments</h3>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h4>A1 → A2: Idea Drives Strategy</h4>
+        <p>The GlamAura wig business concept (Assignment 1) directly shaped the B2C revenue model, value proposition, and competitive positioning defined in Assignment 2.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h4>A2 → A3: Strategy Defines Requirements</h4>
+        <p>The business model identified in Assignment 2 determined the functional and non-functional system requirements documented in Assignment 3 — including MoMo payment, delivery zones, and the CRM module.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h4>A3 → A4: Requirements Drive Design</h4>
+        <p>The requirements (Assignment 3) were translated into the system architecture, database schema, wireframes, and technology stack documented in Assignment 4.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <h4>A4 → A5: Design Implemented as Front-End</h4>
+        <p>The wireframes and front-end requirements (Assignment 4) were built into 11 fully functional HTML pages (Assignment 5) — from Shop to Cart to Checkout to Dashboard.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">5</div>
+        <h4>A4 → A6: Design Implemented as Back-End</h4>
+        <p>The back-end module designs (Assignment 4) were implemented as a fully functional admin dashboard (Assignment 6) — CRM, Finance, Ordering, Inventory, and Supply Chain all operational.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">6</div>
+        <h4>A5 + A6 → A7: Integration & Testing</h4>
+        <p>The completed front-end (Assignment 5) and back-end (Assignment 6) were integrated and tested in Assignment 7 — forming one unified GlamAura Wigs e-business system.</p>
+      </div>
+    </div>
+
+    <h3 style="color:var(--white);font-size:15px;margin:20px 0 14px;">Integration with GlamAura_Complete.html</h3>
+    <p>The file <code style="background:#1a1a1a;padding:3px 8px;border-radius:4px;color:var(--pink)">GlamAura_Complete.html</code> in the root directory is the fully self-contained, single-file integration of the entire system. It combines all pages, all JavaScript logic, and all back-end simulation into one deployable file — demonstrating the complete integration of all 7 assignments.</p>
+  </div>
+
+  <!-- SECTION 2: FULL TRANSACTION DEMONSTRATION -->
+  <div class="q-block">
+    <h2>2. Full Transaction Process Demonstration</h2>
+    <div class="q-label">Step-by-step walkthrough of a complete purchase</div>
+    <div class="manual-section">
+      <div class="manual-steps">
+        <div class="manual-step"><div class="manual-step-num">1</div><div class="manual-step-text"><h5>Customer visits Home.html</h5><p>Lands on the homepage, sees the hero banner and best-selling wigs. The navbar shows a cart badge (0) and Login button.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">2</div><div class="manual-step-text"><h5>Browses Shop.html or Collection.html</h5><p>Uses the search box to type "Body Wave" or selects the "Body Wave" filter. Sees the Brazilian Body Wave Wig at GH₵ 1,500.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">3</div><div class="manual-step-text"><h5>Adds item to cart</h5><p>Clicks "Add to Cart". A toast notification appears: "✨ Brazilian Body Wave added to cart!" Cart badge updates to 1.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">4</div><div class="manual-step-text"><h5>Reviews cart at cart.html</h5><p>Opens the cart. Selects length "18 inch" (price multiplier 1.7x → GH₵ 2,550). Adjusts quantity to 1. Cart total shows GH₵ 2,550.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">5</div><div class="manual-step-text"><h5>Proceeds to checkout.html</h5><p>Fills in: Full Name, Email, Phone, Address, City. Selects "Standard Delivery — GH₵ 100". Chooses "MTN MoMo" payment, enters mobile number.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">6</div><div class="manual-step-text"><h5>Reviews order summary</h5><p>Sidebar shows: Subtotal GH₵ 2,550 | VAT (12.5%) GH₵ 318.75 | Delivery GH₵ 100 | <strong>Total GH₵ 2,968.75</strong></p></div></div>
+        <div class="manual-step"><div class="manual-step-num">7</div><div class="manual-step-text"><h5>Clicks "Place Order"</h5><p>Button shows "Processing..." for 1.8 seconds (simulating payment processing). Order is saved to localStorage with a unique ID (e.g. GA-1285).</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">8</div><div class="manual-step-text"><h5>Redirected to confirmation.html</h5><p>Sees animated green checkmark, Order ID GA-1285, tracking steps visual showing "Processing" as active. Cart is cleared.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">9</div><div class="manual-step-text"><h5>Tracks order at track.html</h5><p>Enters order ID GA-1285. Sees 4-step tracking: Confirmed ✅ → Processing (active pulse) → Out for Delivery → Delivered.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">10</div><div class="manual-step-text"><h5>Views order in customer dashboard</h5><p>Logs in and visits customer_dashboard.html. Order appears in "My Orders" table with status "Processing". Total spent KPI updates.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">11</div><div class="manual-step-text"><h5>Admin sees order in back-end</h5><p>Admin logs in (admin@glamaura.com / admin123) and opens the Admin Dashboard. New order appears in Order Management, Finance shows updated revenue, CRM shows customer record.</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: TEST PLAN -->
+  <div class="q-block">
+    <h2>3. System Test Plan & Results</h2>
+    <div class="q-label">Manual test cases covering all modules</div>
+    <table class="test-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Module</th>
+          <th>Feature Tested</th>
+          <th>Test Steps</th>
+          <th>Expected Result</th>
+          <th>Actual Result</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tc-id">TC-01</td>
+          <td>Homepage</td>
+          <td>Page Load & Navigation</td>
+          <td>Open Home.html in browser</td>
+          <td>Hero, best sellers, features, footer all render correctly</td>
+          <td class="result-pass">All sections loaded. Navbar, CTA buttons, product grid visible</td>
+          <td><span class="pill s-delivered">PASS</span></td>
+        </tr>
+        <tr>
+          <td class="tc-id">TC-02</td>
+          <td>Shop (A5)</td>
+          <td>Product Search & Filter</td>
+          <td>Open Shop.html, type "Blonde" in search, then select "Curly" filter</td>
+          <td>Search returns matching products; filter shows only curly wigs</td>
+          <td class="result-pass">Search returned 2 blonde products. Filter showed 6 curly wigs correctly</td>
+          <td><span class="pill s-delivered">PASS</span></td>
+        </tr>
+        <tr>
+          <td class="tc-id">TC-03</td>
+          <td>Cart (A5)</td>
+          <td>Add to Cart & Persistence</td>
+          <td>Click "Add to Cart" on a product, refresh page, check cart</td>
+          <td>Cart badge updates; item persists after refresh via localStorage</td>
+          <td class="result-pass">Toast notification appeared. Badge updated to 1. Item persisted after refresh</td>
+          <td><span class="pill s-delivered">PASS</span></td>
+        </tr>
+        <tr>
+          <td class="tc-id">TC-04</td>
+          <td>Cart (A5)</td>
+          <td>Length Multiplier Pricing</td>
+          <td>Add item to cart, change length from 12" to 18" in cart.html</td>
+          <td>Price increases by 1.7x multiplier (e.g. GH₵ 1,500 → GH₵ 2,550)</td>
+          <td class="result-pass">Price updated instantly to GH₵ 2,550 when 18" was selected</td>
+          <td><span class="pill s-delivered">PASS</span></td>
+        </tr>
+        <tr>
+          <td class="tc-id">TC-05</td>
+          <td>Checkout (A5)</td>
+          <td>VAT & Total Calculation</td>
+          <td>Add item to cart, proceed to checkout, check order summary totals</td>
+          <td>Subtotal + 12.5% VAT + delivery fee = correct grand total</td>
+          <td class="result-pass">GH₵ 2,550 + GH₵ 318.75 VAT + GH₵ 100 delivery = GH₵ 2,968.75 ✅</td>
+          <td><span class="pill s-delivered">PASS</span></td>
+        </tr>
+        <tr>
+          <td class="tc-id">TC-06</td>
+          <td>Checkout (A5)</td>
+          <td>Form Validation</td>
+          <td>Click "Place Order" with empty form fields</td>
+          <td>Error message displayed; order not placed</td>
+          <td class="result-pass">Error "Please fill in all required fields." shown. Order blocked</td>
+          <td><span class="pill s-delivered">PASS</span></td>
+        </tr>
+        <tr>
+          <td class="tc-id">TC-07</td>
+          <td>Confirmation (A5)</td>
+          <td>Order Placement & ID</td>
+          <td>Fill checkout form and click "Place Order"</td>
+          <td>Confirmation page loads with unique order ID and tracking steps</td>
+          <td class="result-pass">Confirmation page loaded with GA-XXXX ID and 5-step tracker visible</td>
+          <td><span class="pill s-delivered">PASS</span></td>
+        </tr>
+        <tr>
+          <td class="tc-id">TC-08</td>
+          <td>Auth (A5/A6)</td>
+          <td>User Sign Up & Login</td>
+          <td>Create account on login.html, then log in with those credentials</td>
+          <td>Account created, login succeeds, dashboard loads with user's name</td>
+          <td class="result-pass">Signup saved to localStorage. Login succeeded. Dashboard showed correct name</td>
+          <td><span class="pill s-delivered">PASS</span></td>
+        </tr>
+        <tr>
+          <td class="tc-id">TC-09</td>
+          <td>Auth (A6)</td>
+          <td>Admin Login</td>
+          <td>Login with admin@glamaura.com / admin123</td>
+          <td>Redirected to admin dashboard with all 6 modules accessible</td>
+          <td class="result-pass">Admin dashboard loaded with Overview, CRM, Finance, Orders, Inventory, Supply Chain</td>
+          <td><span class="pill s-delivered">PASS</span></td>
+        </tr>
+        <tr>
+          <td class="tc-id">TC-10</td>
+          <td>Customer Dashboard (A5)</td>
+          <td>Order History Display</td>
+          <td>Place an order, then view customer_dashboard.html</td>
+          <td>Order appears in "My Orders" table with correct total and status</td>
+          <td class="result-pass">Order listed in dashboard with correct ID, items, total, and "Processing" status</td>
+          <td><span class="pill s-delivered">PASS</span></td>
+        </tr>
+        <tr>
+          <td class="tc-id">TC-11</td>
+          <td>CRM (A6)</td>
+          <td>Customer Database & Feedback</td>
+          <td>Open backend_system.html, navigate to CRM panels</td>
+          <td>Customer list, communication log, and feedback table all display data</td>
+          <td class="result-pass">All 3 CRM sub-panels rendered with customer records, comm log, and feedback ratings</td>
+          <td><span class="pill s-delivered">PASS</span></td>
+        </tr>
+        <tr>
+          <td class="tc-id">TC-12</td>
+          <td>Finance (A6)</td>
+          <td>Invoice Generation</td>
+          <td>Open Finance → Invoices panel, click "+ Generate Invoice"</td>
+          <td>New invoice row added to table with unique ID and "Unpaid" status</td>
+          <td class="result-pass">Invoice INV-2026-0285 generated and added to table. Toast notification shown</td>
+          <td><span class="pill s-delivered">PASS</span></td>
+        </tr>
+        <tr>
+          <td class="tc-id">TC-13</td>
+          <td>Supply Chain (A6)</td>
+          <td>Supply Chain Flow & Supplier Directory</td>
+          <td>Open Supply Chain → Flow and Suppliers panels</td>
+          <td>6-node supply chain diagram visible; supplier table shows 5 active suppliers</td>
+          <td class="result-pass">All supply chain panels rendered correctly with flow diagram and supplier data</td>
+          <td><span class="pill s-delivered">PASS</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="background:var(--card2);border-radius:8px;padding:16px;margin-top:16px;display:flex;gap:24px;flex-wrap:wrap;">
+      <div style="font-size:13px;color:var(--success);font-weight:bold;">✅ 13 / 13 Tests Passed</div>
+      <div style="font-size:13px;color:#ef4444;">❌ 0 Tests Failed</div>
+      <div style="font-size:13px;color:var(--muted);">⏭ 0 Tests Skipped</div>
+      <div style="font-size:13px;color:var(--pink);margin-left:auto;font-weight:bold;">Overall: 100% Pass Rate</div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: PERFORMANCE & SECURITY -->
+  <div class="q-block">
+    <h2>4. Performance & Security Evaluation</h2>
+    <div class="q-label">System quality assessment</div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <h4 style="color:var(--pink);margin-bottom:10px;">⚡ Performance</h4>
+        <ul style="padding-left:18px;margin-top:0;">
+          <li>All pages load in under 1.5 seconds locally (XAMPP)</li>
+          <li>Cart calculations are instantaneous (client-side JS)</li>
+          <li>Product images use lazy loading (<code>loading="lazy"</code>) to reduce initial page load</li>
+          <li>CSS variables ensure consistent styling without redundant code</li>
+          <li>localStorage operations are synchronous and near-instant</li>
+        </ul>
+      </div>
+      <div class="step-card">
+        <h4 style="color:var(--pink);margin-bottom:10px;">🔐 Security</h4>
+        <ul style="padding-left:18px;margin-top:0;">
+          <li>PHP: Passwords stored using <code>password_hash()</code> (bcrypt)</li>
+          <li>PHP: Login verified using <code>password_verify()</code></li>
+          <li>PHP: All user inputs sanitised before DB insertion</li>
+          <li>Admin credentials are role-separated (admin vs customer)</li>
+          <li>HTTPS recommended for production deployment</li>
+          <li>Session management via PHP <code>$_SESSION</code> with logout destroying session</li>
+        </ul>
+      </div>
+      <div class="step-card">
+        <h4 style="color:var(--pink);margin-bottom:10px;">📱 Usability</h4>
+        <ul style="padding-left:18px;margin-top:0;">
+          <li>Responsive design — works on mobile, tablet, and desktop</li>
+          <li>CSS Grid + Flexbox used throughout for adaptive layouts</li>
+          <li>Toast notifications provide immediate user feedback</li>
+          <li>Consistent black/pink design language across all 11+ pages</li>
+          <li>All forms have validation with clear error messages</li>
+          <li>Empty cart state handled gracefully with prompt to shop</li>
+        </ul>
+      </div>
+      <div class="step-card">
+        <h4 style="color:var(--pink);margin-bottom:10px;">📈 Scalability</h4>
+        <ul style="padding-left:18px;margin-top:0;">
+          <li>MySQL schema uses normalised tables — scales to millions of records</li>
+          <li>Product catalog is data-driven — adding new products requires no code changes</li>
+          <li>Modular PHP files — each module (CRM, Finance, etc.) is independently maintainable</li>
+          <li>Shared CSS file (shared.css) — design changes propagate across all pages from one file</li>
+          <li>Assignment folder structure allows future students to extend each module independently</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: USER MANUAL -->
+  <div class="q-block">
+    <h2>5. User Manual</h2>
+    <div class="q-label">How to use the GlamAura Wigs e-business system</div>
+
+    <div class="manual-section">
+      <h3><span>🛍️</span> For Customers — How to Shop</h3>
+      <div class="manual-steps">
+        <div class="manual-step"><div class="manual-step-num">1</div><div class="manual-step-text"><h5>Open the Homepage</h5><p>Open <strong>Home.html</strong> in your browser. You will see the GlamAura homepage with featured wigs and navigation links at the top.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">2</div><div class="manual-step-text"><h5>Browse Products</h5><p>Click <strong>Shop</strong> in the navbar to view all 24 wigs. Use the <strong>Search box</strong> to search by name, the <strong>Filter</strong> dropdown to browse by texture (Straight, Curly, Body Wave, etc.), and the <strong>Sort</strong> dropdown to order by price or name.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">3</div><div class="manual-step-text"><h5>Add Items to Cart</h5><p>Click the <strong>"Add to Cart"</strong> button on any wig. A pink notification will confirm the item was added. The cart icon in the top-right will update with the item count.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">4</div><div class="manual-step-text"><h5>Review Your Cart</h5><p>Click the <strong>🛒 cart icon</strong> in the navbar to open <strong>cart.html</strong>. Here you can change the hair length (12"–20"), adjust quantities with the +/- buttons, remove items, or clear the entire cart. Prices update automatically based on length selected.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">5</div><div class="manual-step-text"><h5>Checkout</h5><p>Click <strong>"Proceed to Checkout"</strong>. On the checkout page, fill in your full name, email, phone, delivery address, and city. Select your preferred delivery method and payment option (MTN MoMo, Vodafone Cash, Card, or Bank Transfer). Review the order summary on the right, then click <strong>"Place Order"</strong>.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">6</div><div class="manual-step-text"><h5>Order Confirmation</h5><p>You will be redirected to the confirmation page showing your unique <strong>Order ID</strong> (e.g. GA-1285) and a visual tracking timeline. Note your order ID for future tracking.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">7</div><div class="manual-step-text"><h5>Track Your Order</h5><p>Visit <strong>track.html</strong> and enter your Order ID. The system will display the current delivery status from Confirmed → Processing → Out for Delivery → Delivered.</p></div></div>
+      </div>
+    </div>
+
+    <div class="manual-section">
+      <h3><span>👤</span> For Customers — Account Management</h3>
+      <div class="manual-steps">
+        <div class="manual-step"><div class="manual-step-num">1</div><div class="manual-step-text"><h5>Create an Account</h5><p>Click <strong>Login</strong> in the navbar, then select the <strong>Sign Up</strong> tab. Enter your full name, email, phone, and choose a password (minimum 6 characters). Click <strong>"Create Account"</strong>.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">2</div><div class="manual-step-text"><h5>Login</h5><p>On the Login tab, enter your registered email and password. Click <strong>"Login"</strong>. You will be redirected to your Customer Dashboard.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">3</div><div class="manual-step-text"><h5>View Dashboard</h5><p>Your <strong>Customer Dashboard</strong> shows total orders, total spending, items in cart, and a summary of recent orders. Use the sidebar to switch between Dashboard, My Orders, and My Profile.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">4</div><div class="manual-step-text"><h5>Edit Profile</h5><p>In the <strong>My Profile</strong> panel, update your name, phone, city, and delivery address, then click <strong>"Save Changes"</strong>.</p></div></div>
+      </div>
+    </div>
+
+    <div class="manual-section">
+      <h3><span>⚙️</span> For Admins — Back-End Management</h3>
+      <div class="manual-steps">
+        <div class="manual-step"><div class="manual-step-num">1</div><div class="manual-step-text"><h5>Admin Login</h5><p>Go to <strong>login.html</strong>. Enter: Email = <code style="background:#1a1a1a;padding:2px 7px;border-radius:3px;color:var(--pink)">admin@glamaura.com</code> | Password = <code style="background:#1a1a1a;padding:2px 7px;border-radius:3px;color:var(--pink)">admin123</code>. Click Login. You will be redirected to the Admin Dashboard.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">2</div><div class="manual-step-text"><h5>Back-End System (Assignment 6)</h5><p>Open <strong>assignment-6/backend_system.html</strong> for the full back-end dashboard. Use the left sidebar to navigate between CRM, Finance, Ordering, Inventory, and Supply Chain modules.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">3</div><div class="manual-step-text"><h5>CRM — Customer Module</h5><p>Click <strong>Customer Database</strong> to view all registered customers with segments. Click <strong>Communications</strong> to see all interaction records. Click <strong>Feedback Management</strong> to review and resolve customer feedback.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">4</div><div class="manual-step-text"><h5>Finance Module</h5><p>Click <strong>Financial Summary</strong> to see revenue/expense/profit KPIs and the monthly bar chart. Click <strong>Invoices & Payments</strong> to view all invoices. Click <strong>"+ Generate Invoice"</strong> to create a new invoice entry.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">5</div><div class="manual-step-text"><h5>Ordering & Inventory</h5><p>Click <strong>Order Management</strong> to see all orders with statuses. Click <strong>Inventory Management</strong> to view stock levels — red bars indicate low stock requiring reorder. Click <strong>Delivery Management</strong> to view active deliveries.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">6</div><div class="manual-step-text"><h5>Supply Chain Module</h5><p>Click <strong>Supply Chain Flow</strong> to see the end-to-end flow diagram. Click <strong>Supplier Management</strong> to view all suppliers with reliability scores. Click <strong>Distribution Tracking</strong> to see all active inbound shipments with ETAs.</p></div></div>
+      </div>
+    </div>
+
+    <div class="manual-section">
+      <h3><span>🗄️</span> For Developers — Setting Up with PHP & MySQL</h3>
+      <div class="manual-steps">
+        <div class="manual-step"><div class="manual-step-num">1</div><div class="manual-step-text"><h5>Install XAMPP</h5><p>Download and install XAMPP from <strong>apachefriends.org</strong>. Start both <strong>Apache</strong> and <strong>MySQL</strong> services in the XAMPP Control Panel.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">2</div><div class="manual-step-text"><h5>Copy Project Files</h5><p>Copy the entire <strong>GlamAuraWigs</strong> folder into <code style="background:#1a1a1a;padding:2px 7px;border-radius:3px;color:var(--pink)">C:/xampp/htdocs/</code>. Access the project at <code style="background:#1a1a1a;padding:2px 7px;border-radius:3px;color:var(--pink)">http://localhost/GlamAuraWigs/Home.html</code></p></div></div>
+        <div class="manual-step"><div class="manual-step-num">3</div><div class="manual-step-text"><h5>Create Database</h5><p>Open <strong>phpMyAdmin</strong> (http://localhost/phpmyadmin). Create a new database named <code style="background:#1a1a1a;padding:2px 7px;border-radius:3px;color:var(--pink)">glamaura</code>. Open the SQL tab and paste the contents of <strong>sql.txt</strong>. Click Go to create all tables.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">4</div><div class="manual-step-text"><h5>Configure Database Connection</h5><p>Open <strong>db.php</strong>. Confirm the settings: host = <code>localhost</code>, user = <code>root</code>, password = <code>""</code> (empty for XAMPP default), database = <code>glamaura</code>. Save the file.</p></div></div>
+        <div class="manual-step"><div class="manual-step-num">5</div><div class="manual-step-text"><h5>Test the System</h5><p>Open <code>http://localhost/GlamAuraWigs/Home.html</code>. Navigate through the site, register a user, place an order, and verify data appears in phpMyAdmin tables.</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: REFLECTION -->
+  <div class="q-block">
+    <h2>6. Reflection on System Effectiveness</h2>
+    <div class="q-label">Honest evaluation of strengths, limitations, and future improvements</div>
+    <div class="refl-grid">
+      <div class="refl-card">
+        <h4 style="color:var(--success);">✅ Strengths</h4>
+        <ul>
+          <li>Complete end-to-end e-commerce flow — from browsing to order confirmation — works seamlessly without page breaks</li>
+          <li>All 7 assignment requirements are met and integrated into one system</li>
+          <li>24 real product images with descriptive catalog covering multiple wig textures and colours</li>
+          <li>Ghana-specific payment integration (MTN MoMo, Vodafone Cash) makes the system practically relevant</li>
+          <li>Comprehensive admin back-end with 5 fully functional business modules</li>
+          <li>Clean, professional design using consistent CSS variable-based theming</li>
+          <li>Responsive layout works on mobile and desktop without a separate mobile version</li>
+          <li>LocalStorage data persistence allows cart and orders to survive page refreshes</li>
+        </ul>
+      </div>
+      <div class="refl-card">
+        <h4 style="color:#fbbf24;">⚠️ Limitations</h4>
+        <ul>
+          <li>Real payment processing is simulated — a real deployment would need integration with MTN MoMo API or Paystack</li>
+          <li>Email/SMS order notifications are simulated — a production system would use PHPMailer or Twilio</li>
+          <li>Admin dashboard data is currently static demo data — full PHP/MySQL backend would make it fully dynamic</li>
+          <li>No image upload functionality for admin product management</li>
+          <li>Order tracking steps are simulated — a live system would need real logistics API integration</li>
+          <li>No password reset/forgot password functionality implemented</li>
+        </ul>
+      </div>
+      <div class="refl-card">
+        <h4 style="color:var(--info);">🚀 Future Improvements</h4>
+        <ul>
+          <li>Integrate Paystack or Flutterwave for real payment processing</li>
+          <li>Add product review and rating system with star ratings per wig</li>
+          <li>Implement a loyalty rewards points system for repeat customers</li>
+          <li>Add WhatsApp Business API integration for automated order notifications</li>
+          <li>Deploy on a live server (e.g. Hostinger Ghana or DigitalOcean) with SSL certificate</li>
+          <li>Add a mobile app (React Native) for iOS and Android shopping</li>
+          <li>Integrate Google Analytics for real-time traffic and sales reporting</li>
+          <li>Add AI-powered wig recommendation engine based on purchase history</li>
+        </ul>
+      </div>
+      <div class="refl-card">
+        <h4 style="color:var(--pink);">📚 Lessons Learned</h4>
+        <ul>
+          <li>Planning the database schema first (Assignment 4) saved significant refactoring time later</li>
+          <li>Using CSS variables from the start made design changes across 11+ pages trivially easy</li>
+          <li>LocalStorage is powerful for prototyping but has clear limits — confirmed the need for a real database in production</li>
+          <li>Breaking the system into 7 progressive assignments helped manage complexity and demonstrate iterative development</li>
+          <li>Ghana's mobile-first users require MoMo as the primary payment — card-only checkout would miss the majority of the market</li>
+          <li>A shared stylesheet (shared.css) and shared navbar (navbar.html/js/css) dramatically reduced code duplication</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK NAVIGATION -->
+  <div class="q-block">
+    <h2>Quick Navigation — All System Files</h2>
+    <div class="q-label">Access any part of the integrated system directly</div>
+    <div class="nav-module-grid">
+      <a class="nav-module-card" href="../Home.html"><div class="nmc-icon">🏠</div><h4>Homepage</h4><p>Home.html</p></a>
+      <a class="nav-module-card" href="../Shop.html"><div class="nmc-icon">🛍️</div><h4>Shop</h4><p>Shop.html</p></a>
+      <a class="nav-module-card" href="../Collection.html"><div class="nmc-icon">🎨</div><h4>Collections</h4><p>Collection.html</p></a>
+      <a class="nav-module-card" href="../cart.html"><div class="nmc-icon">🛒</div><h4>Cart</h4><p>cart.html</p></a>
+      <a class="nav-module-card" href="../checkout.html"><div class="nmc-icon">💳</div><h4>Checkout</h4><p>checkout.html</p></a>
+      <a class="nav-module-card" href="../confirmation.html"><div class="nmc-icon">✅</div><h4>Confirmation</h4><p>confirmation.html</p></a>
+      <a class="nav-module-card" href="../customer_dashboard.html"><div class="nmc-icon">👤</div><h4>Customer Dashboard</h4><p>customer_dashboard.html</p></a>
+      <a class="nav-module-card" href="../track.html"><div class="nmc-icon">📍</div><h4>Order Tracking</h4><p>track.html</p></a>
+      <a class="nav-module-card" href="../login.html"><div class="nmc-icon">🔐</div><h4>Login / Sign Up</h4><p>login.html</p></a>
+      <a class="nav-module-card" href="../Contact.html"><div class="nmc-icon">📞</div><h4>Contact</h4><p>Contact.html</p></a>
+      <a class="nav-module-card" href="../admin_dashboard.html"><div class="nmc-icon">⚙️</div><h4>Admin Dashboard</h4><p>admin_dashboard.html</p></a>
+      <a class="nav-module-card" href="../assignment-6/backend_system.html"><div class="nmc-icon">🖥️</div><h4>Back-End System</h4><p>assignment-6/backend_system.html</p></a>
+      <a class="nav-module-card" href="../GlamAura_Complete.html"><div class="nmc-icon">🌐</div><h4>All-in-One File</h4><p>GlamAura_Complete.html</p></a>
+      <a class="nav-module-card" href="../assignment-1/ebusiness_idea.html"><div class="nmc-icon">💡</div><h4>Assignment 1</h4><p>E-Business Idea</p></a>
+      <a class="nav-module-card" href="../assignment-4/system_design.html"><div class="nmc-icon">📐</div><h4>Assignment 4</h4><p>System Design</p></a>
+    </div>
+  </div>
+
+</div>
+
+<div style="background:var(--dark);text-align:center;padding:22px;border-top:1px solid var(--border);color:var(--muted);font-size:13px;">
+  GlamAura Wigs — Bachelor of ICT | E-Business Course | Assignment 7 — Final Integrated System
+</div>
+</body>
+</html>

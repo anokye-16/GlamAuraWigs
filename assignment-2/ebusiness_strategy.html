@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assignment 2 — Business Model & Strategy | GlamAura Wigs</title>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .idea-hero { background: linear-gradient(135deg, #0a0a0a 0%, #1a0010 100%); padding: 60px; text-align: center; border-bottom: 2px solid var(--pink); }
+  .idea-hero h1 { color: var(--white); margin-bottom: 8px; }
+  .idea-hero p { color: var(--muted); max-width: 620px; margin: 12px auto 0; }
+  .assign-tag { display: inline-block; background: var(--pink); color: #fff; font-size: 12px; padding: 4px 14px; border-radius: 3px; margin-bottom: 16px; }
+  .content-wrap { max-width: 900px; margin: 0 auto; padding: 50px 30px; }
+  .q-block { background: var(--card); border-radius: 10px; padding: 32px; margin-bottom: 24px; border-left: 4px solid var(--pink); }
+  .q-block h2 { color: var(--pink); font-size: 18px; margin-bottom: 6px; }
+  .q-block .q-label { color: var(--muted); font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 18px; }
+  .q-block p, .q-block li { color: var(--text); font-size: 15px; line-height: 1.8; }
+  .q-block ul { padding-left: 22px; }
+  .q-block li { margin-bottom: 6px; }
+  .canvas-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-top: 16px; }
+  .canvas-cell { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
+  .canvas-cell h4 { color: var(--pink); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+  .canvas-cell ul { padding-left: 16px; }
+  .canvas-cell li { color: var(--text); font-size: 13px; margin-bottom: 4px; line-height: 1.5; }
+  .revenue-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-top: 16px; }
+  .rev-card { background: var(--card2); border-radius: 8px; padding: 20px; border: 1px solid var(--border); text-align: center; }
+  .rev-icon { font-size: 2rem; margin-bottom: 10px; }
+  .rev-card h4 { color: var(--white); font-size: 14px; margin-bottom: 6px; }
+  .rev-card p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .competitor-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+  .competitor-table th { background: var(--dark); color: var(--pink); padding: 12px 14px; text-align: left; font-size: 12px; text-transform: uppercase; }
+  .competitor-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--text); font-size: 14px; }
+  .competitor-table .us { color: var(--success); font-weight: bold; }
+  .adv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+  .adv-item { background: var(--card2); border-radius: 8px; padding: 18px; border: 1px solid var(--border); display: flex; gap: 12px; }
+  .adv-icon { font-size: 1.5rem; }
+  .adv-item h4 { color: var(--pink); font-size: 13px; margin-bottom: 5px; }
+  .adv-item p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  @media(max-width:700px){ .canvas-grid{grid-template-columns:1fr;} .adv-grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<nav class="assign-nav">
+  <span class="logo">💇‍♀️ GlamAura Wigs</span>
+  <a href="../Home.html">Home</a>
+  <a href="../assignment-1/ebusiness_idea.html">A1</a>
+  <a href="ebusiness_strategy.html" class="active">Assignment 2 <span class="assign-badge">A2</span></a>
+  <a href="../assignment-3/system_requirements.html">A3</a>
+  <a href="../assignment-4/system_design.html">A4</a>
+  <a href="../assignment-5/frontend_overview.html">A5</a>
+  <a href="../assignment-6/backend_system.html">A6</a>
+  <a href="../assignment-7/integration_report.html">A7</a>
+</nav>
+
+<div class="idea-hero">
+  <span class="assign-tag">BACHELOR OF ICT — E-BUSINESS COURSE</span>
+  <h1>Assignment 2: Business Model & E-Business Strategy</h1>
+  <p>Guiding Question: What business model and digital strategy will your e-business adopt?</p>
+</div>
+
+<div class="content-wrap">
+
+  <!-- Value Proposition -->
+  <div class="q-block">
+    <h2>1. Value Proposition</h2>
+    <div class="q-label">Define value proposition</div>
+    <p>GlamAura Wigs delivers <strong style="color:var(--white)">premium quality human hair wigs at accessible prices</strong>, sold through a fast, convenient online platform — eliminating the need to visit a physical store, hunt through markets, or rely on informal WhatsApp vendors.</p>
+    <p style="margin-top:12px;">Our core value promises to customers:</p>
+    <ul style="margin-top:10px;">
+      <li>💎 <strong style="color:var(--white)">Premium Quality</strong> — Only high-grade human hair and HD lace — verified before dispatch.</li>
+      <li>✨ <strong style="color:var(--white)">Instant Style Confidence</strong> — Pre-styled, ready-to-wear wigs that look natural immediately.</li>
+      <li>🚚 <strong style="color:var(--white)">Fast Delivery</strong> — Same-day and next-day options; order before 10AM, receive by evening.</li>
+      <li>🔐 <strong style="color:var(--white)">Secure & Easy Payment</strong> — MTN MoMo, Vodafone Cash, card, and bank transfer — all trusted.</li>
+      <li>🔄 <strong style="color:var(--white)">7-Day Returns</strong> — Risk-free shopping with no-hassle return policy.</li>
+      <li>👩‍💻 <strong style="color:var(--white)">24/7 Availability</strong> — Shop at midnight before your morning event — we never close.</li>
+    </ul>
+
+    <h3 style="color:var(--white);margin-top:24px;margin-bottom:14px;">Business Model Canvas Overview</h3>
+    <div class="canvas-grid">
+      <div class="canvas-cell">
+        <h4>Key Partners</h4>
+        <ul>
+          <li>Lagos Hair Imports (Nigeria)</li>
+          <li>HD Lace Suppliers (China)</li>
+          <li>Dubai Wigs Co. (UAE)</li>
+          <li>Kinky Curls Ltd (Ghana)</li>
+          <li>MTN / Vodafone (Payments)</li>
+          <li>Delivery Riders (Last Mile)</li>
+        </ul>
+      </div>
+      <div class="canvas-cell">
+        <h4>Key Activities</h4>
+        <ul>
+          <li>Wig procurement & QC</li>
+          <li>Online catalog management</li>
+          <li>Order fulfillment</li>
+          <li>Customer support</li>
+          <li>Marketing & social media</li>
+          <li>Platform maintenance</li>
+        </ul>
+      </div>
+      <div class="canvas-cell">
+        <h4>Value Propositions</h4>
+        <ul>
+          <li>Premium, verified quality</li>
+          <li>Convenient online ordering</li>
+          <li>Fast Ghana-wide delivery</li>
+          <li>MoMo & card payments</li>
+          <li>24/7 availability</li>
+          <li>Expert style advice</li>
+        </ul>
+      </div>
+      <div class="canvas-cell">
+        <h4>Customer Relationships</h4>
+        <ul>
+          <li>Personalized dashboard</li>
+          <li>WhatsApp support</li>
+          <li>Email notifications</li>
+          <li>Loyalty discounts</li>
+          <li>Review & feedback system</li>
+        </ul>
+      </div>
+      <div class="canvas-cell">
+        <h4>Customer Segments</h4>
+        <ul>
+          <li>Working women (25–45)</li>
+          <li>Students (18–27)</li>
+          <li>Brides & event guests</li>
+          <li>Hair loss clients</li>
+          <li>Wig resellers</li>
+          <li>Diaspora shoppers</li>
+        </ul>
+      </div>
+      <div class="canvas-cell">
+        <h4>Revenue Streams</h4>
+        <ul>
+          <li>Direct wig product sales</li>
+          <li>Accessory sales</li>
+          <li>Express delivery fees</li>
+          <li>Wholesale bulk orders</li>
+          <li>Promotional partnerships</li>
+        </ul>
+      </div>
+      <div class="canvas-cell">
+        <h4>Key Resources</h4>
+        <ul>
+          <li>Wig inventory (warehouse)</li>
+          <li>E-commerce website</li>
+          <li>Supplier relationships</li>
+          <li>Brand & social media</li>
+          <li>Delivery fleet</li>
+        </ul>
+      </div>
+      <div class="canvas-cell">
+        <h4>Channels</h4>
+        <ul>
+          <li>GlamAura website</li>
+          <li>Instagram & Facebook</li>
+          <li>WhatsApp Business</li>
+          <li>Google Search (SEO/Ads)</li>
+          <li>Word-of-mouth referrals</li>
+        </ul>
+      </div>
+      <div class="canvas-cell">
+        <h4>Cost Structure</h4>
+        <ul>
+          <li>Wig procurement costs</li>
+          <li>Delivery & logistics</li>
+          <li>Web hosting & domain</li>
+          <li>Marketing & advertising</li>
+          <li>Staff & operations</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Revenue Model -->
+  <div class="q-block">
+    <h2>2. Revenue Model</h2>
+    <div class="q-label">Explain revenue model</div>
+    <p>GlamAura Wigs generates income through the following revenue streams:</p>
+    <div class="revenue-grid">
+      <div class="rev-card"><div class="rev-icon">💇‍♀️</div><h4>Product Sales (Primary)</h4><p>Direct sales of human hair wigs ranging from GH₵ 80 (accessories) to GH₵ 5,000+ (premium wigs). This accounts for ~85% of revenue.</p></div>
+      <div class="rev-card"><div class="rev-icon">📦</div><h4>Delivery Fees</h4><p>Standard delivery (GH₵ 100), Express delivery (GH₵ 200), and Pickup (GH₵ 50). Delivery revenue covers logistics costs.</p></div>
+      <div class="rev-card"><div class="rev-icon">🏪</div><h4>Wholesale / Bulk Orders</h4><p>Resellers and salons ordering 5+ wigs receive a 10–15% bulk discount — driving higher order volumes from business customers.</p></div>
+      <div class="rev-card"><div class="rev-icon">💼</div><h4>Accessory Upsells</h4><p>Wig caps, glue, combs, and care products are upsold at checkout — increasing average order value by ~15%.</p></div>
+    </div>
+    <p style="margin-top:20px;">
+      <strong style="color:var(--white)">Pricing Strategy:</strong> GlamAura uses a <em>value-based pricing</em> model — prices reflect the quality, sourcing, and convenience delivered, rather than simply matching market averages. Promotional discounts (e.g., promo code GLAMAURA10) are used tactically to drive first-time purchases.
+    </p>
+  </div>
+
+  <!-- Competitors -->
+  <div class="q-block">
+    <h2>3. Competitor Analysis</h2>
+    <div class="q-label">Identify competitors</div>
+    <p>GlamAura operates in Ghana's growing online hair market. Key competitors include:</p>
+    <table class="competitor-table">
+      <thead><tr><th>Competitor</th><th>Type</th><th>Strengths</th><th>Weaknesses</th><th>GlamAura Advantage</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Market Wig Vendors</td>
+          <td>Physical / Informal</td>
+          <td>Immediate pickup, negotiable price</td>
+          <td>No delivery, limited selection, no guarantee</td>
+          <td class="us">Online ordering, delivery, quality guarantee</td>
+        </tr>
+        <tr>
+          <td>Instagram Wig Sellers</td>
+          <td>Social Media</td>
+          <td>Strong visual marketing, large following</td>
+          <td>Manual ordering via DM, no cart/checkout, payment risk</td>
+          <td class="us">Professional website, cart, secure payment</td>
+        </tr>
+        <tr>
+          <td>Jumia Ghana (Hair Category)</td>
+          <td>Online Marketplace</td>
+          <td>Large audience, known brand</td>
+          <td>Multiple unverified sellers, inconsistent quality</td>
+          <td class="us">Curated quality, specialist brand, faster response</td>
+        </tr>
+        <tr>
+          <td>Tonaton Hair Listings</td>
+          <td>Classifieds</td>
+          <td>Free platform, wide reach</td>
+          <td>No e-commerce, no cart, buyer-seller negotiation</td>
+          <td class="us">Full e-commerce experience, tracking, dashboard</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Competitive Advantage -->
+  <div class="q-block">
+    <h2>4. Competitive Advantage</h2>
+    <div class="q-label">Explain competitive advantage</div>
+    <p>GlamAura Wigs differentiates itself through a combination of product quality, platform experience, and customer service:</p>
+    <div class="adv-grid">
+      <div class="adv-item"><div class="adv-icon">🏆</div><div><h4>Verified Premium Quality</h4><p>Every wig is quality-checked before dispatch. Customers know exactly what they're getting — no unpleasant surprises from unverified market sellers.</p></div></div>
+      <div class="adv-item"><div class="adv-icon">💻</div><div><h4>Professional E-Commerce Platform</h4><p>A full website with search, filters, cart, secure checkout, order tracking, and a customer dashboard — far beyond Instagram DM shopping.</p></div></div>
+      <div class="adv-item"><div class="adv-icon">📱</div><div><h4>Ghana-First Payment Integration</h4><p>MTN MoMo and Vodafone Cash are primary payment methods — designed specifically for Ghanaian customers rather than forcing card-only payments.</p></div></div>
+      <div class="adv-item"><div class="adv-icon">🚚</div><div><h4>Reliable Fast Delivery</h4><p>Same-day Accra delivery and nationwide next-day service — with real-time order tracking — beats informal vendors who have no tracking system.</p></div></div>
+      <div class="adv-item"><div class="adv-icon">📊</div><div><h4>Data-Driven Operations</h4><p>Full CRM, inventory, finance, and supply chain management enables smarter decisions, fewer stockouts, and better customer retention.</p></div></div>
+      <div class="adv-item"><div class="adv-icon">💬</div><div><h4>Trust & Brand Loyalty</h4><p>7-day returns, transparent pricing, and consistent quality build long-term customer trust — turning first-time buyers into loyal repeat customers.</p></div></div>
+    </div>
+  </div>
+
+</div>
+
+<div style="background:var(--dark);text-align:center;padding:22px;border-top:1px solid var(--border);color:var(--muted);font-size:13px;">
+  GlamAura Wigs — Bachelor of ICT | E-Business Course | Assignment 2
+</div>
+</body>
+</html>

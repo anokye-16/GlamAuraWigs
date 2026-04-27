@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | GlamAura Wigs</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:#000;
+color:white;
+}
+
+/* SIDEBAR */
+.sidebar{
+position:fixed;
+left:0;
+top:0;
+width:250px;
+height:100%;
+background:#111;
+border-right:2px solid #ff4fa3;
+padding:20px;
+}
+
+.logo{
+color:#ff4fa3;
+font-size:22px;
+font-weight:bold;
+margin-bottom:30px;
+}
+
+.sidebar a{
+display:block;
+color:white;
+text-decoration:none;
+padding:12px;
+margin-bottom:10px;
+border-radius:6px;
+transition:0.3s;
+}
+
+.sidebar a:hover{
+background:#ff4fa3;
+}
+
+/* MAIN */
+.main{
+margin-left:270px;
+padding:30px;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+}
+
+.topbar h1{
+color:#ff4fa3;
+}
+
+/* STATS */
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+margin-bottom:30px;
+}
+
+.card{
+background:#111;
+padding:20px;
+border-radius:10px;
+border:1px solid #222;
+}
+
+.card h3{
+color:#ff4fa3;
+margin:0;
+}
+
+.card p{
+font-size:22px;
+margin-top:10px;
+}
+
+/* TABLE */
+.table-box{
+background:#111;
+padding:20px;
+border-radius:10px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+padding:12px;
+text-align:left;
+border-bottom:1px solid #222;
+}
+
+th{
+color:#ff4fa3;
+}
+
+.status{
+padding:5px 10px;
+border-radius:5px;
+font-size:12px;
+}
+
+.pending{background:orange;color:black;}
+.completed{background:green;}
+.cancelled{background:red;}
+
+/* BUTTON */
+.btn{
+background:#ff4fa3;
+border:none;
+padding:10px 15px;
+color:white;
+border-radius:5px;
+cursor:pointer;
+}
+
+.btn:hover{
+background:#ff2f90;
+}
+
+/* FOOTER */
+footer{
+text-align:center;
+margin-top:40px;
+color:#777;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+<div class="logo">GlamAura Admin</div>
+
+<a href="#">Dashboard</a>
+<a href="#">Orders</a>
+<a href="#">Products</a>
+<a href="#">Customers</a>
+<a href="#" onclick="logout()">Logout</a>
+
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<div class="topbar">
+<h1>Admin Dashboard</h1>
+<button class="btn" onclick="alert('Add new product feature')">+ Add Product</button>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+
+<div class="card">
+<h3>Total Orders</h3>
+<p id="ordersCount">0</p>
+</div>
+
+<div class="card">
+<h3>Revenue</h3>
+<p>₵0</p>
+</div>
+
+<div class="card">
+<h3>Customers</h3>
+<p id="customersCount">0</p>
+</div>
+
+<div class="card">
+<h3>Products</h3>
+<p>24</p>
+</div>
+
+</div>
+
+<!-- ORDERS TABLE -->
+<div class="table-box">
+
+<h3 style="color:#ff4fa3;">Recent Orders</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>Order ID</th>
+<th>Customer</th>
+<th>Total</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="ordersTable">
+
+<tr>
+<td>#1001</td>
+<td>Sample Customer</td>
+<td>₵1500</td>
+<td><span class="status pending">Pending</span></td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<footer>
+© 2026 GlamAura Admin Panel
+</footer>
+
+</div>
+
+<script>
+
+/* LOAD SAMPLE DATA (replace with backend later) */
+let orders = JSON.parse(localStorage.getItem("admin_orders")) || [];
+
+document.getElementById("ordersCount").innerText = orders.length;
+
+/* RENDER ORDERS */
+function renderOrders(){
+
+let table = document.getElementById("ordersTable");
+
+if(orders.length === 0){
+table.innerHTML = `
+<tr><td colspan="4" style="color:#aaa;">No orders yet</td></tr>
+`;
+return;
+}
+
+table.innerHTML = "";
+
+orders.forEach(o=>{
+
+table.innerHTML += `
+<tr>
+<td>#${o.id}</td>
+<td>${o.customer}</td>
+<td>₵${o.total}</td>
+<td><span class="status pending">Pending</span></td>
+</tr>
+`;
+
+});
+
+}
+
+renderOrders();
+
+/* LOGOUT */
+function logout(){
+localStorage.removeItem("admin");
+window.location.href = "login.html";
+}
+
+</script>
+
+</body>
+</html>

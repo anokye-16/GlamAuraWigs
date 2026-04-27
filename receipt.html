@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Order Receipt | GlamAura Wigs</title>
+
+<style>
+
+body{
+background:#000;
+color:white;
+font-family:Arial;
+margin:0;
+}
+
+header{
+padding:20px;
+text-align:center;
+border-bottom:2px solid #ff4fa3;
+}
+
+h1{
+color:#ff4fa3;
+text-align:center;
+margin-top:30px;
+}
+
+.container{
+max-width:800px;
+margin:auto;
+padding:30px;
+background:#111;
+border-radius:10px;
+margin-top:30px;
+}
+
+.item{
+display:flex;
+justify-content:space-between;
+padding:10px 0;
+border-bottom:1px solid #333;
+}
+
+.total{
+font-size:20px;
+font-weight:bold;
+margin-top:20px;
+}
+
+.btn{
+display:block;
+width:100%;
+padding:12px;
+margin-top:20px;
+background:#ff4fa3;
+border:none;
+color:white;
+cursor:pointer;
+border-radius:5px;
+text-align:center;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h2>GlamAura Wigs</h2>
+</header>
+
+<h1>Order Receipt</h1>
+
+<div class="container">
+
+<div id="receipt">Loading order...</div>
+
+<button class="btn" onclick="window.location.href='Home.html'">
+Continue Shopping
+</button>
+
+</div>
+
+<script>
+
+const currency = "₵";
+
+// get order_id from URL
+const urlParams = new URLSearchParams(window.location.search);
+const order_id = urlParams.get("order_id");
+
+if(!order_id){
+document.getElementById("receipt").innerHTML = "Invalid order ID";
+}else{
+loadReceipt(order_id);
+}
+
+function loadReceipt(order_id){
+
+fetch("get_order.php?order_id=" + order_id)
+.then(res => res.json())
+.then(data => {
+
+if(data.status !== "success"){
+document.getElementById("receipt").innerHTML = "Order not found";
+return;
+}
+
+let order = data.order;
+let items = data.items;
+
+let html = "";
+
+html += `
+<h3>Order #${order.id}</h3>
+<p>Status: ${order.status}</p>
+<p>Date: ${order.created_at}</p>
+
+<div class="item"><strong>Product</strong><strong>Total</strong></div>
+`;
+
+let subtotal = 0;
+
+items.forEach(i => {
+let total = i.price * i.quantity;
+subtotal += total;
+
+html += `
+<div class="item">
+<span>${i.product_id} (${i.quality}) x ${i.quantity}</span>
+<span>${currency}${total.toFixed(2)}</span>
+</div>
+`;
+});
+
+let vat = parseFloat(order.vat);
+let shipping = parseFloat(order.shipping);
+let grandTotal = parseFloat(order.total);
+
+html += `
+<hr>
+<p>VAT: ${currency}${vat.toFixed(2)}</p>
+<p>Shipping: ${currency}${shipping.toFixed(2)}</p>
+<p class="total">Total: ${currency}${grandTotal.toFixed(2)}</p>
+`;
+
+document.getElementById("receipt").innerHTML = html;
+
+})
+.catch(err => {
+document.getElementById("receipt").innerHTML = "Error loading order";
+});
+
+}
+
+</script>
+
+</body>
+</html>

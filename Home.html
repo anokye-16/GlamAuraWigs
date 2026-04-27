@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlamAura Wigs</title>
+
+<link rel="stylesheet" href="navbar.css">
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#000;
+    color:#fff;
+}
+
+/* HERO SECTION */
+.hero{
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    /* Background image settings */
+    background-image: url("images/hero.jpeg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative; /* needed for overlay */
+}
+
+/* Optional overlay for text readability */
+.hero::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background: rgba(0,0,0,0.4); /* semi-transparent black overlay */
+    z-index:1;
+}
+
+.hero div{
+    position: relative;
+    z-index:2;
+}
+.hero h1{
+    font-size:55px;
+    margin-bottom:20px;
+}
+
+.hero p{
+    font-size:20px;
+    margin-bottom:25px;
+}
+
+.btn{
+    background:#ff4fa3;
+    color:white;
+    padding:14px 35px;
+    border:none;
+    font-size:16px;
+    cursor:pointer;
+    text-decoration:none;
+}
+
+.btn:hover{
+    background:#ff2f90;
+}
+
+/* SECTIONS */
+section{
+    padding:70px 60px;
+}
+
+.section-title{
+    text-align:center;
+    font-size:34px;
+    margin-bottom:40px;
+    color:#ff4fa3;
+}
+
+/* PRODUCTS GRID */
+.products{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:30px;
+}
+
+.product-card{
+    background:#111;
+    border-radius:10px;
+    overflow:hidden;
+    text-align:center;
+    padding-bottom:20px;
+    transition: transform 0.3s;
+}
+
+.product-card:hover{
+    transform: scale(1.05);
+}
+
+.product-card img{
+    width:100%;
+    height:280px;
+    object-fit:cover;
+}
+
+.product-card h3{
+    margin:15px 0;
+}
+
+.price{
+    color:#ff4fa3;
+    font-size:20px;
+    margin-bottom:10px;
+}
+
+/* ABOUT SECTION */
+.about{
+    background:#111;
+    text-align:center;
+    line-height:1.7;
+}
+
+/* CONTACT SECTION */
+.contact{
+    text-align:center;
+}
+
+/* FOOTER */
+footer{
+    background:#000;
+    text-align:center;
+    padding:20px;
+    border-top:2px solid #ff4fa3;
+    margin-top:40px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">GlamAura Wigs</div>
+    
+        <div id="navbar-container"></div>
+        <script>
+            fetch('navbar.html').then(r => r.text()).then(html => {
+                document.getElementById('navbar-container').innerHTML = html;
+            });
+        </script>
+</header>
+
+<section class="hero">
+    <div>
+        <h1>Luxury Wigs For Confident Women</h1>
+        <p>Premium quality wigs designed to elevate your beauty.</p>
+        <a class="btn" href="Shop.html">Shop Now</a>
+    </div>
+</section>
+
+<section>
+<h2 class="section-title">Best Sellers</h2>
+
+<div class="products">
+
+<div class="product-card">
+<img src="images/Brazilian Body Wave Wig.jfif" alt="Brazilian Body Wave Wig">
+<h3>Brazilian Body Wave Wig</h3>
+<p class="price">GH¢1800</p>
+<button class="btn">Add to Cart</button>
+</div>
+
+<div class="product-card">
+<img src="images/SW.jfif" alt="Straight Lace Wig">
+<h3>Straight Lace Wig</h3>
+<p class="price">GH¢2100</p>
+<button class="btn">Add to Cart</button>
+</div>
+
+<div class="product-card">
+<img src="images/Curly Wig.jfif" alt="Luxury Curly Wig">
+<h3>Luxury Curly Wig</h3>
+<p class="price">GH¢1950</p>
+<button class="btn">Add to Cart</button>
+</div>
+
+</div>
+</section>
+
+<section class="about">
+<h2 class="section-title">About Our Brand</h2>
+<p>
+GlamAura Wigs was created to help women express confidence and beauty through high quality hair. 
+Our wigs are carefully selected to provide natural looks, comfort, and luxury. 
+Whether you want everyday elegance or a bold transformation, GlamAura Wigs is designed to crown your beauty.
+</p>
+</section>
+
+<section class="contact">
+<h2 class="section-title">Contact Us</h2>
+<p>Email: support@glamaurawigs.com</p>
+<p>Instagram: @glamaurawigs</p>
+<p>WhatsApp: +233 539 945 5123</p>
+</section>
+
+<footer>
+<p>© 2026 GlamAura Wigs. All Rights Reserved.</p>
+</footer>
+
+</body>
+</html>

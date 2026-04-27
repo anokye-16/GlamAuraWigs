@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login | GlamAura Wigs</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:black;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+height:100vh;
+}
+
+.container{
+background:#111;
+padding:40px;
+width:350px;
+border-radius:10px;
+}
+
+.logo{
+text-align:center;
+color:#ff4fa3;
+font-size:28px;
+margin-bottom:20px;
+font-weight:bold;
+}
+
+.tabs{
+display:flex;
+justify-content:space-around;
+margin-bottom:20px;
+}
+
+.tabs button{
+background:none;
+border:none;
+color:white;
+cursor:pointer;
+font-size:16px;
+padding:10px;
+}
+
+.tabs button.active{
+color:#ff4fa3;
+border-bottom:2px solid #ff4fa3;
+}
+
+form{
+display:flex;
+flex-direction:column;
+}
+
+input{
+padding:12px;
+margin:10px 0;
+border:none;
+border-radius:5px;
+outline:none;
+}
+
+.submit-btn{
+background:#ff4fa3;
+color:white;
+padding:12px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+.submit-btn:hover{
+background:#ff2f90;
+}
+
+.hidden{
+display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo">GlamAura Wigs</div>
+
+<!-- TABS -->
+<div class="tabs">
+<button id="loginTab" class="active" onclick="showLogin()">Login</button>
+<button id="signupTab" onclick="showSignup()">Sign Up</button>
+</div>
+
+<!-- LOGIN -->
+<form id="loginForm">
+<input type="email" name="email" placeholder="Email" required>
+<input type="password" name="password" placeholder="Password" required>
+<button class="submit-btn">Login</button>
+</form>
+
+<!-- SIGNUP -->
+<form id="signupForm" class="hidden">
+<input type="text" name="full_name" placeholder="Full Name" required>
+<input type="email" name="email" placeholder="Email" required>
+<input type="password" name="password" placeholder="Password" required>
+<input type="password" name="confirm_password" placeholder="Confirm Password" required>
+<button class="submit-btn">Create Account</button>
+</form>
+
+</div>
+
+<script>
+
+/* SWITCH TABS */
+function showLogin(){
+document.getElementById("loginForm").classList.remove("hidden");
+document.getElementById("signupForm").classList.add("hidden");
+
+document.getElementById("loginTab").classList.add("active");
+document.getElementById("signupTab").classList.remove("active");
+}
+
+function showSignup(){
+document.getElementById("signupForm").classList.remove("hidden");
+document.getElementById("loginForm").classList.add("hidden");
+
+document.getElementById("signupTab").classList.add("active");
+document.getElementById("loginTab").classList.remove("active");
+}
+
+/* SIGNUP */
+document.getElementById("signupForm").addEventListener("submit", function(e){
+e.preventDefault();
+
+if(this.password.value !== this.confirm_password.value){
+alert("Passwords do not match");
+return;
+}
+
+const data = new URLSearchParams();
+data.append("full_name", this.full_name.value);
+data.append("email", this.email.value);
+data.append("password", this.password.value);
+
+fetch("signup.php", {
+method:"POST",
+body:data
+})
+.then(res => res.json())
+.then(res => {
+
+alert(res.message);
+
+if(res.status){
+
+// SAVE USER
+localStorage.setItem("customer_name", res.full_name);
+localStorage.setItem("customer_email", res.email);
+
+// AUTO REDIRECT TO DASHBOARD
+window.location.href = "customer_dashboard.html";
+}
+
+})
+.catch(() => alert("Server error during signup"));
+
+});
+
+/* LOGIN */
+document.getElementById("loginForm").addEventListener("submit", function(e){
+e.preventDefault();
+
+const data = new URLSearchParams();
+data.append("email", this.email.value);
+data.append("password", this.password.value);
+
+fetch("login.php", {
+method:"POST",
+body:data
+})
+.then(res => res.json())
+.then(res => {
+
+alert(res.message);
+
+if(res.status){
+
+// SAVE USER DATA
+localStorage.setItem("customer_name", res.full_name);
+localStorage.setItem("customer_email", res.email);
+
+// REDIRECT TO DASHBOARD
+window.location.href = "customer_dashboard.html";
+}
+
+})
+.catch(() => alert("Server error during login"));
+
+});
+
+</script>
+
+</body>
+</html>

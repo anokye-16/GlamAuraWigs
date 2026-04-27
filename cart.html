@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cart | GlamAura Wigs</title>
+
+<style>
+
+body{
+background:black;
+color:white;
+font-family:Arial;
+margin:0;
+}
+
+header{
+display:flex;
+justify-content:space-between;
+padding:20px 60px;
+border-bottom:2px solid #ff4fa3;
+}
+
+.logo{
+color:#ff4fa3;
+font-size:26px;
+font-weight:bold;
+}
+
+nav a{
+color:white;
+margin-left:20px;
+text-decoration:none;
+}
+
+nav a:hover{
+color:#ff4fa3;
+}
+
+h1{
+text-align:center;
+margin-top:40px;
+color:#ff4fa3;
+}
+
+.cart-container{
+width:85%;
+margin:auto;
+margin-top:40px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th, td{
+padding:15px;
+border-bottom:1px solid #333;
+text-align:center;
+}
+
+th{
+color:#ff4fa3;
+}
+
+.cart-img{
+width:70px;
+border-radius:6px;
+}
+
+.qty-box{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:10px;
+}
+
+.qty-btn{
+background:#ff4fa3;
+border:none;
+color:white;
+width:30px;
+height:30px;
+cursor:pointer;
+border-radius:4px;
+}
+
+.qty{
+min-width:20px;
+}
+
+.remove-btn{
+background:#ff4fa3;
+border:none;
+color:white;
+padding:6px 12px;
+cursor:pointer;
+border-radius:5px;
+}
+
+.remove-btn:hover{
+background:#ff2f90;
+}
+
+.quality-select{
+background:#222;
+color:white;
+border:none;
+padding:6px;
+border-radius:5px;
+}
+
+.total{
+text-align:right;
+font-size:20px;
+margin-top:20px;
+}
+
+.buttons{
+display:flex;
+justify-content:space-between;
+margin-top:30px;
+}
+
+.clear-btn{
+background:#444;
+color:white;
+border:none;
+padding:10px 20px;
+cursor:pointer;
+border-radius:5px;
+}
+
+.clear-btn:hover{
+background:#666;
+}
+
+.checkout-btn{
+background:#ff4fa3;
+padding:12px 25px;
+color:white;
+text-decoration:none;
+border-radius:5px;
+}
+
+.checkout-btn:hover{
+background:#ff2f90;
+}
+
+footer{
+text-align:center;
+padding:20px;
+border-top:2px solid #ff4fa3;
+margin-top:50px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">GlamAura Wigs</div>
+
+<div id="navbar-container"></div>
+<script>
+	fetch('navbar.html').then(r => r.text()).then(html => {
+		document.getElementById('navbar-container').innerHTML = html;
+	});
+</script>
+
+</header>
+
+<h1>Your Shopping Cart</h1>
+
+<div class="cart-container">
+
+<table id="cartTable">
+
+<tr>
+<th>Product</th>
+<th>Image</th>
+<th>Length</th>
+<th>Price</th>
+<th>Quantity</th>
+<th>Total</th>
+<th>Remove</th>
+</tr>
+
+</table>
+
+<div class="total">
+Total: GHc <span id="cartTotal">0</span>
+</div>
+
+<div class="buttons">
+<button class="clear-btn" onclick="clearCart()">Clear Cart</button>
+<a href="checkout.html" class="checkout-btn">Proceed to Checkout</a>
+</div>
+
+</div>
+
+<footer>
+© 2026 GlamAura Wigs
+</footer>
+
+<script>
+
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+const qualityPrices = {
+'12"':1,
+'14"':1.2,
+'16"':1.4
+};
+
+function populateCart(){
+
+const table = document.getElementById('cartTable');
+
+table.innerHTML = `
+<tr>
+<th>Product</th>
+<th>Image</th>
+<th>Length</th>
+<th>Price</th>
+<th>Quantity</th>
+<th>Total</th>
+<th>Remove</th>
+</tr>
+`;
+
+if(cart.length === 0){
+
+table.innerHTML += `<tr><td colspan="7">Your cart is empty</td></tr>`;
+document.getElementById("cartTotal").innerText = "0";
+return;
+
+}
+
+cart.forEach((item,index)=>{
+
+if(!item.quality) item.quality='12"';
+if(!item.qty) item.qty=1;
+if(!item.basePrice) item.basePrice=item.price;
+
+let price = item.basePrice * qualityPrices[item.quality];
+let itemTotal = price * item.qty;
+
+const row = table.insertRow();
+
+row.innerHTML = `
+
+<td>${item.name}</td>
+
+<td>
+<img src="${item.image}" class="cart-img">
+</td>
+
+<td>
+
+<select class="quality-select" onchange="changeQuality(${index},this.value)">
+
+<option value='12"' ${item.quality=='12"'?'selected':''}>12"</option>
+<option value='14"' ${item.quality=='14"'?'selected':''}>14"</option>
+<option value='16"' ${item.quality=='16"'?'selected':''}>16"</option>
+
+</select>
+
+</td>
+
+<td>GHc ${price.toFixed(2)}</td>
+
+<td>
+
+<div class="qty-box">
+
+<button class="qty-btn" onclick="changeQty(${index},-1)">-</button>
+
+<span class="qty">${item.qty}</span>
+
+<button class="qty-btn" onclick="changeQty(${index},1)">+</button>
+
+</div>
+
+</td>
+
+<td>GHc ${itemTotal.toFixed(2)}</td>
+
+<td>
+
+<button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+
+</td>
+
+`;
+
+});
+
+updateTotal();
+
+}
+
+function updateTotal(){
+
+let total = 0;
+
+cart.forEach(item=>{
+
+let price = item.basePrice * qualityPrices[item.quality];
+
+total += price * item.qty;
+
+});
+
+document.getElementById("cartTotal").innerText = total.toFixed(2);
+
+localStorage.setItem("cart", JSON.stringify(cart));
+
+}
+
+function changeQty(index,change){
+
+cart[index].qty += change;
+
+if(cart[index].qty < 1){
+cart[index].qty = 1;
+}
+
+populateCart();
+
+}
+
+function changeQuality(index,quality){
+
+cart[index].quality = quality;
+
+populateCart();
+
+}
+
+function removeItem(index){
+
+cart.splice(index,1);
+
+populateCart();
+
+}
+
+function clearCart(){
+
+localStorage.removeItem("cart");
+
+cart = [];
+
+populateCart();
+
+}
+
+populateCart();
+
+</script>
+
+</body>
+</html>

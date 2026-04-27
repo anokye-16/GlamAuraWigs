@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About | GlamAura Wigs</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:#000;
+color:white;
+}
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 60px;
+border-bottom:2px solid #ff4fa3;
+background:#000;
+}
+
+.logo{
+color:#ff4fa3;
+font-size:26px;
+font-weight:bold;
+}
+
+nav a{
+color:white;
+margin-left:20px;
+text-decoration:none;
+transition:0.3s;
+}
+
+nav a:hover{
+color:#ff4fa3;
+}
+
+/* HERO */
+.hero{
+text-align:center;
+padding:70px 20px 40px;
+}
+
+.hero h1{
+color:#ff4fa3;
+font-size:38px;
+margin-bottom:10px;
+}
+
+.hero p{
+color:#aaa;
+font-size:16px;
+}
+
+/* ABOUT SECTION */
+.about{
+max-width:900px;
+margin:auto;
+padding:40px 20px;
+line-height:1.8;
+font-size:16px;
+color:#ddd;
+text-align:center;
+}
+
+/* GRID SECTION */
+.features{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+padding:40px 60px;
+}
+
+.feature-card{
+background:#111;
+padding:20px;
+border-radius:10px;
+border:1px solid #222;
+transition:0.3s;
+text-align:center;
+}
+
+.feature-card:hover{
+transform:translateY(-5px);
+border-color:#ff4fa3;
+}
+
+.feature-card h3{
+color:#ff4fa3;
+}
+
+.feature-card p{
+color:#bbb;
+font-size:14px;
+}
+
+/* QUOTE SECTION */
+.quote{
+text-align:center;
+padding:40px 20px;
+font-style:italic;
+color:#ff4fa3;
+font-size:18px;
+}
+
+/* FOOTER */
+footer{
+text-align:center;
+padding:20px;
+border-top:1px solid #222;
+margin-top:40px;
+color:#aaa;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+header{
+flex-direction:column;
+text-align:center;
+}
+
+nav{
+margin-top:10px;
+}
+
+.features{
+padding:20px;
+}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+<div class="logo">GlamAura Wigs</div>
+
+<div id="navbar-container"></div>
+<script>
+	fetch('navbar.html').then(r => r.text()).then(html => {
+		document.getElementById('navbar-container').innerHTML = html;
+	});
+</script>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+<h1>About Our Brand</h1>
+<p>Beauty. Confidence. Elegance.</p>
+</div>
+
+<!-- ABOUT TEXT -->
+<div class="about">
+
+<p>
+GlamAura Wigs was created with the vision of helping women express confidence and beauty through premium quality wigs. Our brand focuses on providing natural-looking wigs made with high-quality hair and modern styling techniques.
+</p>
+
+<p>
+We believe that hair is a crown every woman deserves to wear proudly. Our collections are designed to offer luxury, comfort, and versatility for everyday beauty and special occasions.
+</p>
+
+</div>
+
+<!-- FEATURES -->
+<div class="features">
+
+<div class="feature-card">
+<h3>Premium Quality</h3>
+<p>We source only high-grade hair materials for a natural, long-lasting finish.</p>
+</div>
+
+<div class="feature-card">
+<h3>Confidence First</h3>
+<p>Our wigs are designed to boost confidence and enhance natural beauty.</p>
+</div>
+
+<div class="feature-card">
+<h3>Luxury Styling</h3>
+<p>Modern, trendy, and elegant styles for every occasion and personality.</p>
+</div>
+
+</div>
+
+<!-- QUOTE -->
+<div class="quote">
+“Every woman deserves to feel beautiful, confident, and powerful.”
+</div>
+
+<!-- FOOTER -->
+<footer>
+© 2026 GlamAura Wigs. All Rights Reserved.
+</footer>
+
+</body>
+</html>

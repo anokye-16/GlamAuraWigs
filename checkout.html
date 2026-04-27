@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Checkout | GlamAura Wigs</title>
+
+<style>
+
+body{
+background:#000;
+color:white;
+font-family:Arial;
+margin:0;
+}
+
+header{
+display:flex;
+justify-content:space-between;
+padding:20px 60px;
+border-bottom:2px solid #ff4fa3;
+}
+
+.logo{
+color:#ff4fa3;
+font-size:26px;
+font-weight:bold;
+}
+
+nav a{
+color:white;
+margin-left:20px;
+text-decoration:none;
+}
+
+nav a:hover{
+color:#ff4fa3;
+}
+
+h1{
+text-align:center;
+margin-top:40px;
+color:#ff4fa3;
+}
+
+.checkout-wrapper{
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:40px;
+padding:60px;
+}
+
+/* FORM */
+.checkout-form{
+background:#111;
+padding:40px;
+border-radius:10px;
+}
+
+.checkout-form h3{
+color:#ff4fa3;
+margin-top:20px;
+}
+
+input, select{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:5px;
+background:#222;
+color:white;
+}
+
+/* PAYMENT BOX */
+.payment-box{
+background:#1a1a1a;
+padding:15px;
+border-radius:8px;
+margin-top:10px;
+}
+
+/* SUMMARY */
+.summary{
+background:#111;
+padding:30px;
+border-radius:10px;
+}
+
+.cart-item{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:15px;
+gap:10px;
+}
+
+.cart-item img{
+width:60px;
+height:60px;
+border-radius:8px;
+object-fit:cover;
+}
+
+.item-info{
+flex:1;
+font-size:14px;
+}
+
+.line{
+border-top:1px solid #444;
+margin:15px 0;
+}
+
+.summary-item{
+display:flex;
+justify-content:space-between;
+margin:10px 0;
+}
+
+.total{
+font-size:20px;
+font-weight:bold;
+}
+
+/* BUTTON */
+.pay-btn{
+width:100%;
+margin-top:25px;
+padding:14px;
+background:#ff4fa3;
+border:none;
+color:white;
+font-size:16px;
+cursor:pointer;
+border-radius:5px;
+}
+
+.pay-btn:hover{
+background:#ff2f90;
+}
+
+.pay-btn:disabled{
+background:gray;
+cursor:not-allowed;
+}
+
+footer{
+text-align:center;
+padding:20px;
+border-top:2px solid #ff4fa3;
+margin-top:50px;
+}
+
+.error{
+color:red;
+font-size:13px;
+margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">GlamAura Wigs</div>
+
+<nav>
+<a href="Home.html">Home</a>
+<a href="Shop.html">Shop</a>
+<a href="Collection.html">Collections</a>
+<a href="cart.html">Cart</a>
+</nav>
+</header>
+
+<h1>Secure Checkout</h1>
+
+<div class="checkout-wrapper">
+
+<!-- FORM -->
+<div class="checkout-form">
+
+<h3>Shipping Information</h3>
+
+<input id="name" type="text" placeholder="Full Name">
+<input id="email" type="email" placeholder="Email Address">
+<input id="phone" type="text" placeholder="Phone Number">
+<input id="address" type="text" placeholder="Shipping Address">
+<input id="city" type="text" placeholder="City">
+<input id="country" type="text" placeholder="Country">
+
+<div id="error" class="error"></div>
+
+<h3>Delivery Method</h3>
+<select id="delivery">
+<option value="100">Standard Delivery (3–5 days) - ₵100</option>
+<option value="200">Express Delivery (1–2 days) - ₵200</option>
+</select>
+
+<h3>Payment Method</h3>
+
+<select id="paymentMethod" onchange="togglePayment()">
+<option value="momo">Mobile Money </option>
+<option value="card">Card Payment</option>
+</select>
+
+<!-- MOBILE MONEY -->
+<div id="momoBox" class="payment-box">
+<input type="text" id="momoNumber" placeholder="Mobile Money Number (e.g. 054XXXXXXX)">
+<select id="momoProvider">
+<option>MTN MoMo</option>
+<option>Vodafone Cash</option>
+<option>AirtelTigo Money</option>
+</select>
+</div>
+
+<!-- CARD -->
+<div id="cardBox" class="payment-box" style="display:none;">
+<input type="text" placeholder="Card Number">
+<input type="text" placeholder="Expiry Date">
+<input type="text" placeholder="CVV">
+</div>
+
+<button id="btn" class="pay-btn" onclick="placeOrder()">Place Order</button>
+
+</div>
+
+<!-- SUMMARY -->
+<div class="summary">
+
+<h3>Order Summary</h3>
+
+<div id="cart-items"></div>
+
+<div class="line"></div>
+
+<div class="summary-item">
+<span>Subtotal</span>
+<span id="subtotal">₵0</span>
+</div>
+
+<div class="summary-item">
+<span>VAT (12.5%)</span>
+<span id="vat">₵0</span>
+</div>
+
+<div class="summary-item">
+<span>Shipping</span>
+<span id="shipping">₵0</span>
+</div>
+
+<div class="line"></div>
+
+<div class="summary-item total">
+<span>Total</span>
+<span id="total">₵0</span>
+</div>
+
+</div>
+
+</div>
+
+<footer>
+© 2026 GlamAura Wigs
+</footer>
+
+<script>
+
+const currency = "₵";
+
+const qualityPrices = {
+"12\"":1,
+"14\"":1.2,
+"16\"":1.4
+};
+
+document.addEventListener("DOMContentLoaded", loadCheckout);
+
+function loadCheckout(){
+
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
+const cartItems = document.getElementById("cart-items");
+
+let subtotal = 0;
+cartItems.innerHTML = "";
+
+cart.forEach(item => {
+
+let price = item.basePrice * (qualityPrices[item.quality] || 1);
+let total = price * item.qty;
+
+subtotal += total;
+
+cartItems.innerHTML += `
+<div class="cart-item">
+<img src="${item.image}">
+<div class="item-info">
+<strong>${item.name}</strong><br>
+${item.quality} x ${item.qty}
+</div>
+<div>${currency}${total.toFixed(2)}</div>
+</div>
+`;
+
+});
+
+updateTotals(subtotal);
+
+document.getElementById("delivery").addEventListener("change", ()=>updateTotals(subtotal));
+
+}
+
+function updateTotals(subtotal){
+
+let vat = subtotal * 0.125;
+let shipping = parseFloat(document.getElementById("delivery").value);
+let total = subtotal + vat + shipping;
+
+document.getElementById("subtotal").innerText = currency + subtotal.toFixed(2);
+document.getElementById("vat").innerText = currency + vat.toFixed(2);
+document.getElementById("shipping").innerText = currency + shipping.toFixed(2);
+document.getElementById("total").innerText = currency + total.toFixed(2);
+
+}
+
+function togglePayment(){
+let method = document.getElementById("paymentMethod").value;
+
+document.getElementById("momoBox").style.display = method === "momo" ? "block" : "none";
+document.getElementById("cardBox").style.display = method === "card" ? "block" : "none";
+}
+
+function placeOrder(){
+
+const btn = document.getElementById("btn");
+const error = document.getElementById("error");
+
+const name = document.getElementById("name").value;
+const email = document.getElementById("email").value;
+const phone = document.getElementById("phone").value;
+const address = document.getElementById("address").value;
+
+if(!name || !email || !phone || !address){
+error.innerText = "Please fill all required fields";
+return;
+}
+
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+if(cart.length === 0){
+error.innerText = "Cart is empty";
+return;
+}
+
+btn.disabled = true;
+btn.innerText = "Processing...";
+
+let subtotal = parseFloat(document.getElementById("subtotal").innerText.replace("₵",""));
+let vat = parseFloat(document.getElementById("vat").innerText.replace("₵",""));
+let shipping = parseFloat(document.getElementById("shipping").innerText.replace("₵",""));
+let total = parseFloat(document.getElementById("total").innerText.replace("₵",""));
+
+fetch("place_order.php", {
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body: JSON.stringify({
+customer:{name,email,phone,address},
+cart,
+subtotal,
+vat,
+shipping,
+total
+})
+})
+.then(res=>res.json())
+.then(data=>{
+
+if(data.status==="success"){
+localStorage.removeItem("cart");
+window.location.href = "confirmation.html?order_id="+data.order_id;
+}else{
+btn.disabled=false;
+btn.innerText="Place Order";
+error.innerText="Order failed";
+}
+
+})
+.catch(()=>{
+btn.disabled=false;
+btn.innerText="Place Order";
+error.innerText="Server error";
+});
+
+}
+
+</script>
+
+</body>
+</html>
