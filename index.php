@@ -2,18 +2,35 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-echo "<div style='background:white; color:black; padding:20px; border:5px solid red; font-family:sans-serif; z-index:9999; position:relative;'>";
-echo "<h1>System Status Check</h1>";
+echo "<h1>System Status</h1>";
 
-if (!extension_loaded('mysqli')) {
-    echo "<p style='color:red;'>❌ ERROR: The 'mysqli' extension is NOT loaded.</p>";
-} else {
-    echo "<p style='color:green;'>✅ SUCCESS: 'mysqli' extension is loaded.</p>";
+// Function to find a file anywhere in the directory structure
+function findFile($filename, $dir = '.') {
+    $files = scandir($dir);
+    foreach ($files as $file) {
+        if ($file === '.' || $file === '..') continue;
+        $path = $dir . DIRECTORY_SEPARATOR . $file;
+        if (is_dir($path)) {
+            $res = findFile($filename, $path);
+            if ($res) return $res;
+        } elseif (strtolower($file) === strtolower($filename)) {
+            return $path;
+        }
+    }
+    return null;
 }
 
-include 'db.php';
-echo "<p>✅ Database connection file loaded.</p>";
-echo "</div>";
+$homeFile = findFile('home.html');
 
-include 'home.html';
+if ($homeFile) {
+    echo "<p>✅ Found home page at: $homeFile</p><hr>";
+    include $homeFile;
+} else {
+    echo "<p style='color:red;'>❌ ERROR: Could not find home.html anywhere in your repository.</p>";
+    echo "<h3>Files found in the root:</h3><ul>";
+    foreach (scandir('.') as $f) {
+        echo "<li>$f</li>";
+    }
+    echo "</ul>";
+}
 ?>
