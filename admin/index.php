@@ -1,5 +1,8 @@
 <?php
-// Try to find the dashboard page file (checking for case sensitivity)
+// Enable error reporting to find out why the admin page is failing
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 $files = ['dashboard.html', 'Dashboard.html'];
 $found = false;
 
@@ -12,7 +15,12 @@ foreach ($files as $file) {
 }
 
 if (!$found) {
-    echo "<h1>Admin Dashboard</h1>";
-    echo "<p>Error: Could not find the dashboard page file.</p>";
+    echo "<h1>Admin Dashboard Debug</h1>";
+    echo "<p>Error: dashboard.html not found in the admin directory.</p>";
+    echo "<h3>Files in this folder:</h3><ul>";
+    foreach (scandir('.') as $f) {
+        if ($f !== '.' && $f !== '..') echo "<li>$f</li>";
+    }
+    echo "</ul>";
 }
 ?>
