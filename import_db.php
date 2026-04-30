@@ -22,6 +22,10 @@ $sql = file_get_contents($sql_file);
 $sql = preg_replace('/--.*$/m', '', $sql);
 $sql = preg_replace('/\/\*.*?\*\//s', '', $sql);
 
+// STRIP "CREATE DATABASE" AND "USE" statements so it uses Railway's default DB
+$sql = preg_replace('/CREATE DATABASE.*?;/i', '', $sql);
+$sql = preg_replace('/USE .*?;/i', '', $sql);
+
 // Disable foreign key checks to allow truncate/drop
 $conn->query("SET FOREIGN_KEY_CHECKS = 0;");
 
