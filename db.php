@@ -13,13 +13,24 @@ if ($mysql_url) {
     $pass = $url['pass'] ?? null;
     $dbname = isset($url['path']) ? ltrim($url['path'], '/') : null;
     $port = $url['port'] ?? 3306;
+    echo "<!-- Debug: Using MYSQL_URL -->";
 } else {
     $host = getenv('MYSQLHOST') ?: "localhost";
     $user = getenv('MYSQLUSER') ?: "root";
     $pass = getenv('MYSQLPASSWORD') ?: ""; 
     $dbname = getenv('MYSQLDATABASE') ?: "glamaura";
     $port = getenv('MYSQLPORT') ?: 3306;
+    echo "<!-- Debug: Using Individual/Fallback Variables -->";
 }
+
+// PRINT DEBUG INFO (WITHOUT PASSWORD)
+echo "<div style='color:blue; font-size:12px; border:1px solid blue; padding:10px; margin:10px;'>";
+echo "<strong>DEBUG CONNECTION INFO:</strong><br>";
+echo "Host: " . ($host ?: 'NOT SET') . "<br>";
+echo "User: " . ($user ?: 'NOT SET') . "<br>";
+echo "Database: " . ($dbname ?: 'NOT SET') . "<br>";
+echo "Port: " . ($port ?: 'NOT SET') . "<br>";
+echo "</div>";
 
 // Create connection
 try {
