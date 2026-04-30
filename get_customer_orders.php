@@ -1,18 +1,7 @@
 <?php
 session_start();
+include 'db.php';
 header("Content-Type: application/json");
-
-$host = "localhost";
-$user = "root";
-$pass = "";
-$dbname = "glamaura";
-
-$conn = new mysqli($host, $user, $pass, $dbname);
-
-if ($conn->connect_error) {
-    echo json_encode(["status" => "error", "message" => "DB connection failed"]);
-    exit;
-}
 
 if(!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'customer'){
     echo json_encode(["status" => "error", "message" => "Not logged in"]);

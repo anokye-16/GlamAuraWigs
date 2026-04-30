@@ -2,12 +2,7 @@
 session_start();
 header("Content-Type: application/json");
 
-$host = "localhost";
-$user = "root";
-$pass = "";
-$dbname = "glamaura";
-
-$conn = new mysqli($host, $user, $pass, $dbname);
+include 'db.php';
 
 if ($conn->connect_error) {
     die(json_encode(["status" => "error", "message" => "DB connection failed"]));

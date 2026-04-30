@@ -1,18 +1,11 @@
 <?php
 session_start();
+// Enable error reporting to find the cause of the Server Error
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+include 'db.php';
 header("Content-Type: application/json");
-
-$host = "localhost";
-$user = "root";
-$pass = "";
-$dbname = "glamaura";
-
-$conn = new mysqli($host, $user, $pass, $dbname);
-
-if ($conn->connect_error) {
-    echo json_encode(["status" => "error", "message" => "DB connection failed"]);
-    exit;
-}
 
 if(!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'customer'){
     echo json_encode(["status" => "error", "message" => "Not logged in"]);
