@@ -1,14 +1,22 @@
 <?php
 session_start();
+// Enable error reporting to find the cause of the Server Error
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 include 'db.php';
 
 header("Content-Type: application/json");
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
-
-$full_name = $conn->real_escape_string($_POST['full_name']);
-$email = $conn->real_escape_string($_POST['email']);
-$password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+    // Get JSON POST data or Form data
+    $json = file_get_contents('php://input');
+    $data = json_decode($json, true);
+    
+    $full_name = $conn->real_escape_string($data['full_name'] ?? $_POST['full_name'] ?? '');
+    $email = $conn->real_escape_string($data['email'] ?? $_POST['email'] ?? '');
+    $raw_password = $data['password'] ?? $_POST['password'] ?? '';
+    $password = password_hash($raw_password, PASSWORD_BCRYPT);
 
 // check if email exists in customers table
 $check = $conn->query("SELECT id FROM customers WHERE email='$email'");
