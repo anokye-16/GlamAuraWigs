@@ -1,24 +1,19 @@
 <?php
-// Try to find the home page file (checking for case sensitivity)
-$files = ['home.html', 'Home.html', 'HOME.HTML'];
-$found = false;
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-foreach ($files as $file) {
-    if (file_exists($file)) {
-        include $file;
-        $found = true;
-        break;
-    }
+echo "<h1>System Status Check</h1>";
+
+if (!extension_loaded('mysqli')) {
+    echo "<p style='color:red;'>❌ ERROR: The 'mysqli' extension is NOT loaded on this server.</p>";
+} else {
+    echo "<p style='color:green;'>✅ SUCCESS: 'mysqli' extension is loaded.</p>";
 }
 
-if (!$found) {
-    echo "<h1>GlamAura Wigs</h1>";
-    echo "<p>Error: Could not find the home page file. Please check your filenames.</p>";
-    // List files to help debug
-    echo "<h3>Files found in directory:</h3><ul>";
-    foreach (scandir('.') as $f) {
-        if ($f !== '.' && $f !== '..') echo "<li>$f</li>";
-    }
-    echo "</ul>";
-}
+echo "<p>PHP Version: " . phpversion() . "</p>";
+
+include 'db.php';
+echo "<p>✅ Database connection file loaded.</p>";
+
+include 'home.html';
 ?>
