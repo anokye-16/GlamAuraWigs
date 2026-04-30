@@ -4,7 +4,7 @@ include 'db.php';
 $sql = "SELECT * FROM products";
 $result = $conn->query($sql);
 
-if($result->num_rows > 0){
+if($result && $result->num_rows > 0){
     while($row = $result->fetch_assoc()){
         echo '
         <div class="product-card">
@@ -18,5 +18,7 @@ if($result->num_rows > 0){
         </div>
         ';
     }
+} else {
+    echo '<p style="color:#888;text-align:center;grid-column:1/-1;">No products found.</p>';
 }
 ?>
