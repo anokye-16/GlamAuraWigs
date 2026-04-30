@@ -1,5 +1,4 @@
 <?php
-// Redirect to the home page
-header("Location: home.html");
-exit;
+// Serve the home page content directly
+include 'home.html';
 ?>
