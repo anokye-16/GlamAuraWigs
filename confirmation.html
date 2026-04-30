@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Order Confirmed | GlamAura Wigs</title>
 <link rel="stylesheet" href="shared.css">
-<link rel="stylesheet" href="navbar.css">
+
 <style>
 body{
 margin:0;
@@ -13,38 +13,20 @@ font-family:Arial,Helvetica,sans-serif;
 background:#000;
 color:white;
 }
+.page-top{padding-top:62px;}
 .container{
 background:#111;
 padding:50px;
 border-radius:15px;
 width:400px;
 max-width:90%;
-margin:80px auto;
+margin:60px auto;
 animation: pop 0.6s ease;
+text-align:center;
 }
-header{display:flex;justify-content:space-between;align-items:center;padding:20px 40px;border-bottom:2px solid #ff4fa3;}
 button{margin-top:20px;padding:12px 20px;background:#ff4fa3;border:none;color:white;cursor:pointer;border-radius:5px;}
 button:hover{background:#ff2f90;}
 
-body{
-margin:0;
-font-family:Arial;
-background:#000;
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-text-align:center;
-}
-
-.container{
-background:#111;
-padding:50px;
-border-radius:15px;
-width:400px;
-animation: pop 0.6s ease;
-}
 
 /* SUCCESS ANIMATION */
 .checkmark{
@@ -111,21 +93,27 @@ color:#aaa;
 
 </style>
 </head>
-
 <body>
-<header>
-  <div class="logo">GlamAura Wigs</div>
-  <div id="navbar-container"></div>
-</header>
-<script>
-  fetch('navbar.html').then(r => r.text()).then(html => {
-    document.getElementById('navbar-container').innerHTML = html;
-    const script = document.createElement('script');
-    script.src = 'navbar.js';
-    document.body.appendChild(script);
-  });
-</script>
+<nav class="site-nav">
+  <div class="brand" onclick="location.href='home.html'">GlamAura Wigs</div>
+  <div class="nav-links">
+    <a href="home.html">Home</a>
+    <a href="Collection.html">Collections</a>
+    <a href="Shop.html">Shop</a>
+    <a href="About.html">About</a>
+    <a href="Contact.html">Contact</a>
+    <a href="cart.html" class="cart-link">🛒 <span class="cart-badge">0</span></a>
+    <button class="nav-btn" id="navAuthBtn">Login</button>
+  </div>
+  <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="home.html">Home</a><a href="Collection.html">Collections</a><a href="Shop.html">Shop</a>
+  <a href="About.html">About</a><a href="Contact.html">Contact</a>
+  <a href="cart.html">🛒 Cart</a><a href="login.html" id="mobileAuthLink">Login / Sign Up</a>
+</div>
 
+<div class="page-top">
 <div class="container">
 
 <div class="checkmark"></div>
@@ -134,9 +122,18 @@ color:#aaa;
 
 <p>Your order has been placed successfully.</p>
 
-<p class="small">Order ID: <span id="orderId">Loading...</span></p>
+<p class="small">Please save your Tracking ID for your records:</p>
+<p style="color:#ff4fa3; font-weight:bold; font-size:24px; margin:10px 0;">
+    <span id="trackId">Loading...</span>
+</p>
 
-<button onclick="window.location.href='Shop.html'">
+<button onclick="window.location.href='customer_dashboard.html'">
+Track Order
+</button>
+
+<br>
+
+<button style="background:#333; margin-top:10px;" onclick="window.location.href='Shop.html'">
 Continue Shopping
 </button>
 
@@ -144,13 +141,16 @@ Continue Shopping
 
 <script>
 
-// get order id from URL
+// get order id and tracking from URL
 const params = new URLSearchParams(window.location.search);
 const orderId = params.get("order_id");
+const trackingId = params.get("tracking");
 
-document.getElementById("orderId").innerText = orderId ? "#"+orderId : "N/A";
+if (document.getElementById("trackId")) {
+    document.getElementById("trackId").innerText = trackingId ? trackingId : "Processing...";
+}
 
 </script>
-
+<script src="shared-nav.js"></script>
 </body>
 </html>

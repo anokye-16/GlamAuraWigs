@@ -2,221 +2,172 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login | GlamAura Wigs</title>
-
+<link rel="stylesheet" href="shared.css">
 <style>
-body{
-margin:0;
-font-family:Arial;
-background:black;
-color:white;
-display:flex;
-align-items:center;
-justify-content:center;
-height:100vh;
-}
-
-.container{
-background:#111;
-padding:40px;
-width:350px;
-border-radius:10px;
-}
-
-.logo{
-text-align:center;
-color:#ff4fa3;
-font-size:28px;
-margin-bottom:20px;
-font-weight:bold;
-}
-
-.tabs{
-display:flex;
-justify-content:space-around;
-margin-bottom:20px;
-}
-
-.tabs button{
-background:none;
-border:none;
-color:white;
-cursor:pointer;
-font-size:16px;
-padding:10px;
-}
-
-.tabs button.active{
-color:#ff4fa3;
-border-bottom:2px solid #ff4fa3;
-}
-
-form{
-display:flex;
-flex-direction:column;
-}
-
-input{
-padding:12px;
-margin:10px 0;
-border:none;
-border-radius:5px;
-outline:none;
-}
-
-.submit-btn{
-background:#ff4fa3;
-color:white;
-padding:12px;
-border:none;
-border-radius:5px;
-cursor:pointer;
-}
-
-.submit-btn:hover{
-background:#ff2f90;
-}
-
-.hidden{
-display:none;
-}
+body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-serif;min-height:100vh;display:flex;flex-direction:column;}
+.login-page{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;}
+.login-wrap{width:100%;max-width:420px;}
+.login-brand{text-align:center;margin-bottom:28px;}
+.login-brand a{color:var(--pink);font-size:26px;font-weight:700;text-decoration:none;letter-spacing:.5px;}
+.login-brand p{color:#666;font-size:13px;margin-top:4px;}
+.login-card{background:#111;border:1px solid #222;border-radius:12px;padding:36px;}
+.tabs{display:flex;border-bottom:1px solid #222;margin-bottom:26px;}
+.tabs button{flex:1;background:none;border:none;color:#888;font-size:15px;padding:12px;cursor:pointer;font-weight:500;border-bottom:2px solid transparent;transition:all .2s;margin-bottom:-1px;}
+.tabs button.active{color:var(--pink);border-bottom-color:var(--pink);}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:12px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+.form-group input{width:100%;padding:12px 14px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:6px;color:#fff;font-size:14px;outline:none;transition:border-color .2s;box-sizing:border-box;}
+.form-group input:focus{border-color:var(--pink);}
+.submit-btn{width:100%;padding:13px;background:var(--pink);color:#fff;border:none;border-radius:6px;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s;margin-top:6px;}
+.submit-btn:hover{background:var(--dark-pink);}
+.form-msg{font-size:13px;margin-top:12px;min-height:18px;text-align:center;}
+.form-msg.success{color:var(--success);}
+.form-msg.error{color:var(--danger);}
+.hidden{display:none;}
+.login-footer-link{text-align:center;margin-top:20px;font-size:13px;color:#666;}
+.login-footer-link a{color:var(--pink);}
 </style>
 </head>
-
 <body>
 
-<div class="container">
+<div class="login-page">
+  <div class="login-wrap">
+    <div class="login-brand">
+      <a href="home.html">GlamAura Wigs</a>
+      <p>Premium human hair wigs, delivered to your door</p>
+    </div>
 
-<div class="logo">GlamAura Wigs</div>
+    <div class="login-card">
+      <div class="tabs">
+        <button id="loginTab" class="active" onclick="showLogin()">Login</button>
+        <button id="signupTab" onclick="showSignup()">Create Account</button>
+      </div>
 
-<!-- TABS -->
-<div class="tabs">
-<button id="loginTab" class="active" onclick="showLogin()">Login</button>
-<button id="signupTab" onclick="showSignup()">Sign Up</button>
-</div>
+      <!-- LOGIN FORM -->
+      <form id="loginForm" onsubmit="doLogin(event)">
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" name="email" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="Your password" required>
+        </div>
+        <button class="submit-btn" type="submit" id="loginBtn">Login</button>
+        <div class="form-msg" id="loginMsg"></div>
+      </form>
 
-<!-- LOGIN -->
-<form id="loginForm">
-<input type="email" name="email" placeholder="Email" required>
-<input type="password" name="password" placeholder="Password" required>
-<button class="submit-btn">Login</button>
-</form>
+      <!-- SIGNUP FORM -->
+      <form id="signupForm" class="hidden" onsubmit="doSignup(event)">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" name="full_name" placeholder="Your full name" required>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" name="email" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="Choose a password" required>
+        </div>
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <input type="password" name="confirm_password" placeholder="Repeat password" required>
+        </div>
+        <button class="submit-btn" type="submit" id="signupBtn">Create Account</button>
+        <div class="form-msg" id="signupMsg"></div>
+      </form>
+    </div>
 
-<!-- SIGNUP -->
-<form id="signupForm" class="hidden">
-<input type="text" name="full_name" placeholder="Full Name" required>
-<input type="email" name="email" placeholder="Email" required>
-<input type="password" name="password" placeholder="Password" required>
-<input type="password" name="confirm_password" placeholder="Confirm Password" required>
-<button class="submit-btn">Create Account</button>
-</form>
-
+    <div class="login-footer-link">
+      <a href="home.html">← Back to Store</a>
+    </div>
+  </div>
 </div>
 
 <script>
-
-/* SWITCH TABS */
 function showLogin(){
-document.getElementById("loginForm").classList.remove("hidden");
-document.getElementById("signupForm").classList.add("hidden");
-
-document.getElementById("loginTab").classList.add("active");
-document.getElementById("signupTab").classList.remove("active");
+  document.getElementById('loginForm').classList.remove('hidden');
+  document.getElementById('signupForm').classList.add('hidden');
+  document.getElementById('loginTab').classList.add('active');
+  document.getElementById('signupTab').classList.remove('active');
 }
-
 function showSignup(){
-document.getElementById("signupForm").classList.remove("hidden");
-document.getElementById("loginForm").classList.add("hidden");
-
-document.getElementById("signupTab").classList.add("active");
-document.getElementById("loginTab").classList.remove("active");
+  document.getElementById('signupForm').classList.remove('hidden');
+  document.getElementById('loginForm').classList.add('hidden');
+  document.getElementById('signupTab').classList.add('active');
+  document.getElementById('loginTab').classList.remove('active');
 }
 
-/* SIGNUP */
-document.getElementById("signupForm").addEventListener("submit", function(e){
-e.preventDefault();
-
-if(this.password.value !== this.confirm_password.value){
-alert("Passwords do not match");
-return;
+function showMsg(id, text, type){
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = 'form-msg ' + type;
 }
 
-const data = new URLSearchParams();
-data.append("full_name", this.full_name.value);
-data.append("email", this.email.value);
-data.append("password", this.password.value);
-
-fetch("signup.php", {
-method:"POST",
-body:data
-})
-.then(res => res.json())
-.then(res => {
-
-alert(res.message);
-
-if(res.status){
-
-// SAVE USER
-localStorage.setItem("customer_name", res.full_name);
-localStorage.setItem("customer_email", res.email);
-localStorage.setItem("customer_id", res.user_id);
-localStorage.setItem("user", JSON.stringify({
-  user_id: res.user_id,
-  full_name: res.full_name,
-  email: res.email,
-  is_admin: false
-}));
-
-// AUTO REDIRECT TO DASHBOARD
-window.location.href = "customer_dashboard.html";
+function doSignup(e){
+  e.preventDefault();
+  const form = e.target;
+  if(form.password.value !== form.confirm_password.value){
+    showMsg('signupMsg', 'Passwords do not match', 'error'); return;
+  }
+  const btn = document.getElementById('signupBtn');
+  btn.disabled = true; btn.textContent = 'Creating account...';
+  const data = new URLSearchParams();
+  data.append('full_name', form.full_name.value);
+  data.append('email', form.email.value);
+  data.append('password', form.password.value);
+  fetch('signup.php', {method:'POST', body:data})
+    .then(r => r.json())
+    .then(res => {
+      if(res.status){
+        localStorage.setItem('user', JSON.stringify({user_id:res.user_id, full_name:res.full_name, email:res.email, is_admin:false}));
+        showMsg('signupMsg', '✔ Account created! Redirecting...', 'success');
+        setTimeout(() => location.href = 'customer_dashboard.html', 1000);
+      } else {
+        showMsg('signupMsg', res.message || 'Signup failed', 'error');
+        btn.disabled = false; btn.textContent = 'Create Account';
+      }
+    })
+    .catch(() => { showMsg('signupMsg', 'Server error. Please try again.', 'error'); btn.disabled = false; btn.textContent = 'Create Account'; });
 }
 
-})
-.catch(() => alert("Server error during signup"));
-
-});
-
-/* LOGIN */
-document.getElementById("loginForm").addEventListener("submit", function(e){
-e.preventDefault();
-
-const data = new URLSearchParams();
-data.append("email", this.email.value);
-data.append("password", this.password.value);
-
-fetch("login.php", {
-method:"POST",
-body:data
-})
-.then(res => res.json())
-.then(res => {
-
-alert(res.message);
-
-if(res.status){
-
-// SAVE USER DATA
-localStorage.setItem("customer_name", res.full_name);
-localStorage.setItem("customer_email", res.email);
-localStorage.setItem("customer_id", res.user_id);
-localStorage.setItem("user", JSON.stringify({
-  user_id: res.user_id,
-  full_name: res.full_name,
-  email: res.email,
-  is_admin: false
-}));
-
-// REDIRECT TO DASHBOARD
-window.location.href = "customer_dashboard.html";
+function doLogin(e){
+  e.preventDefault();
+  const form = e.target;
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'Logging in...';
+  const data = {
+    email: form.email.value,
+    password: form.password.value
+  };
+  fetch('api/auth_login.php', {
+    method:'POST', 
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+  })
+    .then(r => r.json())
+    .then(res => {
+      if(res.status){
+        localStorage.setItem('user', JSON.stringify({user_id:res.user_id, full_name:res.full_name, email:res.email, is_admin:res.is_admin}));
+        showMsg('loginMsg', '✔ Welcome back! Redirecting...', 'success');
+        setTimeout(() => location.href = res.is_admin ? 'admin/dashboard.html' : 'customer_dashboard.html', 900);
+      } else {
+        showMsg('loginMsg', res.message || 'Login failed', 'error');
+        btn.disabled = false; btn.textContent = 'Login';
+      }
+    })
+    .catch(() => { showMsg('loginMsg', 'Server error. Please try again.', 'error'); btn.disabled = false; btn.textContent = 'Login'; });
 }
 
-})
-.catch(() => alert("Server error during login"));
-
-});
-
+// If already logged in, redirect
+const user = JSON.parse(localStorage.getItem('user')) || {};
+if(user.user_id){
+  location.href = user.is_admin ? 'admin/dashboard.html' : 'customer_dashboard.html';
+}
 </script>
-
 </body>
 </html>

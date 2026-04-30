@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Orders | GlamAura Admin Panel</title>
+    <link rel="stylesheet" href="admin_theme.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+</head>
+<body>
+
+        <aside class="gh-sidebar" id="ghSidebar">
+        <div class="gh-sidebar-header">
+            <h2>GlamAura</h2>
+            <span>Admin Panel</span>
+        </div>
+        
+        <div class="gh-nav">
+            <div class="gh-nav-section">Business Overview</div>
+            <a href="dashboard.html"><i class="fa-solid fa-border-all"></i> Dashboard</a>
+            <a href="finance.html"><i class="fa-solid fa-money-bill-trend-up"></i> Finance</a>
+            
+            <div class="gh-nav-section">CRM Module</div>
+            <a href="customers.html"><i class="fa-solid fa-users"></i> Customers</a>
+            <a href="messages.html"><i class="fa-solid fa-envelope"></i> Enquiries & Feedback</a>
+            
+            <div class="gh-nav-section">Sales & Ordering</div>
+            <a href="orders.html"><i class="fa-solid fa-cart-shopping"></i> Orders</a>
+            <a href="distribution.html"><i class="fa-solid fa-truck-fast"></i> Distribution</a>
+            <a href="purchase_orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Purchase Orders</a>
+            
+            <div class="gh-nav-section">SCM & Inventory</div>
+            <a href="products.html"><i class="fa-solid fa-box-open"></i> Products</a>
+            <a href="inventory.html"><i class="fa-solid fa-boxes-stacked"></i> Inventory</a>
+            <a href="suppliers.html"><i class="fa-solid fa-handshake"></i> Suppliers</a>
+            <a href="logistics.html"><i class="fa-solid fa-truck-ramp-box"></i> Logistics Partners</a>
+            <a href="integrations.html"><i class="fa-solid fa-globe"></i> E-Market Integrations</a>
+        </div>
+        
+        <div class="gh-user-card">
+            <div class="gh-user-info">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=ff4fa3&color=fff" alt="Admin">
+                <div>
+                    <strong id="adminUserName">Loading...</strong>
+                    <span>Administrator</span>
+                </div>
+            </div>
+            <button class="gh-logout-btn" onclick="GH_Admin.logout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </div>
+    </aside>
+
+    <main class="gh-main">
+        <header class="gh-topbar">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <button class="mobile-toggle" id="mobileToggle"><i class="fa-solid fa-bars"></i></button>
+                <div class="gh-breadcrumb">
+                    <span>Sales & Ordering /</span> Purchase Orders
+                </div>
+            </div>
+            <button class="gh-btn" onclick="openNewPOModal()">
+                <i class="fa-solid fa-plus"></i> New Purchase Order
+            </button>
+        </header>
+
+        <div class="gh-content">
+            <div class="gh-card">
+                <div class="gh-card-header">
+                    <h3>Procurement History</h3>
+                </div>
+                <div class="gh-table-wrapper">
+                    <table class="gh-table">
+                        <thead>
+                            <tr>
+                                <th>PO ID</th>
+                                <th>Supplier</th>
+                                <th>Product</th>
+                                <th>Qty</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="poTable">
+                            <tr><td colspan="7" style="text-align:center;">Loading orders...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- NEW PO MODAL -->
+    <div class="gh-modal-backdrop" id="poModal">
+        <div class="gh-modal">
+            <div class="gh-modal-header">
+                <h3>Create Purchase Order</h3>
+                <button class="gh-modal-close" onclick="GH_Admin.closeModal('poModal')">&times;</button>
+            </div>
+            <form id="poForm">
+                <div class="gh-modal-body">
+                    <label>Supplier</label>
+                    <select id="poSupplier" class="gh-input" required></select>
+                    
+                    <label>Product to Order</label>
+                    <select id="poProduct" class="gh-input" required></select>
+                    
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                        <div>
+                            <label>Quantity</label>
+                            <input type="number" id="poQty" class="gh-input" min="1" required>
+                        </div>
+                        <div>
+                            <label>Unit Price (₵)</label>
+                            <input type="number" id="poPrice" class="gh-input" step="0.01" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="gh-modal-footer">
+                    <button type="button" class="gh-btn outline" onclick="GH_Admin.closeModal('poModal')">Cancel</button>
+                    <button type="submit" class="gh-btn">Issue Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            GH_Admin.init();
+            loadPOs();
+            loadFormOptions();
+        });
+
+        async function loadPOs() {
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'purchase_orders_manage.php');
+                const data = await res.json();
+                const tbody = document.getElementById('poTable');
+                if(data.orders && data.orders.length > 0) {
+                    tbody.innerHTML = data.orders.map(o => `
+                        <tr>
+                            <td><strong>#PO-${o.id}</strong></td>
+                            <td>${o.supplier_name}</td>
+                            <td>${o.product_name}</td>
+                            <td>${o.quantity}</td>
+                            <td>₵${parseFloat(o.total_amount).toFixed(2)}</td>
+                            <td><span class="gh-badge ${o.status === 'Received' ? 'green' : 'amber'}">${o.status}</span></td>
+                            <td>
+                                ${o.status === 'Pending' ? `
+                                    <button class="gh-btn outline" style="border-color:var(--info); color:var(--info); padding:4px 8px;" onclick="receivePO(${o.id})">
+                                        <i class="fa-solid fa-box"></i> Receive
+                                    </button>
+                                ` : `<small style="color:#666;">${new Date(o.received_date).toLocaleDateString()}</small>`}
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No purchase orders found.</td></tr>';
+                }
+            } catch(e) {}
+        }
+
+        async function loadFormOptions() {
+            // Load Suppliers
+            const sRes = await fetch(GH_Admin.apiBase + 'suppliers_manage.php');
+            const sData = await sRes.json();
+            document.getElementById('poSupplier').innerHTML = sData.suppliers.map(s => `<option value="${s.id}">${s.company_name}</option>`).join('');
+
+            // Load Products
+            const pRes = await fetch(GH_Admin.apiBase + 'products_manage.php');
+            const pData = await pRes.json();
+            document.getElementById('poProduct').innerHTML = pData.products.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+        }
+
+        function openNewPOModal() {
+            GH_Admin.openModal('poModal');
+        }
+
+        document.getElementById('poForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                supplier_id: document.getElementById('poSupplier').value,
+                product_id: document.getElementById('poProduct').value,
+                quantity: document.getElementById('poQty').value,
+                unit_price: document.getElementById('poPrice').value
+            };
+
+            const res = await fetch(GH_Admin.apiBase + 'purchase_orders_manage.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if(data.status === 'success') {
+                GH_Admin.toast("Purchase Order Issued!");
+                GH_Admin.closeModal('poModal');
+                loadPOs();
+            }
+        });
+
+        async function receivePO(id) {
+            if(!confirm("Mark this order as received? This will automatically update your inventory levels.")) return;
+            const res = await fetch(GH_Admin.apiBase + 'purchase_orders_manage.php', {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: id, action: 'receive'})
+            });
+            const data = await res.json();
+            if(data.status === 'success') {
+                GH_Admin.toast("Inventory updated successfully!");
+                loadPOs();
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+

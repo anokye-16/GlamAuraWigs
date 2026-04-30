@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suppliers | GlamAura Admin Panel</title>
+    <link rel="stylesheet" href="admin_theme.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+        <aside class="gh-sidebar" id="ghSidebar">
+        <div class="gh-sidebar-header">
+            <h2>GlamAura</h2>
+            <span>Admin Panel</span>
+        </div>
+        
+        <div class="gh-nav">
+            <div class="gh-nav-section">Business Overview</div>
+            <a href="dashboard.html"><i class="fa-solid fa-border-all"></i> Dashboard</a>
+            <a href="finance.html"><i class="fa-solid fa-money-bill-trend-up"></i> Finance</a>
+            
+            <div class="gh-nav-section">CRM Module</div>
+            <a href="customers.html"><i class="fa-solid fa-users"></i> Customers</a>
+            <a href="messages.html"><i class="fa-solid fa-envelope"></i> Enquiries & Feedback</a>
+            
+            <div class="gh-nav-section">Sales & Ordering</div>
+            <a href="orders.html"><i class="fa-solid fa-cart-shopping"></i> Orders</a>
+            <a href="distribution.html"><i class="fa-solid fa-truck-fast"></i> Distribution</a>
+            <a href="purchase_orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Purchase Orders</a>
+            
+            <div class="gh-nav-section">SCM & Inventory</div>
+            <a href="products.html"><i class="fa-solid fa-box-open"></i> Products</a>
+            <a href="inventory.html"><i class="fa-solid fa-boxes-stacked"></i> Inventory</a>
+            <a href="suppliers.html"><i class="fa-solid fa-handshake"></i> Suppliers</a>
+            <a href="logistics.html"><i class="fa-solid fa-truck-ramp-box"></i> Logistics Partners</a>
+            <a href="integrations.html"><i class="fa-solid fa-globe"></i> E-Market Integrations</a>
+        </div>
+        
+        <div class="gh-user-card">
+            <div class="gh-user-info">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=ff4fa3&color=fff" alt="Admin">
+                <div>
+                    <strong id="adminUserName">Loading...</strong>
+                    <span>Administrator</span>
+                </div>
+            </div>
+            <button class="gh-logout-btn" onclick="GH_Admin.logout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="gh-main">
+        <header class="gh-topbar">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <button class="mobile-toggle" id="mobileToggle"><i class="fa-solid fa-bars"></i></button>
+                <div class="gh-breadcrumb">
+                    <span>Inventory & Products /</span> Suppliers
+                </div>
+            </div>
+            <div class="gh-topbar-actions">
+                <button class="gh-btn" onclick="GH_Admin.openModal('addSupplierModal')"><i class="fa-solid fa-plus"></i> Add Vendor</button>
+            </div>
+        </header>
+
+        <div class="gh-content">
+            <div class="gh-card">
+                <div class="gh-card-header">
+                    <h3>Vendor Directory</h3>
+                </div>
+                
+                <div class="gh-table-wrapper">
+                    <table class="gh-table">
+                        <thead>
+                            <tr>
+                                <th>Vendor Name</th>
+                                <th>Contact Person</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="suppliersTable">
+                            <tr><td colspan="5" style="text-align:center;">Loading suppliers...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ADD SUPPLIER MODAL -->
+    <div class="gh-modal-backdrop" id="addSupplierModal">
+        <div class="gh-modal">
+            <div class="gh-modal-header">
+                <h3>Add New Vendor</h3>
+                <button class="gh-modal-close" onclick="GH_Admin.closeModal('addSupplierModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="addForm">
+                <div class="gh-modal-body">
+                    <label>Vendor Company Name</label>
+                    <input type="text" id="addName" class="gh-input" required>
+                    
+                    <label>Contact Person</label>
+                    <input type="text" id="addContact" class="gh-input" required>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                        <div>
+                            <label>Email</label>
+                            <input type="email" id="addEmail" class="gh-input" required>
+                        </div>
+                        <div>
+                            <label>Phone</label>
+                            <input type="text" id="addPhone" class="gh-input" required>
+                        </div>
+                    </div>
+
+                    <label>Business Address</label>
+                    <input type="text" id="addAddress" class="gh-input">
+                </div>
+                <div class="gh-modal-footer">
+                    <button type="button" class="gh-btn outline" onclick="GH_Admin.closeModal('addSupplierModal')">Cancel</button>
+                    <button type="submit" class="gh-btn">Save Vendor</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            GH_Admin.init();
+            loadSuppliers();
+        });
+
+        async function loadSuppliers() {
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'suppliers_manage.php');
+                const data = await res.json();
+                if(data.error) return;
+
+                const html = data.suppliers.map(s => `
+                    <tr>
+                        <td><strong>${s.name}</strong></td>
+                        <td>${s.contact_person}</td>
+                        <td><a href="mailto:${s.email}" style="color:var(--info); text-decoration:none;">${s.email}</a></td>
+                        <td>${s.phone}</td>
+                        <td>
+                            <button class="gh-btn outline" style="padding:4px 8px; border-color:var(--danger); color:var(--danger);" onclick="deleteSupplier(${s.id})"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                document.getElementById('suppliersTable').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">No vendors found.</td></tr>';
+
+            } catch(e) {
+                GH_Admin.toast("Failed to load suppliers", "error");
+            }
+        }
+
+        document.getElementById('addForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                name: document.getElementById('addName').value,
+                contact_person: document.getElementById('addContact').value,
+                email: document.getElementById('addEmail').value,
+                phone: document.getElementById('addPhone').value,
+                address: document.getElementById('addAddress').value
+            };
+
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'suppliers_manage.php', { 
+                    method: 'POST', 
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify(payload) 
+                });
+                const data = await res.json();
+                if(data.status === 'success') {
+                    GH_Admin.toast("Vendor added!");
+                    GH_Admin.closeModal('addSupplierModal');
+                    e.target.reset();
+                    loadSuppliers();
+                } else { GH_Admin.toast("Error adding vendor", "error"); }
+            } catch(e) { GH_Admin.toast("Server error", "error"); }
+        });
+
+        async function deleteSupplier(id) {
+            if(!confirm("Delete this vendor?")) return;
+            try {
+                await fetch(GH_Admin.apiBase + 'suppliers_manage.php', {
+                    method: 'DELETE',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({id: id})
+                });
+                GH_Admin.toast("Vendor deleted");
+                loadSuppliers();
+            } catch(e) { GH_Admin.toast("Error", "error"); }
+        }
+    </script>
+</body>
+</html>
+
+
+
+

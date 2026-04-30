@@ -1,186 +1,259 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GlamAura Wigs</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlamAura Wigs — Premium Wig Store</title>
+<meta name="description" content="GlamAura Wigs — Premium quality human hair wigs delivered to your door across Ghana.">
+<link rel="stylesheet" href="shared.css">
+<style>
+/* NAV */
+.site-nav{position:fixed;top:0;left:0;right:0;z-index:900;height:62px;background:#000;border-bottom:2px solid #ff4fa3;display:flex;align-items:center;justify-content:space-between;padding:0 50px;}
+.site-nav .brand{color:#ff4fa3;font-size:22px;font-weight:700;cursor:pointer;letter-spacing:.5px;}
+.nav-links{display:flex;align-items:center;gap:22px;}
+.nav-links a{color:#ccc;font-size:14px;text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:#ff4fa3;}
+.cart-link{position:relative;}
+.cart-badge{position:absolute;top:-7px;right:-10px;background:#ff4fa3;color:#fff;border-radius:50%;width:17px;height:17px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700;}
+.nav-btn{background:#ff4fa3;color:#fff;border:none;padding:8px 18px;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;}
+.nav-btn:hover{background:#e0007e;}
+.hamburger{display:none;background:none;border:none;color:#ff4fa3;font-size:24px;cursor:pointer;}
+.mobile-menu{display:none;position:fixed;top:62px;left:0;right:0;background:#0d0d0d;border-bottom:1px solid #222;padding:16px 24px;flex-direction:column;gap:12px;z-index:899;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{color:#ccc;font-size:15px;text-decoration:none;padding:8px 0;border-bottom:1px solid #1a1a1a;}
+.mobile-menu a:last-child{border:none;}
+@media(max-width:768px){.nav-links{display:none;}.hamburger{display:block;}.site-nav{padding:0 20px;}}
 
-    <link rel="stylesheet" href="shared.css">
-    <link rel="stylesheet" href="navbar.css">
-    <style>
-        .hero {
-            min-height: 75vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 80px 20px;
-        }
+/* HERO */
+.hero{min-height:100vh;background:url('images/hero.jpeg') center/cover no-repeat;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;padding-top:62px;}
+.hero::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,.58);}
+.hero-content{position:relative;z-index:1;max-width:620px;padding:0 20px;}
+.hero-content h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.15;margin-bottom:16px;}
+.hero-content p{font-size:18px;color:#ddd;margin-bottom:28px;}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-outline-w{background:transparent;color:#fff;border:2px solid #fff;padding:11px 28px;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block;}
+.btn-outline-w:hover{border-color:#ff4fa3;color:#ff4fa3;}
 
-        .hero h1 {
-            color: #ff4fa3;
-            font-size: clamp(2.5rem, 4vw, 4rem);
-            margin-bottom: 20px;
-        }
+/* SECTIONS */
+.page-body{padding-top:62px;}
+.sec{padding:70px 60px;}
+.sec-alt{background:#0a0a0a;}
+.sec-title{text-align:center;color:#ff4fa3;font-size:28px;margin-bottom:10px;}
+.sec-sub{text-align:center;color:#999;font-size:14px;margin-bottom:36px;}
 
-        .hero p {
-            color: #ddd;
-            font-size: 1.1rem;
-            max-width: 720px;
-            margin: 0 auto 25px;
-        }
+/* BEST SELLERS */
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:26px;}
+.product-card{background:#111;border-radius:10px;overflow:hidden;border:1px solid #222;transition:transform .3s,border-color .3s;}
+.product-card:hover{transform:translateY(-6px);border-color:#ff4fa3;}
+.product-card img{width:100%;height:255px;object-fit:cover;}
+.product-card .card-body{padding:16px;}
+.product-card h3{font-size:14px;margin-bottom:5px;color:#fff;}
+.product-card .price{color:#ff4fa3;font-size:18px;font-weight:700;margin-bottom:10px;}
+.product-card .desc{font-size:12px;color:#888;line-height:1.5;margin-bottom:12px;}
+.add-btn{background:#ff4fa3;color:#fff;border:none;padding:10px 20px;border-radius:5px;font-size:13px;font-weight:600;cursor:pointer;width:100%;transition:background .2s;}
+.add-btn:hover{background:#e0007e;}
 
-        .btn {
-            background: #ff4fa3;
-            color: #fff;
-            padding: 14px 35px;
-            border: none;
-            border-radius: 8px;
-            text-decoration: none;
-            display: inline-block;
-            font-weight: 700;
-            transition: background 0.2s ease;
-        }
+/* WHY US */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;margin-top:30px;}
+.feat-card{background:#111;padding:26px;border-radius:10px;border:1px solid #222;text-align:center;transition:border-color .3s,transform .3s;}
+.feat-card:hover{border-color:#ff4fa3;transform:translateY(-4px);}
+.feat-icon{font-size:2rem;margin-bottom:10px;}
+.feat-card h4{color:#ff4fa3;margin-bottom:8px;}
+.feat-card p{color:#999;font-size:13px;line-height:1.6;}
 
-        .btn:hover {
-            background: #ff2f90;
-        }
+/* FOOTER */
+.site-footer{background:#000;border-top:2px solid #ff4fa3;}
+.footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:28px;padding:50px 60px 30px;}
+.footer-col h5{color:#ff4fa3;font-size:13px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;}
+.footer-col a,.footer-col p{display:block;color:#888;font-size:13px;margin-bottom:8px;text-decoration:none;cursor:pointer;transition:color .2s;}
+.footer-col a:hover{color:#ff4fa3;}
+.footer-bottom{border-top:1px solid #1a1a1a;padding:16px 60px;color:#444;font-size:12px;text-align:center;}
 
-        section {
-            padding: 70px 60px;
-        }
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:#ff4fa3;color:#fff;padding:13px 22px;border-radius:7px;font-size:14px;z-index:9999;opacity:0;transform:translateY(20px);transition:all .3s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
 
-        .section-title {
-            text-align: center;
-            color: #ff4fa3;
-            margin-bottom: 35px;
-        }
-
-        .products {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-        }
-
-        .product-card {
-            background: #111;
-            border-radius: 12px;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-        }
-
-        .product-card:hover {
-            transform: translateY(-6px);
-        }
-
-        .product-card img {
-            width: 100%;
-            height: 260px;
-            object-fit: cover;
-        }
-
-        .product-card h3 {
-            margin: 18px 0 10px;
-        }
-
-        .price {
-            color: #ff4fa3;
-            font-size: 1.15rem;
-            margin-bottom: 15px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 24px 0;
-            border-top: 1px solid #222;
-            color: #aaa;
-        }
-
-        @media(max-width:768px) {
-            section {
-                padding: 50px 20px;
-            }
-
-            .products {
-                gap: 20px;
-            }
-        }
-    </style>
+@media(max-width:768px){
+  .sec{padding:50px 20px;}
+  .footer-grid{padding:40px 20px 20px;}
+  .footer-bottom{padding:14px 20px;}
+}
+</style>
 </head>
-
 <body>
 
-    <header>
-        <div class="logo">GlamAura Wigs</div>
-        <div id="navbar-container"></div>
-    </header>
-    <script>
-        fetch('navbar.html').then(r => r.text()).then(html => {
-            document.getElementById('navbar-container').innerHTML = html;
-            const script = document.createElement('script');
-            script.src = 'navbar.js';
-            document.body.appendChild(script);
-        });
-    </script>
+<nav class="site-nav">
+  <div class="brand" onclick="location.href='home.html'">GlamAura Wigs</div>
+  <div class="nav-links">
+    <a href="home.html">Home</a>
+    <a href="Collection.html">Collections</a>
+    <a href="Shop.html">Shop</a>
+    <a href="About.html">About</a>
+    <a href="Contact.html">Contact</a>
+    <a href="cart.html" class="cart-link">🛒 <span class="cart-badge" id="cartBadge">0</span></a>
+    <button class="nav-btn" id="authBtn" onclick="location.href='login.html'">Login</button>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="home.html">Home</a>
+  <a href="Collection.html">Collections</a>
+  <a href="Shop.html">Shop</a>
+  <a href="About.html">About</a>
+  <a href="Contact.html">Contact</a>
+  <a href="cart.html">🛒 Cart (<span id="mobileCartBadge">0</span>)</a>
+  <a href="login.html" id="mobileAuthBtn">Login / Sign Up</a>
+</div>
 
-    <section class="hero">
-        <div>
-            <h1>Luxury Wigs For Confident Women</h1>
-            <p>Premium quality wigs designed to elevate your beauty.</p>
-            <a class="btn" href="Shop.html">Shop Now</a>
-        </div>
-    </section>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <h1>Luxury Wigs For<br>Confident Women</h1>
+    <p>Premium quality human hair wigs crafted to elevate your beauty, every single day.</p>
+    <div class="hero-btns">
+      <a href="Shop.html" class="btn btn-pink">Shop Now</a>
+      <a href="Collection.html" class="btn-outline-w">View Collections</a>
+    </div>
+  </div>
+</div>
 
-    <section>
-        <h2 class="section-title">Best Sellers</h2>
+<div class="page-body">
 
-        <div class="products">
+  <!-- BEST SELLERS -->
+  <div class="sec">
+    <h2 class="sec-title">Best Sellers</h2>
+    <p class="sec-sub">Our most loved wigs — ready to ship to your door.</p>
+    <div class="products-grid" id="bestSellers">
+      <p style="color:#888;text-align:center;grid-column:1/-1;">Loading...</p>
+    </div>
+  </div>
 
-            <div class="product-card">
-                <img src="images/Brazilian Body Wave Wig.jfif" alt="Brazilian Body Wave Wig">
-                <h3>Brazilian Body Wave Wig</h3>
-                <p class="price">GH¢1800</p>
-                <button class="btn">Add to Cart</button>
-            </div>
+  <!-- WHY US -->
+  <div class="sec sec-alt">
+    <h2 class="sec-title">Why Choose GlamAura?</h2>
+    <div class="features-grid">
+      <div class="feat-card"><div class="feat-icon">💎</div><h4>Premium Quality</h4><p>100% high-grade human hair for a natural, long-lasting look.</p></div>
+      <div class="feat-card"><div class="feat-icon">🚚</div><h4>Fast Delivery</h4><p>Same-day and next-day delivery available across Ghana.</p></div>
+      <div class="feat-card"><div class="feat-icon">🔐</div><h4>Secure Payment</h4><p>Mobile Money, card &amp; bank transfer — all fully secured.</p></div>
+      <div class="feat-card"><div class="feat-icon">✨</div><h4>Expert Styling</h4><p>Pre-styled, ready-to-wear wigs — no salon visit needed.</p></div>
+    </div>
+  </div>
 
-            <div class="product-card">
-                <img src="images/SW.jfif" alt="Straight Lace Wig">
-                <h3>Straight Lace Wig</h3>
-                <p class="price">GH¢2100</p>
-                <button class="btn">Add to Cart</button>
-            </div>
+  <!-- ABOUT SNIPPET -->
+  <div class="sec" style="text-align:center;">
+    <h2 class="sec-title">About GlamAura</h2>
+    <p style="max-width:700px;margin:0 auto 24px;color:#bbb;line-height:1.8;">GlamAura Wigs was created with the vision of helping women express confidence and beauty through premium quality hair. Our brand focuses on natural-looking wigs made with high-quality materials and modern styling. Every woman deserves to feel beautiful — and that is our promise.</p>
+    <a href="About.html" class="btn btn-pink">Learn More</a>
+  </div>
 
-            <div class="product-card">
-                <img src="images/Curly Wig.jfif" alt="Luxury Curly Wig">
-                <h3>Luxury Curly Wig</h3>
-                <p class="price">GH¢1950</p>
-                <button class="btn">Add to Cart</button>
-            </div>
+</div>
 
-        </div>
-    </section>
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h5>GlamAura Wigs</h5>
+      <p>Premium quality wigs for confident, beautiful women across Ghana and beyond.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Shop</h5>
+      <a href="Shop.html">All Wigs</a>
+      <a href="Collection.html">Collections</a>
+      <a href="About.html">About Us</a>
+    </div>
+    <div class="footer-col">
+      <h5>Account</h5>
+      <a href="login.html">Login / Sign Up</a>
+      <a href="customer_dashboard.html">My Orders</a>
+      <a href="customer_dashboard.html">Track Order</a>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <p>📧 support@glamaurawigs.com</p>
+      <p>📱 +233 539 945 5123</p>
+      <p>📸 @glamaurawigs</p>
+      <p>📍 Accra, Ghana</p>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 GlamAura Wigs. All Rights Reserved.</div>
+</footer>
 
-    <section class="about">
-        <h2 class="section-title">About Our Brand</h2>
-        <p>
-            GlamAura Wigs was created to help women express confidence and beauty through high quality hair.
-            Our wigs are carefully selected to provide natural looks, comfort, and luxury.
-            Whether you want everyday elegance or a bold transformation, GlamAura Wigs is designed to crown your beauty.
-        </p>
-    </section>
+<div class="toast" id="toast"></div>
 
-    <section class="contact">
-        <h2 class="section-title">Contact Us</h2>
-        <p>Email: support@glamaurawigs.com</p>
-        <p>Instagram: @glamaurawigs</p>
-        <p>WhatsApp: +233 539 945 5123</p>
-    </section>
+<script>
+// CART BADGE
+function updateBadge(){
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const total = cart.reduce((s,i) => s + (i.qty||1), 0);
+  document.getElementById('cartBadge').textContent = total;
+  const m = document.getElementById('mobileCartBadge');
+  if(m) m.textContent = total;
+}
+updateBadge();
 
-    <footer>
-        <p>© 2026 GlamAura Wigs. All Rights Reserved.</p>
-    </footer>
+// AUTH NAV
+const user = JSON.parse(localStorage.getItem('user')) || {};
+if(user.user_id){
+  const btn = document.getElementById('authBtn');
+  btn.textContent = 'My Account';
+  btn.onclick = () => location.href = 'customer_dashboard.html';
+  const m = document.getElementById('mobileAuthBtn');
+  if(m){ m.textContent = 'My Account'; m.href = 'customer_dashboard.html'; }
+}
+if(user.is_admin){
+  const btn = document.getElementById('authBtn');
+  btn.textContent = 'Admin Panel';
+  btn.onclick = () => location.href = 'admin/dashboard.html';
+}
 
+// MOBILE MENU
+function toggleMenu(){
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+// LOAD BEST SELLERS
+fetch('fetch_products.php')
+  .then(r => r.text())
+  .then(html => {
+    const grid = document.getElementById('bestSellers');
+    // Parse the returned HTML cards and take first 4
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    const cards = tmp.querySelectorAll('.product-card');
+    grid.innerHTML = '';
+    let count = 0;
+    cards.forEach(c => {
+      if(count < 4){ grid.appendChild(c.cloneNode(true)); count++; }
+    });
+    if(count === 0) grid.innerHTML = '<p style="color:#888;text-align:center;grid-column:1/-1;">No products found.</p>';
+    // Attach add-to-cart
+    grid.querySelectorAll('.add-btn').forEach(btn => {
+      btn.addEventListener('click', function(){
+        const card = this.closest('.product-card');
+        const name = card.querySelector('h3')?.innerText || '';
+        const price = parseFloat((card.querySelector('.price')?.innerText || '0').replace(/[^0-9.]/g,''));
+        const img = card.querySelector('img')?.src || '';
+        const pid = this.getAttribute('data-id') || '0';
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const ex = cart.find(p => p.name === name);
+        if(ex){ ex.qty++; } else { cart.push({product_id:pid,name,basePrice:price,image:img,qty:1,quality:'12"'}); }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateBadge();
+        showToast(name + ' added to cart ✓');
+      });
+    });
+  })
+  .catch(() => {
+    document.getElementById('bestSellers').innerHTML = '<p style="color:#888;text-align:center;grid-column:1/-1;">Could not load products.</p>';
+  });
+
+// TOAST
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
 </body>
-
 </html>

@@ -140,3 +140,48 @@ td { color: var(--text); }
   .module-sidebar { display: none; }
   .kpi-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ============================================================
+   SITE-WIDE NAV & FOOTER (shared across all customer pages)
+   ============================================================ */
+
+.site-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+  height: 62px; background: #000; border-bottom: 2px solid var(--pink);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 50px;
+}
+.site-nav .brand { color: var(--pink); font-size: 22px; font-weight: 700; cursor: pointer; letter-spacing: .5px; }
+.nav-links { display: flex; align-items: center; gap: 22px; }
+.nav-links a { color: #ccc; font-size: 14px; text-decoration: none; transition: color .2s; }
+.nav-links a:hover { color: var(--pink); }
+.nav-links a.active { color: var(--pink); font-weight: 600; }
+.cart-link { position: relative; }
+.cart-badge { position: absolute; top: -7px; right: -10px; background: var(--pink); color: #fff; border-radius: 50%; width: 17px; height: 17px; font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.nav-btn { background: var(--pink); color: #fff; border: none; padding: 8px 18px; border-radius: 5px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background .2s; }
+.nav-btn:hover { background: var(--dark-pink); }
+.hamburger { display: none; background: none; border: none; color: var(--pink); font-size: 24px; cursor: pointer; }
+.mobile-menu { display: none; position: fixed; top: 62px; left: 0; right: 0; background: #0d0d0d; border-bottom: 1px solid var(--border); padding: 16px 24px; flex-direction: column; gap: 0; z-index: 899; }
+.mobile-menu.open { display: flex; }
+.mobile-menu a { color: #ccc; font-size: 15px; text-decoration: none; padding: 12px 0; border-bottom: 1px solid #1a1a1a; transition: color .2s; }
+.mobile-menu a:hover { color: var(--pink); }
+.mobile-menu a:last-child { border: none; }
+
+/* Page body offset for fixed nav */
+.page-top { padding-top: 62px; }
+
+/* Site footer */
+.site-footer { background: #000; border-top: 2px solid var(--pink); margin-top: 60px; }
+.footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 26px; padding: 48px 60px 28px; }
+.footer-col h5 { color: var(--pink); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 14px; }
+.footer-col a, .footer-col p { display: block; color: #666; font-size: 13px; margin-bottom: 8px; text-decoration: none; cursor: pointer; transition: color .2s; }
+.footer-col a:hover { color: var(--pink); }
+.footer-bottom { border-top: 1px solid #1a1a1a; padding: 16px 60px; color: #444; font-size: 12px; text-align: center; }
+
+@media (max-width: 768px) {
+  .site-nav { padding: 0 18px; }
+  .nav-links { display: none; }
+  .hamburger { display: block; }
+  .footer-grid { padding: 36px 20px 20px; }
+  .footer-bottom { padding: 14px 20px; }
+}

@@ -10,8 +10,8 @@ $full_name = $conn->real_escape_string($_POST['full_name']);
 $email = $conn->real_escape_string($_POST['email']);
 $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
 
-// check if email exists
-$check = $conn->query("SELECT id FROM users WHERE email='$email'");
+// check if email exists in customers table
+$check = $conn->query("SELECT id FROM customers WHERE email='$email'");
 
 if($check->num_rows > 0){
 echo json_encode([
@@ -21,8 +21,8 @@ echo json_encode([
 exit;
 }
 
-// insert user
-$conn->query("INSERT INTO users (full_name, email, password)
+// insert user into customers table
+$conn->query("INSERT INTO customers (full_name, email, password)
 VALUES ('$full_name','$email','$password')");
 
 $user_id = $conn->insert_id;
@@ -30,13 +30,15 @@ $user_id = $conn->insert_id;
 // AUTO LOGIN AFTER SIGNUP
 $_SESSION['user_id'] = $user_id;
 $_SESSION['user_name'] = $full_name;
+$_SESSION['user_type'] = 'customer';
 
 echo json_encode([
 'status'=>true,
 'message'=>'Account created successfully',
 'user_id'=>$user_id,
 'full_name'=>$full_name,
-'email'=>$email
+'email'=>$email,
+'is_admin'=>false
 ]);
 
 }

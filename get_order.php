@@ -10,8 +10,13 @@ if ($conn->connect_error) {
 
 $order_id = $_GET['order_id'] ?? 0;
 
-/* GET ORDER */
-$orderStmt = $conn->prepare("SELECT * FROM orders WHERE id=?");
+/* GET ORDER WITH TRACKING ID */
+$orderStmt = $conn->prepare("
+    SELECT o.*, d.tracking_number 
+    FROM orders o 
+    LEFT JOIN deliveries d ON o.id = d.order_id 
+    WHERE o.id=?
+");
 $orderStmt->bind_param("i", $order_id);
 $orderStmt->execute();
 
@@ -23,8 +28,13 @@ if (!$order) {
     exit;
 }
 
-/* GET ITEMS */
-$itemStmt = $conn->prepare("SELECT * FROM order_items WHERE order_id=?");
+/* GET ITEMS WITH PRODUCT NAMES */
+$itemStmt = $conn->prepare("
+    SELECT oi.*, p.name as product_name 
+    FROM order_items oi 
+    JOIN products p ON oi.product_id = p.id 
+    WHERE oi.order_id=?
+");
 $itemStmt->bind_param("i", $order_id);
 $itemStmt->execute();
 
@@ -37,3 +47,4 @@ echo json_encode([
 ]);
 
 $conn->close();
+?>

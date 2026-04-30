@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM | GlamAura Admin Panel</title>
+    <link rel="stylesheet" href="admin_theme.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        .tabs-header { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+        .tab-btn { background: none; border: none; color: var(--text-muted); padding: 12px 20px; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 600; border-bottom: 2px solid transparent; transition: all 0.3s; }
+        .tab-btn.active { color: var(--glam-pink); border-bottom-color: var(--glam-pink); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .star-rating { color: #f39c12; }
+    </style>
+</head>
+<body>
+
+        <aside class="gh-sidebar" id="ghSidebar">
+        <div class="gh-sidebar-header">
+            <h2>GlamAura</h2>
+            <span>Admin Panel</span>
+        </div>
+        
+        <div class="gh-nav">
+            <div class="gh-nav-section">Business Overview</div>
+            <a href="dashboard.html"><i class="fa-solid fa-border-all"></i> Dashboard</a>
+            <a href="finance.html"><i class="fa-solid fa-money-bill-trend-up"></i> Finance</a>
+            
+            <div class="gh-nav-section">CRM Module</div>
+            <a href="customers.html"><i class="fa-solid fa-users"></i> Customers</a>
+            <a href="messages.html"><i class="fa-solid fa-envelope"></i> Enquiries & Feedback</a>
+            
+            <div class="gh-nav-section">Sales & Ordering</div>
+            <a href="orders.html"><i class="fa-solid fa-cart-shopping"></i> Orders</a>
+            <a href="distribution.html"><i class="fa-solid fa-truck-fast"></i> Distribution</a>
+            <a href="purchase_orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Purchase Orders</a>
+            
+            <div class="gh-nav-section">SCM & Inventory</div>
+            <a href="products.html"><i class="fa-solid fa-box-open"></i> Products</a>
+            <a href="inventory.html"><i class="fa-solid fa-boxes-stacked"></i> Inventory</a>
+            <a href="suppliers.html"><i class="fa-solid fa-handshake"></i> Suppliers</a>
+            <a href="logistics.html"><i class="fa-solid fa-truck-ramp-box"></i> Logistics Partners</a>
+            <a href="integrations.html"><i class="fa-solid fa-globe"></i> E-Market Integrations</a>
+        </div>
+        
+        <div class="gh-user-card">
+            <div class="gh-user-info">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=ff4fa3&color=fff" alt="Admin">
+                <div>
+                    <strong id="adminUserName">Loading...</strong>
+                    <span>Administrator</span>
+                </div>
+            </div>
+            <button class="gh-logout-btn" onclick="GH_Admin.logout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </div>
+    </aside>
+
+    <main class="gh-main">
+        <header class="gh-topbar">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <button class="mobile-toggle" id="mobileToggle"><i class="fa-solid fa-bars"></i></button>
+                <div class="gh-breadcrumb">
+                    <span>CRM Module /</span> Enquiries & Feedback
+                </div>
+            </div>
+        </header>
+
+        <div class="gh-content">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="showTab('enquiries')">Enquiries (Contact Us)</button>
+                <button class="tab-btn" onclick="showTab('feedback')">Customer Feedback</button>
+            </div>
+
+            <!-- ENQUIRIES TAB -->
+            <div id="enquiries" class="tab-content active">
+                <div class="gh-card">
+                    <div class="gh-card-header">
+                        <h3>General Enquiries</h3>
+                        <button class="gh-btn outline" onclick="markAllRead()">Mark All Read</button>
+                    </div>
+                    <div class="gh-table-wrapper">
+                        <table class="gh-table">
+                            <thead>
+                                <tr>
+                                    <th>Sender</th>
+                                    <th>Subject</th>
+                                    <th>Message</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="messagesTable">
+                                <tr><td colspan="5" style="text-align:center;">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FEEDBACK TAB -->
+            <div id="feedback" class="tab-content">
+                <div class="gh-card">
+                    <div class="gh-card-header">
+                        <h3>Ratings & Reviews</h3>
+                    </div>
+                    <div class="gh-table-wrapper">
+                        <table class="gh-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Rating</th>
+                                    <th>Review</th>
+                                    <th>Admin Response</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="feedbackTable">
+                                <tr><td colspan="5" style="text-align:center;">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Reply Modal -->
+    <div class="gh-modal-backdrop" id="replyModal">
+        <div class="gh-modal">
+            <div class="gh-modal-header">
+                <h3 id="replyTitle">Reply to Message</h3>
+                <button class="gh-modal-close" onclick="GH_Admin.closeModal('replyModal')">&times;</button>
+            </div>
+            <div class="gh-modal-body">
+                <input type="hidden" id="replyId">
+                <input type="hidden" id="replyType">
+                <p id="originalMsg" style="background:#1a1a1a; padding:10px; border-radius:6px; margin-bottom:15px; font-size:13px; color:#aaa;"></p>
+                <label>Your Response</label>
+                <textarea id="replyText" class="gh-input" style="height:120px;" placeholder="Type your response here..."></textarea>
+            </div>
+            <div class="gh-modal-footer">
+                <button class="gh-btn outline" onclick="GH_Admin.closeModal('replyModal')">Cancel</button>
+                <button class="gh-btn" onclick="sendReply()">Send Response</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            GH_Admin.init();
+            loadEnquiries();
+            loadFeedback();
+        });
+
+        function showTab(id) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        async function loadEnquiries() {
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'messages_manage.php');
+                const data = await res.json();
+                const tbody = document.getElementById('messagesTable');
+                if(data.messages && data.messages.length > 0) {
+                    tbody.innerHTML = data.messages.map(m => `
+                        <tr style="${m.is_read == 0 ? 'background:rgba(255,79,163,0.03)' : ''}">
+                            <td><strong>${m.name}</strong><br><small>${m.email}</small></td>
+                            <td>${m.subject}</td>
+                            <td style="max-width:300px;">${m.message}</td>
+                            <td><span class="gh-badge ${m.is_read == 1 ? 'green' : 'pink'}">${m.is_read == 1 ? 'Read' : 'New'}</span></td>
+                            <td>
+                                <button class="gh-btn outline" onclick="openReply(${m.id}, 'enquiry', '${m.message.replace(/'/g, "\\'")}')">Reply</button>
+                                <button class="gh-btn outline" onclick="deleteItem(${m.id}, 'enquiry')"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No enquiries found.</td></tr>';
+                }
+            } catch(e) {}
+        }
+
+        async function loadFeedback() {
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'feedback_manage.php');
+                const data = await res.json();
+                const tbody = document.getElementById('feedbackTable');
+                if(data.feedback && data.feedback.length > 0) {
+                    tbody.innerHTML = data.feedback.map(f => `
+                        <tr>
+                            <td><strong>${f.customer_name}</strong></td>
+                            <td class="star-rating">${'★'.repeat(f.rating)}${'☆'.repeat(5-f.rating)}</td>
+                            <td style="max-width:300px;">${f.message}</td>
+                            <td style="font-size:12px; color:#888;">${f.admin_response || '<i>No response yet</i>'}</td>
+                            <td>
+                                <button class="gh-btn outline" onclick="openReply(${f.id}, 'feedback', '${f.message.replace(/'/g, "\\'")}')">Respond</button>
+                                <button class="gh-btn outline" onclick="deleteItem(${f.id}, 'feedback')"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No feedback found.</td></tr>';
+                }
+            } catch(e) {}
+        }
+
+        function openReply(id, type, msg) {
+            document.getElementById('replyId').value = id;
+            document.getElementById('replyType').value = type;
+            document.getElementById('originalMsg').innerText = "Original: " + msg;
+            document.getElementById('replyTitle').innerText = type === 'enquiry' ? "Reply to Enquiry" : "Respond to Feedback";
+            GH_Admin.openModal('replyModal');
+        }
+
+        async function sendReply() {
+            const id = document.getElementById('replyId').value;
+            const type = document.getElementById('replyType').value;
+            const text = document.getElementById('replyText').value;
+            const endpoint = type === 'enquiry' ? 'messages_manage.php' : 'feedback_manage.php';
+
+            try {
+                const res = await fetch(GH_Admin.apiBase + endpoint, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({id: id, admin_response: text})
+                });
+                const data = await res.json();
+                if(data.status === 'success') {
+                    GH_Admin.toast("Response sent!");
+                    GH_Admin.closeModal('replyModal');
+                    if(type === 'enquiry') loadEnquiries(); else loadFeedback();
+                }
+            } catch(e) {}
+        }
+
+        async function deleteItem(id, type) {
+            if(!confirm("Delete this?")) return;
+            const endpoint = type === 'enquiry' ? 'messages_manage.php' : 'feedback_manage.php';
+            await fetch(GH_Admin.apiBase + endpoint, {
+                method: 'DELETE',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: id})
+            });
+            if(type === 'enquiry') loadEnquiries(); else loadFeedback();
+        }
+
+        async function markAllRead() {
+            await fetch(GH_Admin.apiBase + 'messages_manage.php', {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({mark_all: true})
+            });
+            loadEnquiries();
+        }
+    </script>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistics | GlamAura Admin Panel</title>
+    <link rel="stylesheet" href="admin_theme.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <aside class="gh-sidebar" id="ghSidebar">
+        <div class="gh-sidebar-header">
+            <h2>GlamAura</h2>
+            <span>Admin Panel</span>
+        </div>
+        
+        <div class="gh-nav">
+            <div class="gh-nav-section">Business Overview</div>
+            <a href="dashboard.html"><i class="fa-solid fa-border-all"></i> Dashboard</a>
+            <a href="finance.html"><i class="fa-solid fa-money-bill-trend-up"></i> Finance</a>
+            
+            <div class="gh-nav-section">CRM Module</div>
+            <a href="customers.html"><i class="fa-solid fa-users"></i> Customers</a>
+            <a href="messages.html"><i class="fa-solid fa-envelope"></i> Enquiries & Feedback</a>
+            
+            <div class="gh-nav-section">Sales & Ordering</div>
+            <a href="orders.html"><i class="fa-solid fa-cart-shopping"></i> Orders</a>
+            <a href="distribution.html"><i class="fa-solid fa-truck-fast"></i> Distribution</a>
+            <a href="purchase_orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Purchase Orders</a>
+            
+            <div class="gh-nav-section">SCM & Inventory</div>
+            <a href="products.html"><i class="fa-solid fa-box-open"></i> Products</a>
+            <a href="inventory.html"><i class="fa-solid fa-boxes-stacked"></i> Inventory</a>
+            <a href="suppliers.html"><i class="fa-solid fa-handshake"></i> Suppliers</a>
+            <a href="logistics.html" class="active"><i class="fa-solid fa-truck-ramp-box"></i> Logistics Partners</a>
+            <a href="integrations.html"><i class="fa-solid fa-globe"></i> E-Market Integrations</a>
+        </div>
+        
+        <div class="gh-user-card">
+            <div class="gh-user-info">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=ff4fa3&color=fff" alt="Admin">
+                <div>
+                    <strong id="adminUserName">Loading...</strong>
+                    <span>Administrator</span>
+                </div>
+            </div>
+            <button class="gh-logout-btn" onclick="GH_Admin.logout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </div>
+    </aside>
+
+    <main class="gh-main">
+        <header class="gh-topbar">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <button class="mobile-toggle" id="mobileToggle"><i class="fa-solid fa-bars"></i></button>
+                <div class="gh-breadcrumb">
+                    <span>Logistics /</span> Partners
+                </div>
+            </div>
+            <button class="gh-btn" onclick="GH_Admin.openModal('addPartnerModal')">
+                <i class="fa-solid fa-plus"></i> Add Partner
+            </button>
+        </header>
+
+        <div class="gh-content">
+            <div class="gh-card">
+                <div class="gh-card-header">
+                    <h3>Delivery & Logistics Partners</h3>
+                </div>
+                <div class="gh-table-wrapper">
+                    <table class="gh-table">
+                        <thead>
+                            <tr>
+                                <th>Partner</th>
+                                <th>Contact</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="partnersTable">
+                            <tr><td colspan="5" style="text-align:center;">Loading partners...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div class="gh-modal-backdrop" id="addPartnerModal">
+        <div class="gh-modal">
+            <div class="gh-modal-header">
+                <h3>Add Logistics Partner</h3>
+                <button class="gh-modal-close" onclick="GH_Admin.closeModal('addPartnerModal')">&times;</button>
+            </div>
+            <div class="gh-modal-body">
+                <form id="partnerForm">
+                    <label>Company Name</label>
+                    <input type="text" class="gh-input" name="company_name" required>
+                    <label>Contact Person</label>
+                    <input type="text" class="gh-input" name="contact_person">
+                    <label>Email</label>
+                    <input type="email" class="gh-input" name="email">
+                    <label>Phone</label>
+                    <input type="text" class="gh-input" name="phone">
+                    <label>Partnership Type</label>
+                    <select class="gh-input" name="partnership_type">
+                        <option value="Delivery">Delivery / Courier</option>
+                        <option value="Warehousing">Warehousing</option>
+                        <option value="Packaging">Packaging</option>
+                    </select>
+                </form>
+            </div>
+            <div class="gh-modal-footer">
+                <button class="gh-btn outline" onclick="GH_Admin.closeModal('addPartnerModal')">Cancel</button>
+                <button class="gh-btn" onclick="savePartner()">Save Partner</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            GH_Admin.init();
+            loadPartners();
+        });
+
+        async function loadPartners() {
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'logistics_manage.php');
+                const data = await res.json();
+                const tbody = document.getElementById('partnersTable');
+                
+                if(data.partners && data.partners.length > 0) {
+                    tbody.innerHTML = data.partners.map(p => `
+                        <tr>
+                            <td><strong>${p.company_name}</strong></td>
+                            <td>${p.email || 'N/A'}<br><small>${p.phone || ''}</small></td>
+                            <td><span class="gh-badge blue">${p.partnership_type}</span></td>
+                            <td><span class="gh-badge ${p.status === 'Active' ? 'green' : 'pink'}">${p.status}</span></td>
+                            <td>
+                                <button class="gh-btn outline" style="padding:4px 8px;" onclick="deletePartner(${p.id})">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No partners found.</td></tr>';
+                }
+            } catch(e) {
+                GH_Admin.toast("Failed to load partners", "error");
+            }
+        }
+
+        async function savePartner() {
+            const form = document.getElementById('partnerForm');
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((v,k) => data[k] = v);
+
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'logistics_manage.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if(result.status === 'success') {
+                    GH_Admin.toast("Partner added!");
+                    GH_Admin.closeModal('addPartnerModal');
+                    form.reset();
+                    loadPartners();
+                } else {
+                    GH_Admin.toast(result.message || "Error saving partner", "error");
+                }
+            } catch(e) {
+                GH_Admin.toast("Server error", "error");
+            }
+        }
+
+        async function deletePartner(id) {
+            if(!confirm("Are you sure you want to remove this partner?")) return;
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'logistics_manage.php', {
+                    method: 'DELETE',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({id: id})
+                });
+                const result = await res.json();
+                if(result.status === 'success') {
+                    GH_Admin.toast("Partner removed");
+                    loadPartners();
+                }
+            } catch(e) {
+                GH_Admin.toast("Error removing partner", "error");
+            }
+        }
+    </script>
+</body>
+</html>

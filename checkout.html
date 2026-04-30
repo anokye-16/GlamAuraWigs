@@ -1,433 +1,477 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Checkout | GlamAura Wigs</title>
-<link rel="stylesheet" href="shared.css">
-<link rel="stylesheet" href="navbar.css">
-<style>
-body{
-background:#000;
-color:white;
-font-family:Arial,Helvetica,sans-serif;
-margin:0;
-}
-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:20px 60px;
-border-bottom:2px solid #ff4fa3;
-}
-.logo{
-color:#ff4fa3;
-font-size:26px;
-font-weight:bold;
-}
-.checkout-wrapper{
-display:grid;
-grid-template-columns:2fr 1fr;
-gap:40px;
-padding:60px;
-}
-.checkout-form, .summary{
-background:#111;
-padding:30px;
-border-radius:12px;
-}
-.checkout-form h3,
-.summary h3{
-color:#ff4fa3;
-margin-bottom:18px;
-}
-.checkout-form input,
-.checkout-form select{
-width:100%;
-padding:12px;
-margin:10px 0;
-border:none;
-border-radius:6px;
-background:#222;
-color:white;
-}
-.payment-box{margin-top:15px;}
-.pay-btn{
-background:#ff4fa3;
-color:white;
-border:none;
-padding:14px 22px;
-border-radius:8px;
-cursor:pointer;
-margin-top:20px;
-}
-.pay-btn:hover{background:#ff2f90;}
-.line{border-top:1px solid #333;margin:20px 0;}
-.summary-item{display:flex;justify-content:space-between;margin-bottom:12px;}
-@media(max-width:992px){.checkout-wrapper{grid-template-columns:1fr;}}
-@media(max-width:768px){header{flex-direction:column;align-items:flex-start;} .checkout-wrapper{padding:30px;} }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | GlamAura Wigs</title>
+    <link rel="stylesheet" href="shared.css">
 
-h1{
-text-align:center;
-margin-top:40px;
-color:#ff4fa3;
-}
+    <style>
+        body {
+            background: #000;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+        }
 
-.checkout-wrapper{
-display:grid;
-grid-template-columns:2fr 1fr;
-gap:40px;
-padding:60px;
-}
+        .page-top {
+            padding-top: 62px;
+        }
 
-/* FORM */
-.checkout-form{
-background:#111;
-padding:40px;
-border-radius:10px;
-}
+        .page-title {
+            text-align: center;
+            padding: 40px 20px 20px;
+        }
 
-.checkout-form h3{
-color:#ff4fa3;
-margin-top:20px;
-}
+        .page-title h1 {
+            color: var(--pink);
+        }
 
-input, select{
-width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-border-radius:5px;
-background:#222;
-color:white;
-}
+        .checkout-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 28px;
+            padding: 0 60px 60px;
+        }
 
-/* PAYMENT BOX */
-.payment-box{
-background:#1a1a1a;
-padding:15px;
-border-radius:8px;
-margin-top:10px;
-}
+        .checkout-form,
+        .order-summary {
+            background: #111;
+            padding: 32px;
+            border-radius: 10px;
+            border: 1px solid #222;
+        }
 
-/* SUMMARY */
-.summary{
-background:#111;
-padding:30px;
-border-radius:10px;
-}
+        .checkout-form h3 {
+            color: var(--pink);
+            margin-top: 22px;
+            margin-bottom: 12px;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
 
-.cart-item{
-display:flex;
-align-items:center;
-justify-content:space-between;
-margin-bottom:15px;
-gap:10px;
-}
+        .checkout-form h3:first-child {
+            margin-top: 0;
+        }
 
-.cart-item img{
-width:60px;
-height:60px;
-border-radius:8px;
-object-fit:cover;
-}
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            background: #1a1a1a;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: border-color .2s;
+            font-family: inherit;
+        }
 
-.item-info{
-flex:1;
-font-size:14px;
-}
+        input:focus,
+        select:focus {
+            border-color: var(--pink);
+        }
 
-.line{
-border-top:1px solid #444;
-margin:15px 0;
-}
+        .payment-box {
+            background: #1a1a1a;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 8px;
+            border: 1px solid #2a2a2a;
+        }
 
-.summary-item{
-display:flex;
-justify-content:space-between;
-margin:10px 0;
-}
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
 
-.total{
-font-size:20px;
-font-weight:bold;
-}
+        .cart-item img {
+            width: 56px;
+            height: 56px;
+            border-radius: 7px;
+            object-fit: cover;
+            border: 1px solid #2a2a2a;
+        }
 
-/* BUTTON */
-.pay-btn{
-width:100%;
-margin-top:25px;
-padding:14px;
-background:#ff4fa3;
-border:none;
-color:white;
-font-size:16px;
-cursor:pointer;
-border-radius:5px;
-}
+        .item-info {
+            flex: 1;
+            font-size: 13px;
+            color: #ddd;
+        }
 
-.pay-btn:hover{
-background:#ff2f90;
-}
+        .item-info strong {
+            color: #fff;
+            font-size: 14px;
+        }
 
-.pay-btn:disabled{
-background:gray;
-cursor:not-allowed;
-}
+        .line {
+            border-top: 1px solid #222;
+            margin: 16px 0;
+        }
 
-footer{
-text-align:center;
-padding:20px;
-border-top:2px solid #ff4fa3;
-margin-top:50px;
-}
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-size: 14px;
+            color: #aaa;
+        }
 
-.error{
-color:red;
-font-size:13px;
-margin-top:10px;
-}
+        .summary-item.grand-total {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
 
-</style>
+        .summary-item.grand-total span:last-child {
+            color: var(--pink);
+        }
+
+        .pay-btn {
+            width: 100%;
+            margin-top: 22px;
+            padding: 14px;
+            background: var(--pink);
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background .2s;
+        }
+
+        .pay-btn:hover {
+            background: var(--dark-pink);
+        }
+
+        .pay-btn:disabled {
+            background: #444;
+            cursor: not-allowed;
+        }
+
+        .error {
+            color: var(--danger);
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        @media(max-width:992px) {
+            .checkout-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width:768px) {
+            .checkout-wrapper {
+                padding: 0 20px 40px;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <nav class="site-nav">
+        <div class="brand" onclick="location.href='home.html'">GlamAura Wigs</div>
+        <div class="nav-links">
+            <a href="home.html">Home</a>
+            <a href="Collection.html">Collections</a>
+            <a href="Shop.html">Shop</a>
+            <a href="cart.html" class="cart-link">🛒 <span class="cart-badge">0</span></a>
+            <button class="nav-btn" id="navAuthBtn">Login</button>
+        </div>
+        <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="home.html">Home</a><a href="Collection.html">Collections</a><a href="Shop.html">Shop</a>
+        <a href="cart.html">🛒 Cart</a><a href="login.html" id="mobileAuthLink">Login</a>
+    </div>
 
-<header>
-  <div class="logo">GlamAura Wigs</div>
-  <div id="navbar-container"></div>
-</header>
-<script>
-  fetch('navbar.html').then(r => r.text()).then(html => {
-    document.getElementById('navbar-container').innerHTML = html;
-    const script = document.createElement('script');
-    script.src = 'navbar.js';
-    document.body.appendChild(script);
-  });
-</script>
+    <div class="page-top">
+        <div class="page-title">
+            <h1>Secure Checkout</h1>
+        </div>
 
-<h1>Secure Checkout</h1>
+        <div class="checkout-wrapper">
 
-<div class="checkout-wrapper">
+            <!-- SUMMARY (Left Column) -->
+            <div class="order-summary">
 
-<!-- FORM -->
-<div class="checkout-form">
+                <h3>Order Summary</h3>
 
-<h3>Shipping Information</h3>
+                <div id="cart-items"></div>
 
-<input id="name" type="text" placeholder="Full Name">
-<input id="email" type="email" placeholder="Email Address">
-<input id="phone" type="text" placeholder="Phone Number">
-<input id="address" type="text" placeholder="Shipping Address">
-<input id="city" type="text" placeholder="City">
-<input id="country" type="text" placeholder="Country">
+                <div class="line"></div>
 
-<div id="error" class="error"></div>
+                <div class="summary-item">
+                    <span>Subtotal</span>
+                    <span id="subtotal">₵0</span>
+                </div>
 
-<h3>Delivery Method</h3>
-<select id="delivery">
-<option value="100">Standard Delivery (3–5 days) - ₵100</option>
-<option value="200">Express Delivery (1–2 days) - ₵200</option>
-</select>
+                <div class="summary-item">
+                    <span>VAT (12.5%)</span>
+                    <span id="vat">₵0</span>
+                </div>
 
-<h3>Payment Method</h3>
+                <div class="summary-item">
+                    <span>Shipping</span>
+                    <span id="shipping">₵0</span>
+                </div>
 
-<select id="paymentMethod" onchange="togglePayment()">
-<option value="momo">Mobile Money </option>
-<option value="card">Card Payment</option>
-</select>
+                <div class="line"></div>
 
-<!-- MOBILE MONEY -->
-<div id="momoBox" class="payment-box">
-<input type="text" id="momoNumber" placeholder="Mobile Money Number (e.g. 054XXXXXXX)">
-<select id="momoProvider">
-<option>MTN MoMo</option>
-<option>Vodafone Cash</option>
-<option>AirtelTigo Money</option>
-</select>
-</div>
+                <div class="summary-item total">
+                    <span>Total</span>
+                    <span id="total">₵0</span>
+                </div>
 
-<!-- CARD -->
-<div id="cardBox" class="payment-box" style="display:none;">
-<input type="text" placeholder="Card Number">
-<input type="text" placeholder="Expiry Date">
-<input type="text" placeholder="CVV">
-</div>
+            </div>
 
-<button id="btn" class="pay-btn" onclick="placeOrder()">Place Order</button>
+            <!-- FORM & PAYMENT (Right Column) -->
+            <div class="checkout-form">
 
-</div>
+                <h3>Shipping Information</h3>
 
-<!-- SUMMARY -->
-<div class="summary">
+                <input id="name" type="text" placeholder="Full Name *" required>
+                <input id="email" type="email" placeholder="Email Address *" required>
+                <input id="phone" type="text" placeholder="Phone Number *" required>
+                <input id="address" type="text" placeholder="Shipping Address *" required>
+                <input id="city" type="text" placeholder="City *" required>
+                <input id="country" type="text" placeholder="Country *" required>
 
-<h3>Order Summary</h3>
+                <div id="error" class="error"></div>
 
-<div id="cart-items"></div>
+                <h3>Delivery Method</h3>
+                <select id="delivery">
+                    <option value="100">Standard Delivery (3–5 days) - ₵100</option>
+                    <option value="200">Express Delivery (1–2 days) - ₵200</option>
+                </select>
 
-<div class="line"></div>
+                <h3>Payment Method</h3>
 
-<div class="summary-item">
-<span>Subtotal</span>
-<span id="subtotal">₵0</span>
-</div>
+                <select id="paymentMethod" onchange="togglePayment()">
+                    <option value="paystack">Pay Online (Paystack)</option>
+                    <option value="cod">Cash on Delivery</option>
+                </select>
 
-<div class="summary-item">
-<span>VAT (12.5%)</span>
-<span id="vat">₵0</span>
-</div>
+                <div id="paystackNotice" class="payment-box" style="display:block;">
+                    <p style="color:#aaa; font-size:13px; margin:0;">You will be redirected to Paystack's secure
+                        checkout to complete your payment.</p>
+                </div>
 
-<div class="summary-item">
-<span>Shipping</span>
-<span id="shipping">₵0</span>
-</div>
+                <div id="codNotice" class="payment-box" style="display:none;">
+                    <p style="color:#aaa; font-size:13px; margin:0;">Pay with cash or mobile money when your order
+                        arrives. Note: Verification may take longer.</p>
+                </div>
 
-<div class="line"></div>
+                <button id="btn" class="pay-btn" onclick="placeOrder()">Proceed to Pay</button>
 
-<div class="summary-item total">
-<span>Total</span>
-<span id="total">₵0</span>
-</div>
+            </div>
 
-</div>
+        </div><!-- end checkout-wrapper -->
+    </div><!-- end page-top -->
 
-</div>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
 
-<footer>
-© 2026 GlamAura Wigs
-</footer>
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h5>GlamAura Wigs</h5>
+                <p>Premium wigs for confident women.</p>
+            </div>
+            <div class="footer-col">
+                <h5>Shop</h5><a href="Shop.html">All Wigs</a><a href="cart.html">Cart</a>
+            </div>
+            <div class="footer-col">
+                <h5>Contact</h5>
+                <p>📧 support@glamaurawigs.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2026 GlamAura Wigs. All Rights Reserved.</div>
+    </footer>
 
-<script>
+    <script>
 
-const currency = "₵";
+        const currency = "₵";
+        const qualityPrices = { "12\"": 1, "14\"": 1.2, "16\"": 1.4 };
 
-const qualityPrices = {
-"12\"":1,
-"14\"":1.2,
-"16\"":1.4
-};
+        document.addEventListener("DOMContentLoaded", function () {
+            loadCheckout();
+            loadCustomerData();
+        });
 
-document.addEventListener("DOMContentLoaded", loadCheckout);
+        /* PRE-FILL CUSTOMER DATA IF LOGGED IN */
+        function loadCustomerData() {
+            const user = JSON.parse(localStorage.getItem('user')) || {};
+            if (user.user_id && !user.is_admin) {
+                // Try to fetch full profile from server
+                fetch('get_profile.php')
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === "success") {
+                            const c = data.customer;
+                            document.getElementById('name').value = c.full_name || '';
+                            document.getElementById('email').value = c.email || '';
+                            document.getElementById('phone').value = c.phone || '';
+                            document.getElementById('address').value = c.shipping_address || '';
+                            document.getElementById('city').value = c.city || '';
+                            document.getElementById('country').value = c.country || '';
+                        } else {
+                            // Fallback to localStorage
+                            fillFromLocalStorage();
+                        }
+                    })
+                    .catch(() => fillFromLocalStorage());
+            }
+        }
 
-function loadCheckout(){
+        function fillFromLocalStorage() {
+            const user = JSON.parse(localStorage.getItem('user')) || {};
+            document.getElementById('name').value = user.full_name || '';
+            document.getElementById('email').value = user.email || '';
+        }
 
-const cart = JSON.parse(localStorage.getItem("cart")) || [];
-const cartItems = document.getElementById("cart-items");
+        function loadCheckout() {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const cartItems = document.getElementById("cart-items");
+            let subtotal = 0;
+            cartItems.innerHTML = "";
 
-let subtotal = 0;
-cartItems.innerHTML = "";
+            cart.forEach(item => {
+                let price = item.basePrice * (qualityPrices[item.quality] || 1);
+                let total = price * item.qty;
+                subtotal += total;
+                cartItems.innerHTML += `
+        <div class="cart-item">
+        <img src="${item.image}">
+        <div class="item-info">
+        <strong>${item.name}</strong><br>
+        ${item.quality} x ${item.qty}
+        </div>
+        <div>${currency}${total.toFixed(2)}</div>`;
+            });
 
-cart.forEach(item => {
+            updateTotals(subtotal);
+            document.getElementById("delivery").addEventListener("change", () => updateTotals(subtotal));
+        }
 
-let price = item.basePrice * (qualityPrices[item.quality] || 1);
-let total = price * item.qty;
+        function updateTotals(subtotal) {
+            let vat = subtotal * 0.125;
+            let shipping = parseFloat(document.getElementById("delivery").value);
+            let total = subtotal + vat + shipping;
+            document.getElementById("subtotal").innerText = currency + subtotal.toFixed(2);
+            document.getElementById("vat").innerText = currency + vat.toFixed(2);
+            document.getElementById("shipping").innerText = currency + shipping.toFixed(2);
+            document.getElementById("total").innerText = currency + total.toFixed(2);
+        }
 
-subtotal += total;
+        function togglePayment() {
+            let method = document.getElementById("paymentMethod").value;
+            document.getElementById("paystackNotice").style.display = method === "paystack" ? "block" : "none";
+            document.getElementById("codNotice").style.display = method === "cod" ? "block" : "none";
+            const btn = document.getElementById("btn");
+            btn.innerText = method === "paystack" ? "Proceed to Pay" : "Place Order";
+        }
 
-cartItems.innerHTML += `
-<div class="cart-item">
-<img src="${item.image}">
-<div class="item-info">
-<strong>${item.name}</strong><br>
-${item.quality} x ${item.qty}
-</div>
-<div>${currency}${total.toFixed(2)}</div>
-</div>
-`;
+        function placeOrder() {
+            const btn = document.getElementById("btn");
+            const error = document.getElementById("error");
 
-});
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const address = document.getElementById("address").value.trim();
+            const city = document.getElementById("city").value.trim();
+            const country = document.getElementById("country").value.trim();
+            const paymentMethod = document.getElementById("paymentMethod").value;
 
-updateTotals(subtotal);
+            if (!name || !email || !phone || !address || !city || !country) {
+                error.innerText = "Please fill all required fields";
+                return;
+            }
 
-document.getElementById("delivery").addEventListener("change", ()=>updateTotals(subtotal));
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            if (cart.length === 0) {
+                error.innerText = "Cart is empty";
+                return;
+            }
 
-}
+            btn.disabled = true;
+            btn.innerText = "Processing...";
 
-function updateTotals(subtotal){
+            let subtotal = parseFloat(document.getElementById("subtotal").innerText.replace("₵", ""));
+            let vat = parseFloat(document.getElementById("vat").innerText.replace("₵", ""));
+            let shipping = parseFloat(document.getElementById("shipping").innerText.replace("₵", ""));
+            let total = parseFloat(document.getElementById("total").innerText.replace("₵", ""));
 
-let vat = subtotal * 0.125;
-let shipping = parseFloat(document.getElementById("delivery").value);
-let total = subtotal + vat + shipping;
+            if (paymentMethod === "paystack") {
+                // Initialize Paystack
+                let handler = PaystackPop.setup({
+                    key: 'pk_test_f4342be382870c5c409c219444d4db65ffae04c1', // Replace with your test/live key
+                    email: email,
+                    amount: total * 100, // Amount is in pesewas
+                    currency: 'GHS',
+                    ref: 'GLAM_' + Math.floor((Math.random() * 1000000000) + 1),
+                    callback: function (response) {
+                        // Payment successful
+                        submitOrderToBackend(name, email, phone, address, city, country, paymentMethod, cart, subtotal, vat, shipping, total, response.reference);
+                    },
+                    onClose: function () {
+                        error.innerText = "Payment window closed.";
+                        btn.disabled = false;
+                        btn.innerText = "Proceed to Pay";
+                    }
+                });
+                handler.openIframe();
+            } else {
+                // Cash on Delivery
+                submitOrderToBackend(name, email, phone, address, city, country, paymentMethod, cart, subtotal, vat, shipping, total, null);
+            }
+        }
 
-document.getElementById("subtotal").innerText = currency + subtotal.toFixed(2);
-document.getElementById("vat").innerText = currency + vat.toFixed(2);
-document.getElementById("shipping").innerText = currency + shipping.toFixed(2);
-document.getElementById("total").innerText = currency + total.toFixed(2);
+        function submitOrderToBackend(name, email, phone, address, city, country, paymentMethod, cart, subtotal, vat, shipping, total, reference) {
+            fetch("place_order.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    customer: { name, email, phone, address, city, country },
+                    cart,
+                    subtotal,
+                    vat,
+                    shipping,
+                    total,
+                    payment_method: paymentMethod,
+                    payment_reference: reference
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        localStorage.removeItem("cart");
+                        window.location.href = `confirmation.html?order_id=${data.order_id}&tracking=${data.tracking_number}`;
+                    } else {
+                        document.getElementById("error").innerText = data.message || "Failed to place order";
+                        const btn = document.getElementById("btn");
+                        btn.disabled = false;
+                        btn.innerText = "Try Again";
+                    }
+                })
+                .catch(err => {
+                    document.getElementById("error").innerText = "Server error occurred";
+                    const btn = document.getElementById("btn");
+                    btn.disabled = false;
+                    btn.innerText = "Try Again";
+                });
+        }
 
-}
-
-function togglePayment(){
-let method = document.getElementById("paymentMethod").value;
-
-document.getElementById("momoBox").style.display = method === "momo" ? "block" : "none";
-document.getElementById("cardBox").style.display = method === "card" ? "block" : "none";
-}
-
-function placeOrder(){
-
-const btn = document.getElementById("btn");
-const error = document.getElementById("error");
-
-const name = document.getElementById("name").value;
-const email = document.getElementById("email").value;
-const phone = document.getElementById("phone").value;
-const address = document.getElementById("address").value;
-
-if(!name || !email || !phone || !address){
-error.innerText = "Please fill all required fields";
-return;
-}
-
-const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-if(cart.length === 0){
-error.innerText = "Cart is empty";
-return;
-}
-
-btn.disabled = true;
-btn.innerText = "Processing...";
-
-let subtotal = parseFloat(document.getElementById("subtotal").innerText.replace("₵",""));
-let vat = parseFloat(document.getElementById("vat").innerText.replace("₵",""));
-let shipping = parseFloat(document.getElementById("shipping").innerText.replace("₵",""));
-let total = parseFloat(document.getElementById("total").innerText.replace("₵",""));
-
-fetch("place_order.php", {
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body: JSON.stringify({
-customer:{name,email,phone,address},
-cart,
-subtotal,
-vat,
-shipping,
-total
-})
-})
-.then(res=>res.json())
-.then(data=>{
-
-if(data.status==="success"){
-localStorage.removeItem("cart");
-window.location.href = "confirmation.html?order_id="+data.order_id;
-}else{
-btn.disabled=false;
-btn.innerText="Place Order";
-error.innerText="Order failed";
-}
-
-})
-.catch(()=>{
-btn.disabled=false;
-btn.innerText="Place Order";
-error.innerText="Server error";
-});
-
-}
-
-</script>
-
+    </script>
+    <script src="shared-nav.js"></script>
 </body>
+
 </html>

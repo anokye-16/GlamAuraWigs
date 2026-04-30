@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | GlamAura Admin Panel</title>
+    <link rel="stylesheet" href="admin_theme.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="gh-sidebar" id="ghSidebar">
+        <div class="gh-sidebar-header">
+            <h2>GlamAura</h2>
+            <span>Admin Panel</span>
+        </div>
+
+        <div class="gh-nav">
+            <div class="gh-nav-section">Business Overview</div>
+            <a href="dashboard.html"><i class="fa-solid fa-border-all"></i> Dashboard</a>
+            <a href="finance.html"><i class="fa-solid fa-money-bill-trend-up"></i> Finance</a>
+
+            <div class="gh-nav-section">CRM Module</div>
+            <a href="customers.html"><i class="fa-solid fa-users"></i> Customers</a>
+            <a href="messages.html"><i class="fa-solid fa-envelope"></i> Enquiries & Feedback</a>
+
+            <div class="gh-nav-section">Sales & Ordering</div>
+            <a href="orders.html"><i class="fa-solid fa-cart-shopping"></i> Orders</a>
+            <a href="distribution.html"><i class="fa-solid fa-truck-fast"></i> Distribution</a>
+            <a href="purchase_orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Purchase Orders</a>
+
+            <div class="gh-nav-section">SCM & Inventory</div>
+            <a href="products.html"><i class="fa-solid fa-box-open"></i> Products</a>
+            <a href="inventory.html"><i class="fa-solid fa-boxes-stacked"></i> Inventory</a>
+            <a href="suppliers.html"><i class="fa-solid fa-handshake"></i> Suppliers</a>
+            <a href="logistics.html"><i class="fa-solid fa-truck-ramp-box"></i> Logistics Partners</a>
+            <a href="integrations.html"><i class="fa-solid fa-globe"></i> E-Market Integrations</a>
+        </div>
+
+        <div class="gh-user-card">
+            <div class="gh-user-info">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=ff4fa3&color=fff" alt="Admin">
+                <div>
+                    <strong id="adminUserName">Loading...</strong>
+                    <span>Administrator</span>
+                </div>
+            </div>
+            <button class="gh-logout-btn" onclick="GH_Admin.logout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <p>Log out <font size="2px"></font>
+                </p>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="gh-main">
+
+        <!-- TOPBAR -->
+        <header class="gh-topbar">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <button class="mobile-toggle" id="mobileToggle"><i class="fa-solid fa-bars"></i></button>
+                <div class="gh-breadcrumb">
+                    <span>Overview /</span> Dashboard
+                </div>
+            </div>
+
+            <div class="gh-topbar-actions">
+                <div class="gh-search">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" placeholder="Search orders, customers...">
+                </div>
+                <div class="gh-notification">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="gh-notification-badge">3</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENT -->
+        <div class="gh-content">
+
+            <!-- KPIs -->
+            <div class="gh-kpi-grid">
+                <div class="gh-kpi-card">
+                    <div class="gh-kpi-icon"><i class="fa-solid fa-cedi-sign"></i></div>
+                    <div class="gh-kpi-content">
+                        <div class="gh-kpi-label">Revenue</div>
+                        <div class="gh-kpi-value" id="kpiRevenue">₵0</div>
+                    </div>
+                </div>
+                <div class="gh-kpi-card">
+                    <div class="gh-kpi-icon"><i class="fa-solid fa-cart-arrow-down"></i></div>
+                    <div class="gh-kpi-content">
+                        <div class="gh-kpi-label">Orders</div>
+                        <div class="gh-kpi-value" id="kpiOrders">0</div>
+                    </div>
+                </div>
+                <div class="gh-kpi-card">
+                    <div class="gh-kpi-icon"><i class="fa-solid fa-users"></i></div>
+                    <div class="gh-kpi-content">
+                        <div class="gh-kpi-label">Customers</div>
+                        <div class="gh-kpi-value" id="kpiCustomers">0</div>
+                    </div>
+                </div>
+                <div class="gh-kpi-card">
+                    <div class="gh-kpi-icon" style="background:rgba(231,76,60,0.15); color:var(--danger);"><i
+                            class="fa-solid fa-triangle-exclamation"></i></div>
+                    <div class="gh-kpi-content">
+                        <div class="gh-kpi-label">Low Stock</div>
+                        <div class="gh-kpi-value" id="kpiLowStock">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:var(--gh-gap); margin-bottom:var(--gh-gap);">
+                <div class="gh-card">
+                    <div class="gh-card-header">
+                        <h3>Performance Trend</h3>
+                    </div>
+                    <canvas id="revenueChart" width="600" height="220" style="width:100%; height:220px;"></canvas>
+                </div>
+                <div class="gh-card">
+                    <div class="gh-card-header">
+                        <h3>Status Mix</h3>
+                    </div>
+                    <canvas id="orderDonut" width="300" height="220" style="width:100%; height:220px;"></canvas>
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:var(--gh-gap);">
+                <!-- RECENT ORDERS -->
+                <div class="gh-card">
+                    <div class="gh-card-header">
+                        <h3>Recent Orders</h3>
+                        <a href="orders.html" class="gh-btn outline">View All</a>
+                    </div>
+                    <div class="gh-table-wrapper">
+                        <table class="gh-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Total</th>
+                                    <th>Payment</th>
+                                    <th>Fulfillment</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentOrdersTable">
+                                <tr>
+                                    <td colspan="5" style="text-align:center;">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- LOW STOCK TABLE -->
+                <div class="gh-card">
+                    <div class="gh-card-header">
+                        <h3 style="color:var(--danger);">Low Stock Alerts</h3>
+                    </div>
+                    <div class="gh-table-wrapper">
+                        <table class="gh-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lowStockTable">
+                                <tr>
+                                    <td colspan="2" style="text-align:center;">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="../js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            GH_Admin.init();
+
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'dashboard_stats.php');
+                const data = await res.json();
+
+                if (data.error) return; // Unauth handled by GH_Admin
+
+                // KPIs
+                document.getElementById('kpiRevenue').innerText = '₵' + parseFloat(data.kpi.revenue).toLocaleString();
+                document.getElementById('kpiOrders').innerText = data.kpi.orders;
+                document.getElementById('kpiCustomers').innerText = data.kpi.customers;
+                document.getElementById('kpiLowStock').innerText = data.kpi.low_stock;
+
+                // Charts
+                GH_Admin.drawBarChart('revenueChart', data.revenue_chart.data, data.revenue_chart.labels);
+                GH_Admin.drawDonutChart('orderDonut', data.order_chart.data, data.order_chart.labels, ['#f39c12', '#3498db', '#9b59b6', '#2ecc71']);
+
+                // Low Stock
+                const lowStockHtml = data.low_stock.map(item => `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td><span class="gh-badge red">${item.stock_quantity} Left</span></td>
+                    </tr>
+                `).join('');
+                document.getElementById('lowStockTable').innerHTML = lowStockHtml || '<tr><td colspan="2">No low stock items.</td></tr>';
+
+                // Recent Orders
+                const getStatusBadge = (status) => {
+                    const s = status ? status.toLowerCase() : '';
+                    if (s === 'delivered') return '<span class="gh-badge green">Delivered</span>';
+                    if (s === 'processing') return '<span class="gh-badge blue">Processing</span>';
+                    if (s === 'shipped') return '<span class="gh-badge amber">Shipped</span>';
+                    return '<span class="gh-badge gold">Pending</span>';
+                };
+
+                const getPayBadge = (method, status) => {
+                    const s = status ? status.toLowerCase() : 'pending';
+                    const m = method ? method.toUpperCase() : 'N/A';
+                    if (s === 'paid') return `<span class="gh-badge green">${m} (PAID)</span>`;
+                    return `<span class="gh-badge pink">${m} (PENDING)</span>`;
+                };
+
+                const ordersHtml = data.recent_orders.map(o => `
+                    <tr>
+                        <td><strong>#${o.id}</strong></td>
+                        <td>${o.full_name}</td>
+                        <td>₵${parseFloat(o.total).toFixed(2)}</td>
+                        <td>${getPayBadge(o.payment_method, o.payment_status)}</td>
+                        <td>${getStatusBadge(o.status)}</td>
+                    </tr>
+                `).join('');
+                document.getElementById('recentOrdersTable').innerHTML = ordersHtml || '<tr><td colspan="5">No orders found.</td></tr>';
+
+            } catch (e) {
+                console.error("Failed to load dashboard data", e);
+                GH_Admin.toast("Failed to load dashboard data.", "error");
+            }
+        });
+    </script>
+</body>
+
+</html>

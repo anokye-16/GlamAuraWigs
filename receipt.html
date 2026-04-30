@@ -5,177 +5,157 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Order Receipt | GlamAura Wigs</title>
 <link rel="stylesheet" href="shared.css">
-<link rel="stylesheet" href="navbar.css">
+
 <style>
-body{
-background:#000;
-color:white;
-font-family:Arial,Helvetica,sans-serif;
-margin:0;
-}
-header{padding:20px 40px;text-align:center;border-bottom:2px solid #ff4fa3;}
-.container{max-width:800px;margin:40px auto 0;padding:30px;background:#111;border-radius:10px;}
+body{background:#000;color:white;font-family:Arial,Helvetica,sans-serif;margin:0;}
+.page-top{padding-top:62px;}
+h1{color:var(--pink);text-align:center;margin-top:40px;}
+.container{max-width:800px;margin:30px auto 60px;padding:30px;background:#111;border-radius:10px;border:1px solid #222;}
+.receipt-header{border-bottom:1px solid #333;padding-bottom:15px;margin-bottom:20px;}
+.receipt-header h2{margin:0;color:#ff4fa3;}
+.receipt-header p{color:#aaa;margin:5px 0;}
 .item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #333;}
-.total{font-size:20px;font-weight:bold;margin-top:20px;}
-.btn{display:block;width:100%;padding:12px;margin-top:20px;background:#ff4fa3;border:none;color:white;cursor:pointer;border-radius:5px;text-align:center;}
+.total{font-size:20px;font-weight:bold;margin-top:20px;color:#ff4fa3;}
+.btn{display:block;width:100%;padding:12px;margin-top:20px;background:#ff4fa3;border:none;color:white;cursor:pointer;border-radius:5px;text-align:center;text-decoration:none;}
 .btn:hover{background:#ff2f90;}
-
-body{
-background:#000;
-color:white;
-font-family:Arial;
-margin:0;
-}
-
-header{
-padding:20px;
-text-align:center;
-border-bottom:2px solid #ff4fa3;
-}
-
-h1{
-color:#ff4fa3;
-text-align:center;
-margin-top:30px;
-}
-
-.container{
-max-width:800px;
-margin:auto;
-padding:30px;
-background:#111;
-border-radius:10px;
-margin-top:30px;
-}
-
-.item{
-display:flex;
-justify-content:space-between;
-padding:10px 0;
-border-bottom:1px solid #333;
-}
-
-.total{
-font-size:20px;
-font-weight:bold;
-margin-top:20px;
-}
-
-.btn{
-display:block;
-width:100%;
-padding:12px;
-margin-top:20px;
-background:#ff4fa3;
-border:none;
-color:white;
-cursor:pointer;
-border-radius:5px;
-text-align:center;
-}
-
+footer{text-align:center;padding:20px;border-top:2px solid #ff4fa3;margin-top:50px;}
+.shipping-info{background:#1a1a1a;padding:15px;border-radius:8px;margin-top:20px;}
+.shipping-info h3{color:#ff4fa3;margin-top:0;}
+.shipping-info p{margin:5px 0;color:#ccc;}
+.status-badge{display:inline-block;padding:5px 12px;border-radius:5px;background:#ff4fa3;color:white;font-size:14px;}
 </style>
 </head>
-
 <body>
-<header>
-  <div class="logo">GlamAura Wigs</div>
-  <div id="navbar-container"></div>
-</header>
-<script>
-  fetch('navbar.html').then(r => r.text()).then(html => {
-    document.getElementById('navbar-container').innerHTML = html;
-    const script = document.createElement('script');
-    script.src = 'navbar.js';
-    document.body.appendChild(script);
-  });
-</script>
+<nav class="site-nav">
+  <div class="brand" onclick="location.href='home.html'">GlamAura Wigs</div>
+  <div class="nav-links">
+    <a href="home.html">Home</a>
+    <a href="Collection.html">Collections</a>
+    <a href="Shop.html">Shop</a>
+    <a href="About.html">About</a>
+    <a href="Contact.html">Contact</a>
+    <a href="cart.html" class="cart-link">🛒 <span class="cart-badge">0</span></a>
+    <button class="nav-btn" id="navAuthBtn">Login</button>
+  </div>
+  <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="home.html">Home</a><a href="Collection.html">Collections</a><a href="Shop.html">Shop</a>
+  <a href="About.html">About</a><a href="Contact.html">Contact</a>
+  <a href="cart.html">🛒 Cart</a><a href="login.html" id="mobileAuthLink">Login / Sign Up</a>
+</div>
 
+<div class="page-top">
 <h1>Order Receipt</h1>
 
 <div class="container">
 
 <div id="receipt">Loading order...</div>
 
-<button class="btn" onclick="window.location.href='Home.html'">
-Continue Shopping
-</button>
+<a href="Shop.html" class="btn">Continue Shopping</a>
 
 </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-col"><h5>GlamAura Wigs</h5><p>Premium wigs for confident women.</p></div>
+    <div class="footer-col"><h5>Shop</h5><a href="Shop.html">All Wigs</a><a href="Collection.html">Collections</a></div>
+    <div class="footer-col"><h5>Account</h5><a href="login.html">Login</a><a href="customer_dashboard.html">My Orders</a></div>
+    <div class="footer-col"><h5>Contact</h5><p>📧 support@glamaurawigs.com</p></div>
+  </div>
+  <div class="footer-bottom">© 2026 GlamAura Wigs. All Rights Reserved.</div>
+</footer>
 
 <script>
 
 const currency = "₵";
 
-// get order_id from URL
 const urlParams = new URLSearchParams(window.location.search);
 const order_id = urlParams.get("order_id");
 
 if(!order_id){
-document.getElementById("receipt").innerHTML = "Invalid order ID";
+    document.getElementById("receipt").innerHTML = "<p style='color:red;'>Invalid order ID</p>";
 }else{
-loadReceipt(order_id);
+    loadReceipt(order_id);
 }
 
 function loadReceipt(order_id){
 
-fetch("get_order.php?order_id=" + order_id)
-.then(res => res.json())
-.then(data => {
+    fetch("get_order.php?order_id=" + order_id)
+    .then(res => res.json())
+    .then(data => {
 
-if(data.status !== "success"){
-document.getElementById("receipt").innerHTML = "Order not found";
-return;
-}
+        if(data.status !== "success"){
+            document.getElementById("receipt").innerHTML = "<p style='color:red;'>Order not found</p>";
+            return;
+        }
 
-let order = data.order;
-let items = data.items;
+        let order = data.order;
+        let items = data.items;
 
-let html = "";
+        let html = "";
 
-html += `
-<h3>Order #${order.id}</h3>
-<p>Status: ${order.status}</p>
-<p>Date: ${order.created_at}</p>
+        // Receipt Header
+        html += `
+        <div class="receipt-header">
+            <h2>Order: ${order.tracking_number || 'ID #' + order.id}</h2>
+            <p><span class="status-badge">${order.status}</span></p>
+            <p>Date: ${new Date(order.created_at).toLocaleString()}</p>
+            <p>Payment Method: ${order.payment_method ? order.payment_method.toUpperCase() : 'N/A'}</p>
+        </div>
+        `;
 
-<div class="item"><strong>Product</strong><strong>Total</strong></div>
-`;
+        // Shipping Info
+        html += `
+        <div class="shipping-info">
+            <h3>Shipping Information</h3>
+            <p><strong>${order.full_name || 'N/A'}</strong></p>
+            <p>${order.email || 'N/A'} | ${order.phone || 'N/A'}</p>
+            <p>${order.shipping_address || 'N/A'}</p>
+            <p>${order.city || ''}${order.city && order.country ? ', ' : ''}${order.country || ''}</p>
+        </div>
+        `;
 
-let subtotal = 0;
+        // Items Header
+        html += `<div class="item" style="font-weight:bold;color:#ff4fa3;"><span>Product</span><span>Total</span></div>`;
 
-items.forEach(i => {
-let total = i.price * i.quantity;
-subtotal += total;
+        let subtotal = 0;
 
-html += `
-<div class="item">
-<span>${i.product_id} (${i.quality}) x ${i.quantity}</span>
-<span>${currency}${total.toFixed(2)}</span>
-</div>
-`;
-});
+        items.forEach(i => {
+            let itemTotal = i.price * i.quantity;
+            subtotal += itemTotal;
 
-let vat = parseFloat(order.vat);
-let shipping = parseFloat(order.shipping);
-let grandTotal = parseFloat(order.total);
+            html += `
+            <div class="item">
+                <span>${i.product_name || 'Product ' + i.product_id} (${i.quality}) x ${i.quantity}</span>
+                <span>${currency}${itemTotal.toFixed(2)}</span>
+            </div>
+            `;
+        });
 
-html += `
-<hr>
-<p>VAT: ${currency}${vat.toFixed(2)}</p>
-<p>Shipping: ${currency}${shipping.toFixed(2)}</p>
-<p class="total">Total: ${currency}${grandTotal.toFixed(2)}</p>
-`;
+        let vat = parseFloat(order.vat);
+        let shipping = parseFloat(order.shipping);
+        let grandTotal = parseFloat(order.total);
 
-document.getElementById("receipt").innerHTML = html;
+        html += `
+        <div class="line"></div>
+        <div class="item"><span>Subtotal</span><span>${currency}${subtotal.toFixed(2)}</span></div>
+        <div class="item"><span>VAT (12.5%)</span><span>${currency}${vat.toFixed(2)}</span></div>
+        <div class="item"><span>Shipping</span><span>${currency}${shipping.toFixed(2)}</span></div>
+        <div class="item total"><span>Grand Total</span><span>${currency}${grandTotal.toFixed(2)}</span></div>
+        `;
 
-})
-.catch(err => {
-document.getElementById("receipt").innerHTML = "Error loading order";
-});
+        document.getElementById("receipt").innerHTML = html;
+
+    })
+    .catch(err => {
+        document.getElementById("receipt").innerHTML = "<p style='color:red;'>Error loading order</p>";
+    });
 
 }
 
 </script>
-
+<script src="shared-nav.js"></script>
 </body>
 </html>

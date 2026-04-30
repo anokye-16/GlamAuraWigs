@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products | GlamAura Admin Panel</title>
+    <link rel="stylesheet" href="admin_theme.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        .prod-img { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-color); }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+        <aside class="gh-sidebar" id="ghSidebar">
+        <div class="gh-sidebar-header">
+            <h2>GlamAura</h2>
+            <span>Admin Panel</span>
+        </div>
+        
+        <div class="gh-nav">
+            <div class="gh-nav-section">Business Overview</div>
+            <a href="dashboard.html"><i class="fa-solid fa-border-all"></i> Dashboard</a>
+            <a href="finance.html"><i class="fa-solid fa-money-bill-trend-up"></i> Finance</a>
+            
+            <div class="gh-nav-section">CRM Module</div>
+            <a href="customers.html"><i class="fa-solid fa-users"></i> Customers</a>
+            <a href="messages.html"><i class="fa-solid fa-envelope"></i> Enquiries & Feedback</a>
+            
+            <div class="gh-nav-section">Sales & Ordering</div>
+            <a href="orders.html"><i class="fa-solid fa-cart-shopping"></i> Orders</a>
+            <a href="distribution.html"><i class="fa-solid fa-truck-fast"></i> Distribution</a>
+            <a href="purchase_orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Purchase Orders</a>
+            
+            <div class="gh-nav-section">SCM & Inventory</div>
+            <a href="products.html"><i class="fa-solid fa-box-open"></i> Products</a>
+            <a href="inventory.html"><i class="fa-solid fa-boxes-stacked"></i> Inventory</a>
+            <a href="suppliers.html"><i class="fa-solid fa-handshake"></i> Suppliers</a>
+            <a href="logistics.html"><i class="fa-solid fa-truck-ramp-box"></i> Logistics Partners</a>
+            <a href="integrations.html"><i class="fa-solid fa-globe"></i> E-Market Integrations</a>
+        </div>
+        
+        <div class="gh-user-card">
+            <div class="gh-user-info">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=ff4fa3&color=fff" alt="Admin">
+                <div>
+                    <strong id="adminUserName">Loading...</strong>
+                    <span>Administrator</span>
+                </div>
+            </div>
+            <button class="gh-logout-btn" onclick="GH_Admin.logout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="gh-main">
+        <header class="gh-topbar">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <button class="mobile-toggle" id="mobileToggle"><i class="fa-solid fa-bars"></i></button>
+                <div class="gh-breadcrumb">
+                    <span>Inventory & Products /</span> Products
+                </div>
+            </div>
+            <div class="gh-topbar-actions">
+                <button class="gh-btn" onclick="GH_Admin.openModal('addProductModal')"><i class="fa-solid fa-plus"></i> Add Product</button>
+            </div>
+        </header>
+
+        <div class="gh-content">
+            <div class="gh-card">
+                <div class="gh-card-header">
+                    <h3>Product Catalog</h3>
+                </div>
+                
+                <div class="gh-table-wrapper">
+                    <table class="gh-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTable">
+                            <tr><td colspan="5" style="text-align:center;">Loading products...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ADD PRODUCT MODAL -->
+    <div class="gh-modal-backdrop" id="addProductModal">
+        <div class="gh-modal">
+            <div class="gh-modal-header">
+                <h3>Add New Product</h3>
+                <button class="gh-modal-close" onclick="GH_Admin.closeModal('addProductModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="addForm">
+                <div class="gh-modal-body">
+                    <label>Product Name</label>
+                    <input type="text" id="addName" class="gh-input" required>
+                    
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                        <div>
+                            <label>Price (₵)</label>
+                            <input type="number" id="addPrice" class="gh-input" step="0.01" required>
+                        </div>
+                        <div>
+                            <label>Category</label>
+                            <select id="addCat" class="gh-input" required>
+                                <option value="Human Hair">Human Hair</option>
+                                <option value="Synthetic">Synthetic</option>
+                                <option value="Frontal">Frontal</option>
+                                <option value="Closure">Closure</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <label>Description</label>
+                    <textarea id="addDesc" class="gh-input" style="height:80px;"></textarea>
+
+                    <label>Product Image</label>
+                    <input type="file" id="addImage" class="gh-input" accept="image/*" required>
+                </div>
+                <div class="gh-modal-footer">
+                    <button type="button" class="gh-btn outline" onclick="GH_Admin.closeModal('addProductModal')">Cancel</button>
+                    <button type="submit" class="gh-btn">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- EDIT PRODUCT MODAL (Basic info) -->
+    <div class="gh-modal-backdrop" id="editProductModal">
+        <div class="gh-modal">
+            <div class="gh-modal-header">
+                <h3>Edit Product</h3>
+                <button class="gh-modal-close" onclick="GH_Admin.closeModal('editProductModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="editForm">
+                <div class="gh-modal-body">
+                    <input type="hidden" id="editId">
+                    <label>Product Name</label>
+                    <input type="text" id="editName" class="gh-input" required>
+                    
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                        <div>
+                            <label>Price (₵)</label>
+                            <input type="number" id="editPrice" class="gh-input" step="0.01" required>
+                        </div>
+                        <div>
+                            <label>Category</label>
+                            <select id="editCat" class="gh-input" required>
+                                <option value="Human Hair">Human Hair</option>
+                                <option value="Synthetic">Synthetic</option>
+                                <option value="Frontal">Frontal</option>
+                                <option value="Closure">Closure</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="gh-modal-footer">
+                    <button type="button" class="gh-btn outline" onclick="GH_Admin.closeModal('editProductModal')">Cancel</button>
+                    <button type="submit" class="gh-btn">Update Details</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/admin.js"></script>
+    <script>
+        let allProducts = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            GH_Admin.init();
+            loadProducts();
+        });
+
+        async function loadProducts() {
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'products_manage.php');
+                const data = await res.json();
+                if(data.error) return;
+                
+                allProducts = data.products;
+
+                const html = data.products.map(p => `
+                    <tr>
+                        <td><img src="../${p.image || 'images/avatar-placeholder.png'}" class="prod-img"></td>
+                        <td><strong>${p.name}</strong></td>
+                        <td><span class="gh-badge pink">Premium</span></td>
+                        <td>₵${parseFloat(p.base_price).toFixed(2)}</td>
+                        <td>
+                            <button class="gh-btn outline" style="padding:4px 8px;" onclick="openEdit(${p.id})"><i class="fa-solid fa-pen"></i></button>
+                            <button class="gh-btn outline" style="padding:4px 8px; border-color:var(--danger); color:var(--danger);" onclick="deleteProd(${p.id})"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                document.getElementById('productsTable').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">No products found.</td></tr>';
+
+            } catch(e) {
+                GH_Admin.toast("Failed to load products", "error");
+            }
+        }
+
+        document.getElementById('addForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('name', document.getElementById('addName').value);
+            formData.append('price', document.getElementById('addPrice').value);
+            formData.append('category', document.getElementById('addCat').value);
+            formData.append('description', document.getElementById('addDesc').value);
+            formData.append('image', document.getElementById('addImage').files[0]);
+
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'products_manage.php', { method: 'POST', body: formData });
+                const data = await res.json();
+                if(data.status === 'success') {
+                    GH_Admin.toast("Product added!");
+                    GH_Admin.closeModal('addProductModal');
+                    e.target.reset();
+                    loadProducts();
+                } else { GH_Admin.toast("Error adding product", "error"); }
+            } catch(e) { GH_Admin.toast("Server error", "error"); }
+        });
+
+        function openEdit(id) {
+            const p = allProducts.find(x => x.id == id);
+            if(!p) return;
+            document.getElementById('editId').value = p.id;
+            document.getElementById('editName').value = p.name;
+            document.getElementById('editPrice').value = p.base_price;
+            GH_Admin.openModal('editProductModal');
+        }
+
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                id: document.getElementById('editId').value,
+                name: document.getElementById('editName').value,
+                price: document.getElementById('editPrice').value,
+                category: document.getElementById('editCat').value
+            };
+
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'products_manage.php', { 
+                    method: 'PUT', 
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload) 
+                });
+                const data = await res.json();
+                if(data.status === 'success') {
+                    GH_Admin.toast("Product updated!");
+                    GH_Admin.closeModal('editProductModal');
+                    loadProducts();
+                } else { GH_Admin.toast("Error updating", "error"); }
+            } catch(e) { GH_Admin.toast("Server error", "error"); }
+        });
+
+        async function deleteProd(id) {
+            if(!confirm("Delete this product? It will also be removed from inventory.")) return;
+            try {
+                await fetch(GH_Admin.apiBase + 'products_manage.php', {
+                    method: 'DELETE',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({id: id})
+                });
+                GH_Admin.toast("Product deleted");
+                loadProducts();
+            } catch(e) { GH_Admin.toast("Error", "error"); }
+        }
+    </script>
+</body>
+</html>
+
+
+
+

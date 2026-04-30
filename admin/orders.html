@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders | GlamAura Admin Panel</title>
+    <link rel="stylesheet" href="admin_theme.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="gh-sidebar" id="ghSidebar">
+        <div class="gh-sidebar-header">
+            <h2>GlamAura</h2>
+            <span>Admin Panel</span>
+        </div>
+        
+        <div class="gh-nav">
+            <div class="gh-nav-section">Business Overview</div>
+            <a href="dashboard.html"><i class="fa-solid fa-border-all"></i> Dashboard</a>
+            <a href="finance.html"><i class="fa-solid fa-money-bill-trend-up"></i> Finance</a>
+            
+            <div class="gh-nav-section">CRM Module</div>
+            <a href="customers.html"><i class="fa-solid fa-users"></i> Customers</a>
+            <a href="messages.html"><i class="fa-solid fa-envelope"></i> Enquiries & Feedback</a>
+            
+            <div class="gh-nav-section">Sales & Ordering</div>
+            <a href="orders.html" class="active"><i class="fa-solid fa-cart-shopping"></i> Orders</a>
+            <a href="distribution.html"><i class="fa-solid fa-truck-fast"></i> Distribution</a>
+            <a href="purchase_orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Purchase Orders</a>
+            
+            <div class="gh-nav-section">SCM & Inventory</div>
+            <a href="products.html"><i class="fa-solid fa-box-open"></i> Products</a>
+            <a href="inventory.html"><i class="fa-solid fa-boxes-stacked"></i> Inventory</a>
+            <a href="suppliers.html"><i class="fa-solid fa-handshake"></i> Suppliers</a>
+            <a href="logistics.html"><i class="fa-solid fa-truck-ramp-box"></i> Logistics Partners</a>
+            <a href="integrations.html"><i class="fa-solid fa-globe"></i> E-Market Integrations</a>
+        </div>
+        
+        <div class="gh-user-card">
+            <div class="gh-user-info">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=ff4fa3&color=fff" alt="Admin">
+                <div>
+                    <strong id="adminUserName">Loading...</strong>
+                    <span>Administrator</span>
+                </div>
+            </div>
+            <button class="gh-logout-btn" onclick="GH_Admin.logout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="gh-main">
+        <!-- TOPBAR -->
+        <header class="gh-topbar">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <button class="mobile-toggle" id="mobileToggle"><i class="fa-solid fa-bars"></i></button>
+                <div class="gh-breadcrumb">
+                    <span>Sales & Logistics /</span> Orders
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENT -->
+        <div class="gh-content">
+            <div class="gh-card">
+                <div class="gh-card-header">
+                    <h3>All Orders</h3>
+                </div>
+                
+                <div class="gh-table-wrapper">
+                    <table class="gh-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Email</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Tracking</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTable">
+                            <tr><td colspan="9" style="text-align:center;">Loading orders...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- SHIPPING MODAL -->
+    <div class="gh-modal-backdrop" id="shipModal">
+        <div class="gh-modal">
+            <div class="gh-modal-header">
+                <h3>Ship Order</h3>
+                <button class="gh-modal-close" onclick="GH_Admin.closeModal('shipModal')">&times;</button>
+            </div>
+            <div class="gh-modal-body">
+                <p id="shipModalText">Assign a logistics partner to start the delivery.</p>
+                <input type="hidden" id="shipOrderId">
+                <label>Select Logistics Partner</label>
+                <select class="gh-input" id="shipPartnerSelect">
+                    <option value="">-- Select Partner --</option>
+                </select>
+            </div>
+            <div class="gh-modal-footer">
+                <button class="gh-btn outline" onclick="GH_Admin.closeModal('shipModal')">Cancel</button>
+                <button class="gh-btn" onclick="confirmShip()">Confirm Shipment</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            GH_Admin.init();
+            loadOrders();
+            loadPartners(); // Preload for the modal
+        });
+
+        let logisticsPartners = [];
+
+        async function loadPartners() {
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'logistics_manage.php');
+                const data = await res.json();
+                logisticsPartners = data.partners || [];
+                
+                const select = document.getElementById('shipPartnerSelect');
+                select.innerHTML = '<option value="">-- Select Partner --</option>' + 
+                    logisticsPartners.map(p => `<option value="${p.id}">${p.company_name} (${p.partnership_type})</option>`).join('');
+            } catch(e) {}
+        }
+
+        async function loadOrders() {
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'orders_list.php');
+                const data = await res.json();
+                if(data.error) return;
+
+                const getStatusBadge = (status) => {
+                    const s = status ? status.toLowerCase() : '';
+                    if(s==='delivered') return '<span class="gh-badge green">Delivered</span>';
+                    if(s==='processing') return '<span class="gh-badge blue">Processing</span>';
+                    if(s==='shipped') return '<span class="gh-badge amber">Shipped</span>';
+                    if(s==='cancelled') return '<span class="gh-badge red">Cancelled</span>';
+                    return '<span class="gh-badge gold">Pending</span>';
+                };
+                
+                const getPayBadge = (method, status, id) => {
+                    const s = status ? status.toLowerCase() : 'pending';
+                    const m = method ? method.toUpperCase() : 'N/A';
+                    if(s === 'paid') return `<span class="gh-badge green">${m} (PAID)</span>`;
+                    
+                    let html = `<span class="gh-badge pink">${m} (PENDING)</span>`;
+                    if(m === 'COD') {
+                        html += `<br><button onclick="markPaid(${id})" style="margin-top:5px; padding:2px 8px; font-size:10px; background:#f39c12; color:#fff; border:none; border-radius:4px; cursor:pointer;">Mark Paid</button>`;
+                    }
+                    return html;
+                };
+
+                const html = data.orders.map(o => `
+                    <tr>
+                        <td><strong>${o.tracking_number || '#' + o.id}</strong></td>
+                        <td>${o.full_name}</td>
+                        <td>${o.email}</td>
+                        <td>₵${parseFloat(o.total).toFixed(2)}</td>
+                        <td>${getPayBadge(o.payment_method, o.payment_status, o.id)}</td>
+                        <td>${getStatusBadge(o.status)}</td>
+                        <td>${new Date(o.created_at).toLocaleDateString()}</td>
+                        <td><span style="font-family:monospace; color:#aaa;">${o.tracking_number || '-'}</span></td>
+                        <td>
+                            <select class="gh-input" style="padding:4px; margin:0;" onchange="handleStatusChange(${o.id}, this.value, '${o.tracking_number || ''}')">
+                                <option value="">Update...</option>
+                                <option value="Pending" ${o.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                <option value="Processing" ${o.status === 'Processing' ? 'selected' : ''}>Processing</option>
+                                <option value="Shipped" ${o.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                                <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                                <option value="Cancelled" ${o.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                            </select>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                document.getElementById('ordersTable').innerHTML = html || '<tr><td colspan="9" style="text-align:center;">No orders found.</td></tr>';
+
+            } catch(e) {
+                GH_Admin.toast("Failed to load orders", "error");
+            }
+        }
+
+        function handleStatusChange(id, status, tracking) {
+            if(!status) return;
+            if(status === 'Shipped') {
+                document.getElementById('shipOrderId').value = id;
+                document.getElementById('shipModalText').innerText = `Assign a partner to start delivery for Order ${tracking || '#' + id}`;
+                GH_Admin.openModal('shipModal');
+            } else {
+                updateStatus(id, status);
+            }
+        }
+
+        async function confirmShip() {
+            const id = document.getElementById('shipOrderId').value;
+            const partnerId = document.getElementById('shipPartnerSelect').value;
+            
+            if(!partnerId) {
+                GH_Admin.toast("Please select a logistics partner", "error");
+                return;
+            }
+
+            await updateStatus(id, 'Shipped', partnerId);
+            GH_Admin.closeModal('shipModal');
+        }
+
+        async function updateStatus(id, status, partnerId = null) {
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'orders_update_status.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        order_id: id, 
+                        status: status,
+                        partner_id: partnerId
+                    })
+                });
+                const data = await res.json();
+                if(data.status === 'success') {
+                    GH_Admin.toast("Order updated to " + status);
+                    loadOrders();
+                } else {
+                    GH_Admin.toast(data.message, "error");
+                }
+            } catch(e) {
+                GH_Admin.toast("Server error", "error");
+            }
+        }
+
+        async function markPaid(id) {
+            if(!confirm(`Mark order #${id} as paid?`)) return;
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'orders_update_payment.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({order_id: id, status: 'Paid'})
+                });
+                const data = await res.json();
+                if(data.status === 'success') {
+                    GH_Admin.toast("Payment updated to Paid");
+                    loadOrders();
+                } else {
+                    GH_Admin.toast(data.message, "error");
+                }
+            } catch(e) {
+                GH_Admin.toast("Server error", "error");
+            }
+        }
+    </script>
+</body>
+</html>

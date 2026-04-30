@@ -5,47 +5,56 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cart | GlamAura Wigs</title>
 <link rel="stylesheet" href="shared.css">
-<link rel="stylesheet" href="navbar.css">
+
 <style>
 body{margin:0;background:#000;color:white;font-family:Arial,Helvetica,sans-serif;}
-header{display:flex;justify-content:space-between;align-items:center;padding:20px 60px;border-bottom:2px solid #ff4fa3;}
-.logo{color:#ff4fa3;font-size:26px;font-weight:bold;}
+.page-top{padding-top:62px;}
 .cart-container{width:90%;max-width:1100px;margin:40px auto;}
 table{width:100%;border-collapse:collapse;}
-th,td{padding:15px;border-bottom:1px solid #333;text-align:center;}
-th{color:#ff4fa3;}
-.cart-img{width:70px;border-radius:6px;}
+th,td{padding:14px 16px;border-bottom:1px solid #2a2a2a;text-align:center;font-size:14px;}
+th{color:var(--pink);background:#0a0a0a;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+.cart-img{width:65px;border-radius:6px;}
 .qty-box{display:flex;justify-content:center;align-items:center;gap:10px;}
-.qty-btn{background:#ff4fa3;border:none;color:white;width:30px;height:30px;cursor:pointer;border-radius:4px;}
-.qty{min-width:20px;}
-.remove-btn{background:#ff4fa3;border:none;color:white;padding:6px 12px;cursor:pointer;border-radius:5px;}
-.remove-btn:hover{background:#ff2f90;}
-.quality-select{background:#222;color:white;border:none;padding:6px;border-radius:5px;}
-.total{text-align:right;font-size:20px;margin-top:20px;}
-.buttons{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:30px;}
-.clear-btn{background:#444;color:white;border:none;padding:10px 20px;cursor:pointer;border-radius:5px;}
-.clear-btn:hover{background:#666;}
-.checkout-btn{background:#ff4fa3;padding:12px 25px;color:white;text-decoration:none;border-radius:5px;}
-.checkout-btn:hover{background:#ff2f90;}
-footer{text-align:center;padding:20px;border-top:2px solid #ff4fa3;margin-top:50px;color:#aaa;}
-@media(max-width:768px){header{flex-direction:column;align-items:flex-start;} .cart-container{width:95%;} .buttons{justify-content:flex-start;}}
+.qty-btn{background:var(--pink);border:none;color:white;width:28px;height:28px;cursor:pointer;border-radius:4px;font-size:15px;}
+.qty{min-width:20px;color:#fff;}
+.remove-btn{background:transparent;border:1px solid #444;color:#aaa;padding:6px 12px;cursor:pointer;border-radius:5px;font-size:12px;transition:all .2s;}
+.remove-btn:hover{border-color:var(--pink);color:var(--pink);}
+.quality-select{background:#1a1a1a;color:white;border:1px solid #333;padding:6px 10px;border-radius:5px;font-size:13px;}
+.cart-total-row{text-align:right;font-size:20px;margin-top:20px;color:#fff;}
+.cart-total-row span{color:var(--pink);font-weight:700;}
+.buttons{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:26px;}
+.clear-btn{background:#1a1a1a;color:#aaa;border:1px solid #333;padding:10px 20px;cursor:pointer;border-radius:5px;font-size:13px;transition:all .2s;}
+.clear-btn:hover{border-color:#555;color:#fff;}
+.checkout-btn{background:var(--pink);padding:12px 28px;color:white;text-decoration:none;border-radius:5px;font-size:14px;font-weight:600;transition:background .2s;display:inline-block;}
+.checkout-btn:hover{background:var(--dark-pink);}
+.page-title{text-align:center;padding:40px 20px 20px;}
+.page-title h1{color:var(--pink);}
+.page-title p{color:#888;font-size:14px;margin-top:6px;}
+@media(max-width:600px){th,td{padding:10px 8px;font-size:12px;}.buttons{justify-content:flex-start;}}
 </style>
 </head>
 <body>
-<header>
-  <div class="logo">GlamAura Wigs</div>
-  <div id="navbar-container"></div>
-</header>
-<script>
-  fetch('navbar.html').then(r => r.text()).then(html => {
-    document.getElementById('navbar-container').innerHTML = html;
-    const script = document.createElement('script');
-    script.src = 'navbar.js';
-    document.body.appendChild(script);
-  });
-</script>
+<nav class="site-nav">
+  <div class="brand" onclick="location.href='home.html'">GlamAura Wigs</div>
+  <div class="nav-links">
+    <a href="home.html">Home</a>
+    <a href="Collection.html">Collections</a>
+    <a href="Shop.html">Shop</a>
+    <a href="About.html">About</a>
+    <a href="Contact.html">Contact</a>
+    <a href="cart.html" class="cart-link active">🛒 <span class="cart-badge" id="cartBadge">0</span></a>
+    <button class="nav-btn" id="navAuthBtn">Login</button>
+  </div>
+  <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="home.html">Home</a><a href="Collection.html">Collections</a><a href="Shop.html">Shop</a>
+  <a href="About.html">About</a><a href="Contact.html">Contact</a>
+  <a href="cart.html">🛒 Cart</a><a href="login.html" id="mobileAuthLink">Login / Sign Up</a>
+</div>
 
-<h1>Your Shopping Cart</h1>
+<div class="page-top">
+<div class="page-title"><h1>Your Shopping Cart</h1><p>Review your items before checkout</p></div>
 
 <div class="cart-container">
 
@@ -63,8 +72,8 @@ footer{text-align:center;padding:20px;border-top:2px solid #ff4fa3;margin-top:50
 
 </table>
 
-<div class="total">
-Total: GHc <span id="cartTotal">0</span>
+<div class="cart-total-row">
+Total: GH₵ <span id="cartTotal">0</span>
 </div>
 
 <div class="buttons">
@@ -74,9 +83,18 @@ Total: GHc <span id="cartTotal">0</span>
 
 </div>
 
-<footer>
-© 2026 GlamAura Wigs
+</div>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-col"><h5>GlamAura Wigs</h5><p>Premium wigs for confident women.</p></div>
+    <div class="footer-col"><h5>Shop</h5><a href="Shop.html">All Wigs</a><a href="Collection.html">Collections</a></div>
+    <div class="footer-col"><h5>Account</h5><a href="login.html">Login</a><a href="customer_dashboard.html">My Orders</a></div>
+    <div class="footer-col"><h5>Contact</h5><p>📧 support@glamaurawigs.com</p></div>
+  </div>
+  <div class="footer-bottom">© 2026 GlamAura Wigs. All Rights Reserved.</div>
 </footer>
+
 
 <script>
 
@@ -234,6 +252,6 @@ populateCart();
 populateCart();
 
 </script>
-
+<script src="shared-nav.js"></script>
 </body>
 </html>

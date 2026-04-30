@@ -1,160 +1,105 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>About | GlamAura Wigs</title>
-
-	<link rel="stylesheet" href="shared.css">
-	<link rel="stylesheet" href="navbar.css">
-	<style>
-		.about {
-			max-width: 900px;
-			margin: auto;
-			padding: 40px 20px;
-			line-height: 1.8;
-			font-size: 16px;
-			color: #ddd;
-			text-align: center;
-		}
-
-		/* GRID SECTION */
-		.features {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-			gap: 20px;
-			padding: 40px 60px;
-		}
-
-		.feature-card {
-			background: #111;
-			padding: 20px;
-			border-radius: 10px;
-			border: 1px solid #222;
-			transition: 0.3s;
-			text-align: center;
-		}
-
-		.feature-card:hover {
-			transform: translateY(-5px);
-			border-color: #ff4fa3;
-		}
-
-		.feature-card h3 {
-			color: #ff4fa3;
-		}
-
-		.feature-card p {
-			color: #bbb;
-			font-size: 14px;
-		}
-
-		/* QUOTE SECTION */
-		.quote {
-			text-align: center;
-			padding: 40px 20px;
-			font-style: italic;
-			color: #ff4fa3;
-			font-size: 18px;
-		}
-
-		/* FOOTER */
-		footer {
-			text-align: center;
-			padding: 20px;
-			border-top: 1px solid #222;
-			margin-top: 40px;
-			color: #aaa;
-		}
-
-		/* RESPONSIVE */
-		@media(max-width:768px) {
-			header {
-				flex-direction: column;
-				text-align: center;
-			}
-
-			nav {
-				margin-top: 10px;
-			}
-
-			.features {
-				padding: 20px;
-			}
-		}
-	</style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us | GlamAura Wigs</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.page-top{padding-top:62px;}
+.about-hero{text-align:center;padding:70px 20px 50px;background:linear-gradient(180deg,#0d0d0d,#000);}
+.about-hero h1{color:var(--pink);font-size:clamp(2rem,4vw,3rem);margin-bottom:12px;}
+.about-hero p{color:#aaa;font-size:16px;max-width:600px;margin:0 auto;}
+.about-text{max-width:780px;margin:0 auto;padding:60px 40px;text-align:center;}
+.about-text p{color:#bbb;font-size:15px;line-height:1.9;margin-bottom:16px;}
+.features-sec{padding:60px;background:#0a0a0a;}
+.features-sec h2{text-align:center;color:var(--pink);margin-bottom:36px;}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;}
+.feat-card{background:#111;padding:26px;border-radius:10px;border:1px solid #222;text-align:center;transition:border-color .3s,transform .3s;}
+.feat-card:hover{border-color:var(--pink);transform:translateY(-4px);}
+.feat-icon{font-size:2rem;margin-bottom:10px;}
+.feat-card h4{color:var(--pink);margin-bottom:8px;}
+.feat-card p{color:#888;font-size:13px;line-height:1.6;}
+.quote-sec{text-align:center;padding:60px 20px;}
+.quote-text{font-size:clamp(16px,3vw,22px);font-style:italic;color:var(--pink);max-width:700px;margin:0 auto;line-height:1.7;}
+.values-sec{padding:60px;}
+.values-sec h2{text-align:center;color:var(--pink);margin-bottom:32px;}
+.values-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;}
+.val-card{background:#111;border-radius:10px;padding:24px;border-left:3px solid var(--pink);}
+.val-card h4{color:#fff;margin-bottom:8px;}
+.val-card p{color:#888;font-size:13px;line-height:1.6;margin:0;}
+.cta-sec{text-align:center;padding:60px 20px;background:#0a0a0a;}
+.cta-sec h2{color:#fff;font-size:24px;margin-bottom:12px;}
+.cta-sec p{color:#888;margin-bottom:24px;}
+@media(max-width:768px){.features-sec,.values-sec{padding:50px 20px;}.about-text{padding:40px 20px;}}
+</style>
 </head>
-
 <body>
+<nav class="site-nav">
+  <div class="brand" onclick="location.href='home.html'">GlamAura Wigs</div>
+  <div class="nav-links">
+    <a href="home.html">Home</a>
+    <a href="Collection.html">Collections</a>
+    <a href="Shop.html">Shop</a>
+    <a href="About.html" class="active">About</a>
+    <a href="Contact.html">Contact</a>
+    <a href="cart.html" class="cart-link">🛒 <span class="cart-badge">0</span></a>
+    <button class="nav-btn" id="navAuthBtn">Login</button>
+  </div>
+  <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="home.html">Home</a><a href="Collection.html">Collections</a><a href="Shop.html">Shop</a>
+  <a href="About.html">About</a><a href="Contact.html">Contact</a>
+  <a href="cart.html">🛒 Cart</a><a href="login.html" id="mobileAuthLink">Login / Sign Up</a>
+</div>
 
-	<!-- HEADER -->
-	<header>
-		<div class="logo">GlamAura Wigs</div>
-		<div id="navbar-container"></div>
-	</header>
-	<script>
-		fetch('navbar.html').then(r => r.text()).then(html => {
-			document.getElementById('navbar-container').innerHTML = html;
-			const script = document.createElement('script');
-			script.src = 'navbar.js';
-			document.body.appendChild(script);
-		});
-	</script>
+<div class="page-top">
+  <div class="about-hero">
+    <h1>About GlamAura Wigs</h1>
+    <p>Beauty. Confidence. Elegance. We are more than a wig store — we are a confidence movement.</p>
+  </div>
+  <div class="about-text">
+    <p>GlamAura Wigs was created to help every woman express confidence through premium quality hair. Our brand believes that hair is a crown every woman deserves to wear proudly.</p>
+    <p>We curate our collections from certified suppliers, ensuring every wig meets our standard of quality. As a Ghana-based brand, we are committed to making premium wigs accessible with seamless online ordering, Mobile Money payments, and reliable doorstep delivery.</p>
+  </div>
+  <div class="features-sec">
+    <h2>Why Women Choose Us</h2>
+    <div class="features-grid">
+      <div class="feat-card"><div class="feat-icon">💎</div><h4>Premium Quality</h4><p>100% high-grade human hair from certified suppliers. Quality-checked before listing.</p></div>
+      <div class="feat-card"><div class="feat-icon">🚚</div><h4>Fast Delivery</h4><p>Standard, express, and same-day pickup options across Ghana.</p></div>
+      <div class="feat-card"><div class="feat-icon">🔐</div><h4>Secure Payments</h4><p>MTN MoMo, Vodafone Cash, AirtelTigo, card, and bank transfer.</p></div>
+      <div class="feat-card"><div class="feat-icon">📦</div><h4>Order Tracking</h4><p>Real-time order status from placement to your door.</p></div>
+    </div>
+  </div>
+  <div class="quote-sec">
+    <div class="quote-text">"Every woman deserves to feel beautiful, confident, and powerful — GlamAura Wigs is here to make that happen."</div>
+  </div>
+  <div class="values-sec">
+    <h2>Our Values</h2>
+    <div class="values-grid">
+      <div class="val-card"><h4>Quality Without Compromise</h4><p>Genuine human hair, pre-styled and ready to wear from day one.</p></div>
+      <div class="val-card"><h4>Customer First, Always</h4><p>Every policy is designed with your convenience and satisfaction in mind.</p></div>
+      <div class="val-card"><h4>Trust & Transparency</h4><p>No hidden fees. Clear pricing. Honest product photography.</p></div>
+      <div class="val-card"><h4>Inclusive Beauty</h4><p>Styles for all women — diverse textures, colours, and lengths.</p></div>
+    </div>
+  </div>
+  <div class="cta-sec">
+    <h2>Ready to Find Your Crown?</h2>
+    <p>Browse our premium human hair wigs and accessories.</p>
+    <a href="Shop.html" class="btn btn-pink">Shop Now</a>
+  </div>
+</div>
 
-	<!-- HERO -->
-	<div class="hero">
-		<h1>About Our Brand</h1>
-		<p>Beauty. Confidence. Elegance.</p>
-	</div>
-
-	<!-- ABOUT TEXT -->
-	<div class="about">
-
-		<p>
-			GlamAura Wigs was created with the vision of helping women express confidence and beauty through premium
-			quality wigs. Our brand focuses on providing natural-looking wigs made with high-quality hair and modern
-			styling techniques.
-		</p>
-
-		<p>
-			We believe that hair is a crown every woman deserves to wear proudly. Our collections are designed to offer
-			luxury, comfort, and versatility for everyday beauty and special occasions.
-		</p>
-
-	</div>
-
-	<!-- FEATURES -->
-	<div class="features">
-
-		<div class="feature-card">
-			<h3>Premium Quality</h3>
-			<p>We source only high-grade hair materials for a natural, long-lasting finish.</p>
-		</div>
-
-		<div class="feature-card">
-			<h3>Confidence First</h3>
-			<p>Our wigs are designed to boost confidence and enhance natural beauty.</p>
-		</div>
-
-		<div class="feature-card">
-			<h3>Luxury Styling</h3>
-			<p>Modern, trendy, and elegant styles for every occasion and personality.</p>
-		</div>
-
-	</div>
-
-	<!-- QUOTE -->
-	<div class="quote">
-		“Every woman deserves to feel beautiful, confident, and powerful.”
-	</div>
-
-	<!-- FOOTER -->
-	<footer>
-		© 2026 GlamAura Wigs. All Rights Reserved.
-	</footer>
-
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-col"><h5>GlamAura Wigs</h5><p>Premium wigs for confident women across Ghana.</p></div>
+    <div class="footer-col"><h5>Shop</h5><a href="Shop.html">All Wigs</a><a href="Collection.html">Collections</a></div>
+    <div class="footer-col"><h5>Account</h5><a href="login.html">Login</a><a href="customer_dashboard.html">My Orders</a></div>
+    <div class="footer-col"><h5>Contact</h5><p>📧 support@glamaurawigs.com</p><p>📱 +233 539 945 5123</p></div>
+  </div>
+  <div class="footer-bottom">© 2026 GlamAura Wigs. All Rights Reserved.</div>
+</footer>
+<script src="shared-nav.js"></script>
 </body>
-
 </html>

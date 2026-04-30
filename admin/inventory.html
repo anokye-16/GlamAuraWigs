@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory | GlamAura Admin Panel</title>
+    <link rel="stylesheet" href="admin_theme.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        .progress-bar-bg {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            height: 8px;
+            width: 100%;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+        <aside class="gh-sidebar" id="ghSidebar">
+        <div class="gh-sidebar-header">
+            <h2>GlamAura</h2>
+            <span>Admin Panel</span>
+        </div>
+        
+        <div class="gh-nav">
+            <div class="gh-nav-section">Business Overview</div>
+            <a href="dashboard.html"><i class="fa-solid fa-border-all"></i> Dashboard</a>
+            <a href="finance.html"><i class="fa-solid fa-money-bill-trend-up"></i> Finance</a>
+            
+            <div class="gh-nav-section">CRM Module</div>
+            <a href="customers.html"><i class="fa-solid fa-users"></i> Customers</a>
+            <a href="messages.html"><i class="fa-solid fa-envelope"></i> Enquiries & Feedback</a>
+            
+            <div class="gh-nav-section">Sales & Ordering</div>
+            <a href="orders.html"><i class="fa-solid fa-cart-shopping"></i> Orders</a>
+            <a href="distribution.html"><i class="fa-solid fa-truck-fast"></i> Distribution</a>
+            <a href="purchase_orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Purchase Orders</a>
+            
+            <div class="gh-nav-section">SCM & Inventory</div>
+            <a href="products.html"><i class="fa-solid fa-box-open"></i> Products</a>
+            <a href="inventory.html"><i class="fa-solid fa-boxes-stacked"></i> Inventory</a>
+            <a href="suppliers.html"><i class="fa-solid fa-handshake"></i> Suppliers</a>
+            <a href="logistics.html"><i class="fa-solid fa-truck-ramp-box"></i> Logistics Partners</a>
+            <a href="integrations.html"><i class="fa-solid fa-globe"></i> E-Market Integrations</a>
+        </div>
+        
+        <div class="gh-user-card">
+            <div class="gh-user-info">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=ff4fa3&color=fff" alt="Admin">
+                <div>
+                    <strong id="adminUserName">Loading...</strong>
+                    <span>Administrator</span>
+                </div>
+            </div>
+            <button class="gh-logout-btn" onclick="GH_Admin.logout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="gh-main">
+        <!-- TOPBAR -->
+        <header class="gh-topbar">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <button class="mobile-toggle" id="mobileToggle"><i class="fa-solid fa-bars"></i></button>
+                <div class="gh-breadcrumb">
+                    <span>Inventory & Products /</span> Inventory
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENT -->
+        <div class="gh-content">
+            <div class="gh-card">
+                <div class="gh-card-header">
+                    <h3>Stock Levels</h3>
+                </div>
+                
+                <div class="gh-table-wrapper">
+                    <table class="gh-table">
+                        <thead>
+                            <tr>
+                                <th>Product ID</th>
+                                <th>Product Name</th>
+                                <th>Stock Level</th>
+                                <th>Visual Indicator</th>
+                                <th>Last Updated</th>
+                                <th>Restock Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTable">
+                            <tr><td colspan="6" style="text-align:center;">Loading inventory...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- RESTOCK MODAL -->
+    <div class="gh-modal-backdrop" id="restockModal">
+        <div class="gh-modal">
+            <div class="gh-modal-header">
+                <h3>Restock Product</h3>
+                <button class="gh-modal-close" onclick="GH_Admin.closeModal('restockModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="restockForm">
+                <div class="gh-modal-body">
+                    <input type="hidden" id="restockProductId">
+                    <p style="margin-bottom:15px; color:#ccc;">Add quantity to <strong id="restockProductName" style="color:var(--glam-pink);"></strong>.</p>
+                    
+                    <label>Quantity to Add</label>
+                    <input type="number" id="restockQty" class="gh-input" min="1" required placeholder="e.g. 50">
+                </div>
+                <div class="gh-modal-footer">
+                    <button type="button" class="gh-btn outline" onclick="GH_Admin.closeModal('restockModal')">Cancel</button>
+                    <button type="submit" class="gh-btn">Update Stock</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            GH_Admin.init();
+            loadInventory();
+        });
+
+        async function loadInventory() {
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'inventory_list.php');
+                const data = await res.json();
+                if(data.error) return;
+
+                const maxStock = 100; // Baseline for progress bar 100%
+
+                const html = data.inventory.map(i => {
+                    let percent = (i.stock_quantity / maxStock) * 100;
+                    if(percent > 100) percent = 100;
+                    
+                    let color = 'var(--success)';
+                    let badgeClass = 'green';
+                    if(i.stock_quantity <= 20) { color = 'var(--warning)'; badgeClass = 'amber'; }
+                    if(i.stock_quantity <= 10) { color = 'var(--danger)'; badgeClass = 'red'; }
+
+                    return `
+                    <tr>
+                        <td><strong>#${i.id}</strong></td>
+                        <td>${i.product_name}</td>
+                        <td><span class="gh-badge ${badgeClass}">${i.stock_quantity} Units</span></td>
+                        <td style="width:200px;">
+                            <div style="font-size:11px; color:#888; text-align:right;">${Math.round(percent)}%</div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: ${percent}%; background: ${color};"></div>
+                            </div>
+                        </td>
+                        <td>${i.last_updated ? new Date(i.last_updated).toLocaleDateString() : '-'}</td>
+                        <td>
+                            <button class="gh-btn outline" style="padding:4px 12px; border-color:var(--info); color:var(--info);" onclick="openRestock(${i.id}, '${i.product_name.replace(/'/g, "\\'")}')">
+                                <i class="fa-solid fa-plus"></i> Restock
+                            </button>
+                        </td>
+                    </tr>
+                `}).join('');
+                
+                document.getElementById('inventoryTable').innerHTML = html || '<tr><td colspan="6" style="text-align:center;">No inventory found.</td></tr>';
+
+            } catch(e) {
+                GH_Admin.toast("Failed to load inventory", "error");
+            }
+        }
+
+        function openRestock(id, name) {
+            document.getElementById('restockProductId').value = id;
+            document.getElementById('restockProductName').innerText = name;
+            document.getElementById('restockQty').value = '';
+            GH_Admin.openModal('restockModal');
+        }
+
+        document.getElementById('restockForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('restockProductId').value;
+            const qty = document.getElementById('restockQty').value;
+
+            try {
+                // Since update endpoint logic is simple, we will reuse the root inventory.php action or make a quick API call if we build it later
+                // The root inventory.php expects POST action=update, product_id, stock_quantity (which sets it absolute, not relative)
+                // Let's create an api/inventory/restock.php later, but for now we'll simulate the call to the old inventory.php if it exists, or just use a new one.
+                const formData = new FormData();
+                formData.append('action', 'update'); // The old script sets absolute stock, let's just make an API
+                formData.append('product_id', id);
+                formData.append('qty_to_add', qty);
+
+                // Wait, I should make api/inventory/restock.php
+                const res = await fetch(GH_Admin.apiBase + 'inventory_restock.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({product_id: id, add_qty: parseInt(qty)})
+                });
+                
+                const data = await res.json();
+                if(data.status === 'success') {
+                    GH_Admin.toast("Stock successfully updated");
+                    GH_Admin.closeModal('restockModal');
+                    loadInventory();
+                } else {
+                    GH_Admin.toast(data.message, "error");
+                }
+            } catch(err) {
+                GH_Admin.toast("Server error", "error");
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+

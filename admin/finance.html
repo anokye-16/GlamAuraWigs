@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance | GlamAura Admin Panel</title>
+    <link rel="stylesheet" href="admin_theme.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+        <aside class="gh-sidebar" id="ghSidebar">
+        <div class="gh-sidebar-header">
+            <h2>GlamAura</h2>
+            <span>Admin Panel</span>
+        </div>
+        
+        <div class="gh-nav">
+            <div class="gh-nav-section">Business Overview</div>
+            <a href="dashboard.html"><i class="fa-solid fa-border-all"></i> Dashboard</a>
+            <a href="finance.html"><i class="fa-solid fa-money-bill-trend-up"></i> Finance</a>
+            
+            <div class="gh-nav-section">CRM Module</div>
+            <a href="customers.html"><i class="fa-solid fa-users"></i> Customers</a>
+            <a href="messages.html"><i class="fa-solid fa-envelope"></i> Enquiries & Feedback</a>
+            
+            <div class="gh-nav-section">Sales & Ordering</div>
+            <a href="orders.html"><i class="fa-solid fa-cart-shopping"></i> Orders</a>
+            <a href="distribution.html"><i class="fa-solid fa-truck-fast"></i> Distribution</a>
+            <a href="purchase_orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Purchase Orders</a>
+            
+            <div class="gh-nav-section">SCM & Inventory</div>
+            <a href="products.html"><i class="fa-solid fa-box-open"></i> Products</a>
+            <a href="inventory.html"><i class="fa-solid fa-boxes-stacked"></i> Inventory</a>
+            <a href="suppliers.html"><i class="fa-solid fa-handshake"></i> Suppliers</a>
+            <a href="logistics.html"><i class="fa-solid fa-truck-ramp-box"></i> Logistics Partners</a>
+            <a href="integrations.html"><i class="fa-solid fa-globe"></i> E-Market Integrations</a>
+        </div>
+        
+        <div class="gh-user-card">
+            <div class="gh-user-info">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=ff4fa3&color=fff" alt="Admin">
+                <div>
+                    <strong id="adminUserName">Loading...</strong>
+                    <span>Administrator</span>
+                </div>
+            </div>
+            <button class="gh-logout-btn" onclick="GH_Admin.logout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="gh-main">
+        <header class="gh-topbar">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <button class="mobile-toggle" id="mobileToggle"><i class="fa-solid fa-bars"></i></button>
+                <div class="gh-breadcrumb">
+                    <span>Overview /</span> Finance
+                </div>
+            </div>
+        </header>
+
+        <div class="gh-content">
+            <div class="gh-kpi-grid">
+                <div class="gh-kpi-card">
+                    <div class="gh-kpi-icon"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+                    <div class="gh-kpi-content">
+                        <div class="gh-kpi-label">Gross Revenue</div>
+                        <div class="gh-kpi-value" id="kpiGross">₵0</div>
+                    </div>
+                </div>
+                <div class="gh-kpi-card">
+                    <div class="gh-kpi-icon"><i class="fa-solid fa-receipt"></i></div>
+                    <div class="gh-kpi-content">
+                        <div class="gh-kpi-label">Total VAT</div>
+                        <div class="gh-kpi-value" id="kpiVat">₵0</div>
+                    </div>
+                </div>
+                <div class="gh-kpi-card">
+                    <div class="gh-kpi-icon"><i class="fa-solid fa-truck"></i></div>
+                    <div class="gh-kpi-content">
+                        <div class="gh-kpi-label">Shipping Fees</div>
+                        <div class="gh-kpi-value" id="kpiShipping">₵0</div>
+                    </div>
+                </div>
+                <div class="gh-kpi-card">
+                    <div class="gh-kpi-icon" style="background:rgba(46,204,113,0.15); color:var(--success);"><i class="fa-solid fa-piggy-bank"></i></div>
+                    <div class="gh-kpi-content">
+                        <div class="gh-kpi-label">Net Revenue</div>
+                        <div class="gh-kpi-value" id="kpiNet">₵0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:24px; margin-bottom:24px;">
+                <div class="gh-card">
+                    <div class="gh-card-header">
+                        <h3>Monthly Sales History</h3>
+                    </div>
+                    <canvas id="financeChart" width="600" height="300" style="width:100%; height:300px;"></canvas>
+                </div>
+                <div class="gh-card">
+                    <div class="gh-card-header">
+                        <h3>Payment Status</h3>
+                    </div>
+                    <div class="gh-table-wrapper">
+                        <table class="gh-table">
+                            <thead>
+                                <tr><th>Status</th><th>Total</th></tr>
+                            </thead>
+                            <tbody id="paymentStatsTable">
+                                <!-- Injected -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gh-card">
+                <div class="gh-card-header">
+                    <h3>Financial Records</h3>
+                </div>
+                <div class="gh-table-wrapper">
+                    <table class="gh-table">
+                        <thead>
+                            <tr>
+                                <th>Order</th>
+                                <th>Customer</th>
+                                <th>Amount</th>
+                                <th>Payment Method</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="financeRecordsTable">
+                            <tr><td colspan="6" style="text-align:center;">Loading records...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            GH_Admin.init();
+            loadFinanceData();
+        });
+
+        async function loadFinanceData() {
+            try {
+                // Summary & Charts
+                const res = await fetch(GH_Admin.apiBase + 'finance_report.php?report=summary');
+                const data = await res.json();
+                
+                if(data.status === 'success') {
+                    const s = data.summary;
+                    document.getElementById('kpiGross').innerText = '₵' + s.total_revenue.toLocaleString(undefined, {minimumFractionDigits: 2});
+                    document.getElementById('kpiVat').innerText = '₵' + s.total_vat.toLocaleString(undefined, {minimumFractionDigits: 2});
+                    document.getElementById('kpiShipping').innerText = '₵' + s.total_shipping.toLocaleString(undefined, {minimumFractionDigits: 2});
+                    document.getElementById('kpiNet').innerText = '₵' + s.net_revenue.toLocaleString(undefined, {minimumFractionDigits: 2});
+
+                    // Monthly Chart
+                    const chartData = data.monthly_sales.map(m => parseFloat(m.total)).reverse();
+                    const chartLabels = data.monthly_sales.map(m => m.month).reverse();
+                    GH_Admin.drawBarChart('financeChart', chartData, chartLabels);
+
+                    // Payment Stats
+                    const payHtml = data.payment_stats.map(p => `
+                        <tr>
+                            <td><span class="gh-badge ${p.status === 'Paid' ? 'green' : 'pink'}">${p.status}</span></td>
+                            <td>₵${parseFloat(p.total).toFixed(2)}</td>
+                        </tr>
+                    `).join('');
+                    document.getElementById('paymentStatsTable').innerHTML = payHtml || '<tr><td colspan="2">No data</td></tr>';
+                }
+
+                // Records
+                const res2 = await fetch(GH_Admin.apiBase + 'finance_report.php?report=orders');
+                const data2 = await res2.json();
+                if(data2.status === 'success') {
+                    const recordsHtml = data2.orders.map(o => `
+                        <tr>
+                            <td><strong>#${o.id}</strong></td>
+                            <td>${o.full_name}</td>
+                            <td>₵${parseFloat(o.total).toFixed(2)}</td>
+                            <td><span class="gh-badge blue">${o.payment_method ? o.payment_method.toUpperCase() : 'N/A'}</span></td>
+                            <td><span class="gh-badge ${o.payment_status === 'Paid' ? 'green' : 'pink'}">${o.payment_status || 'Pending'}</span></td>
+                            <td>${new Date(o.created_at).toLocaleDateString()}</td>
+                        </tr>
+                    `).join('');
+                    document.getElementById('financeRecordsTable').innerHTML = recordsHtml || '<tr><td colspan="6">No records found.</td></tr>';
+                }
+
+            } catch(e) {
+                GH_Admin.toast("Failed to load financial data", "error");
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+

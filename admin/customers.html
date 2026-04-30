@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers | GlamAura Admin Panel</title>
+    <link rel="stylesheet" href="admin_theme.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+        <aside class="gh-sidebar" id="ghSidebar">
+        <div class="gh-sidebar-header">
+            <h2>GlamAura</h2>
+            <span>Admin Panel</span>
+        </div>
+        
+        <div class="gh-nav">
+            <div class="gh-nav-section">Business Overview</div>
+            <a href="dashboard.html"><i class="fa-solid fa-border-all"></i> Dashboard</a>
+            <a href="finance.html"><i class="fa-solid fa-money-bill-trend-up"></i> Finance</a>
+            
+            <div class="gh-nav-section">CRM Module</div>
+            <a href="customers.html"><i class="fa-solid fa-users"></i> Customers</a>
+            <a href="messages.html"><i class="fa-solid fa-envelope"></i> Enquiries & Feedback</a>
+            
+            <div class="gh-nav-section">Sales & Ordering</div>
+            <a href="orders.html"><i class="fa-solid fa-cart-shopping"></i> Orders</a>
+            <a href="distribution.html"><i class="fa-solid fa-truck-fast"></i> Distribution</a>
+            <a href="purchase_orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Purchase Orders</a>
+            
+            <div class="gh-nav-section">SCM & Inventory</div>
+            <a href="products.html"><i class="fa-solid fa-box-open"></i> Products</a>
+            <a href="inventory.html"><i class="fa-solid fa-boxes-stacked"></i> Inventory</a>
+            <a href="suppliers.html"><i class="fa-solid fa-handshake"></i> Suppliers</a>
+            <a href="logistics.html"><i class="fa-solid fa-truck-ramp-box"></i> Logistics Partners</a>
+            <a href="integrations.html"><i class="fa-solid fa-globe"></i> E-Market Integrations</a>
+        </div>
+        
+        <div class="gh-user-card">
+            <div class="gh-user-info">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=ff4fa3&color=fff" alt="Admin">
+                <div>
+                    <strong id="adminUserName">Loading...</strong>
+                    <span>Administrator</span>
+                </div>
+            </div>
+            <button class="gh-logout-btn" onclick="GH_Admin.logout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="gh-main">
+        <!-- TOPBAR -->
+        <header class="gh-topbar">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <button class="mobile-toggle" id="mobileToggle"><i class="fa-solid fa-bars"></i></button>
+                <div class="gh-breadcrumb">
+                    <span>CRM /</span> Customers
+                </div>
+            </div>
+            <div class="gh-topbar-actions">
+                <button class="gh-btn outline" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+            </div>
+        </header>
+
+        <!-- CONTENT -->
+        <div class="gh-content">
+            <div class="gh-card">
+                <div class="gh-card-header">
+                    <h3>Customer Directory</h3>
+                </div>
+                
+                <div class="gh-table-wrapper">
+                    <table class="gh-table" id="customersTableNode">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Location</th>
+                                <th>Orders</th>
+                                <th>Total Spend</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customersTable">
+                            <tr><td colspan="9" style="text-align:center;">Loading customers...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- DETAIL MODAL -->
+    <div class="gh-modal-backdrop" id="customerModal">
+        <div class="gh-modal">
+            <div class="gh-modal-header">
+                <h3>Customer Details</h3>
+                <button class="gh-modal-close" onclick="GH_Admin.closeModal('customerModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="gh-modal-body" id="customerModalBody">
+                <!-- content injected -->
+            </div>
+            <div class="gh-modal-footer">
+                <button class="gh-btn outline" onclick="GH_Admin.closeModal('customerModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/admin.js"></script>
+    <script>
+        let allCustomers = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            GH_Admin.init();
+            loadCustomers();
+        });
+
+        async function loadCustomers() {
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'customers_list.php');
+                const data = await res.json();
+                if(data.error) return;
+                
+                allCustomers = data.customers;
+
+                const html = data.customers.map(c => `
+                    <tr>
+                        <td><strong>#${c.id}</strong></td>
+                        <td>${c.full_name}</td>
+                        <td>${c.email}</td>
+                        <td>${c.phone || '-'}</td>
+                        <td>${c.city ? c.city + ', ' + c.country : '-'}</td>
+                        <td><span class="gh-badge blue">${c.order_count}</span></td>
+                        <td style="color:var(--success); font-weight:bold;">₵${parseFloat(c.total_spend).toFixed(2)}</td>
+                        <td>${new Date(c.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <button class="gh-btn outline" style="padding:4px 8px;" onclick="viewCustomer(${c.id})"><i class="fa-solid fa-eye"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                document.getElementById('customersTable').innerHTML = html || '<tr><td colspan="9" style="text-align:center;">No customers found.</td></tr>';
+
+            } catch(e) {
+                GH_Admin.toast("Failed to load customers", "error");
+            }
+        }
+
+        function viewCustomer(id) {
+            const c = allCustomers.find(x => x.id == id);
+            if(!c) return;
+
+            document.getElementById('customerModalBody').innerHTML = `
+                <div style="display:flex; gap:15px; margin-bottom:20px;">
+                    <div style="width:60px; height:60px; border-radius:50%; background:var(--glam-pink); display:flex; align-items:center; justify-content:center; font-size:24px; color:#fff;">
+                        ${c.full_name.charAt(0)}
+                    </div>
+                    <div>
+                        <h2 style="color:#fff; margin-bottom:5px;">${c.full_name}</h2>
+                        <span style="color:var(--text-muted);">${c.email}</span>
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                    <div><label>Phone</label><div style="color:#fff;">${c.phone || '-'}</div></div>
+                    <div><label>Location</label><div style="color:#fff;">${c.city || '-'}, ${c.country || '-'}</div></div>
+                    <div style="grid-column: span 2;"><label>Address</label><div style="color:#fff;">${c.shipping_address || '-'}</div></div>
+                    <hr style="grid-column: span 2; border:none; border-top:1px solid var(--border-color);">
+                    <div><label>Total Orders</label><div style="color:#fff; font-size:18px;">${c.order_count}</div></div>
+                    <div><label>Lifetime Value</label><div style="color:var(--success); font-size:18px; font-weight:bold;">₵${parseFloat(c.total_spend).toFixed(2)}</div></div>
+                </div>
+            `;
+            
+            GH_Admin.openModal('customerModal');
+        }
+
+        function exportCSV() {
+            let csv = "ID,Name,Email,Phone,City,Country,Orders,TotalSpend\n";
+            allCustomers.forEach(c => {
+                csv += `${c.id},"${c.full_name}","${c.email}","${c.phone}","${c.city}","${c.country}",${c.order_count},${c.total_spend}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'glamaura_customers.csv');
+            a.click();
+        }
+    </script>
+</body>
+</html>
+
+
+
+

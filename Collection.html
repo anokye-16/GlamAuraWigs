@@ -5,230 +5,103 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Collections | GlamAura Wigs</title>
 <link rel="stylesheet" href="shared.css">
-<link rel="stylesheet" href="navbar.css">
 <style>
-body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-serif;}
-.intro{padding:60px 60px;text-align:center;}
-.intro h1{color:#ff4fa3;font-size:2.8rem;margin-bottom:15px;}
-.intro p{color:#ccc;max-width:720px;margin:0 auto;line-height:1.7;}
-.section{padding:60px 60px;}
-.section h2{color:#ff4fa3;text-align:center;margin-bottom:10px;}
-.section p{color:#ccc;text-align:center;max-width:700px;margin:0 auto 40px;}
-.collections{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:25px;}
-.box{position:relative;overflow:hidden;border-radius:12px;}
-.box img{width:100%;height:280px;object-fit:cover;transition:transform .3s ease;}
-.box:hover img{transform:scale(1.05);}
-.box h3{position:absolute;bottom:15px;left:15px;background:rgba(255,79,163,0.95);padding:10px 18px;border-radius:6px;color:#fff;}
-.shop{text-align:center;margin:70px 0;}
-.shop a{background:#ff4fa3;color:#fff;padding:15px 35px;border-radius:8px;text-decoration:none;font-weight:700;transition:background .2s ease;}
-.shop a:hover{background:#ff2f90;}
-footer{padding:24px 0;text-align:center;border-top:1px solid #222;color:#aaa;}
-@media(max-width:768px){.intro,.section{padding:40px 20px;}.collections{gap:20px;}}
+.page-top{padding-top:62px;}
+.col-hero{text-align:center;padding:65px 20px 40px;}
+.col-hero h1{color:var(--pink);font-size:clamp(2rem,4vw,3rem);margin-bottom:10px;}
+.col-hero p{color:#aaa;font-size:15px;max-width:650px;margin:0 auto;line-height:1.7;}
+.col-sec{padding:50px 60px;}
+.col-sec h2{color:var(--pink);text-align:center;margin-bottom:8px;font-size:22px;}
+.col-sec .sub{color:#666;text-align:center;font-size:14px;margin-bottom:30px;}
+.col-sec:nth-child(even){background:#0a0a0a;}
+.col-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;}
+.col-box{position:relative;overflow:hidden;border-radius:10px;border:1px solid #222;transition:border-color .3s;}
+.col-box:hover{border-color:var(--pink);}
+.col-box img{width:100%;height:260px;object-fit:cover;transition:transform .35s;}
+.col-box:hover img{transform:scale(1.06);}
+.col-box .label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,rgba(0,0,0,.85),transparent);padding:18px 16px 14px;color:#fff;font-weight:600;font-size:15px;}
+.col-box .label span{color:var(--pink);}
+.shop-cta{text-align:center;padding:60px 20px;background:#0a0a0a;}
+.shop-cta h2{color:#fff;margin-bottom:12px;}
+.shop-cta p{color:#888;margin-bottom:24px;}
+@media(max-width:768px){.col-sec{padding:40px 20px;}}
 </style>
 </head>
 <body>
-<header>
-  <div class="logo">GlamAura Wigs</div>
-  <div id="navbar-container"></div>
-</header>
-<script>
-  fetch('navbar.html').then(r => r.text()).then(html => {
-    document.getElementById('navbar-container').innerHTML = html;
-    const script = document.createElement('script');
-    script.src = 'navbar.js';
-    document.body.appendChild(script);
-  });
-</script>
-
-
-<!-- INTRO -->
-
-<div class="intro">
-
-<h1>Our Wig Collections</h1>
-
-<p>
-Explore GlamAura's premium wig collections designed for beauty,
-confidence, and luxury. From sleek straight wigs to deep wave textures
-and vibrant colors, each collection is crafted with high-quality human
-hair to give you a flawless, natural look.
-</p>
-
+<nav class="site-nav">
+  <div class="brand" onclick="location.href='home.html'">GlamAura Wigs</div>
+  <div class="nav-links">
+    <a href="home.html">Home</a>
+    <a href="Collection.html" class="active">Collections</a>
+    <a href="Shop.html">Shop</a>
+    <a href="About.html">About</a>
+    <a href="Contact.html">Contact</a>
+    <a href="cart.html" class="cart-link">🛒 <span class="cart-badge">0</span></a>
+    <button class="nav-btn" id="navAuthBtn">Login</button>
+  </div>
+  <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="home.html">Home</a><a href="Collection.html">Collections</a><a href="Shop.html">Shop</a>
+  <a href="About.html">About</a><a href="Contact.html">Contact</a>
+  <a href="cart.html">🛒 Cart</a><a href="login.html" id="mobileAuthLink">Login / Sign Up</a>
 </div>
 
-
-<!-- WIG TYPES -->
-
-<div class="section">
-
-<h2>Wig Types</h2>
-
-<p>
-Discover different wig textures and styles designed to match your
-unique look and personality.
-</p>
-
-<div class="collections">
-
-    <div class="box">
-        <a href="Shop.html?type=bob">
-          <img src="images/Classic Bob Wig.jfif" alt="Bob Wigs">
-          <h3>Bob Wigs</h3>
-        </a>
-      </div>
-
-<div class="box">
-    <a href="Shop.html?type=bodywave">
-      <img src="images/Brazilian Body Wave Wig.jfif" alt="Body Wave">
-      <h3>Body Wave</h3>
-    </a>
+<div class="page-top">
+  <div class="col-hero">
+    <h1>Our Wig Collections</h1>
+    <p>Explore GlamAura's premium wig collections — from sleek straight to deep wave and vibrant colours, all crafted with high-quality human hair.</p>
   </div>
 
-<div class="box">
-    <a href="Shop.html?type=straight"></a>
-<img src="images/Silk Straight Wig 2.jfif">
-<h3>Bone Straight</h3>
+  <div class="col-sec">
+    <h2>Wig Types</h2>
+    <div class="sub">Discover different textures and styles designed for your unique look</div>
+    <div class="col-grid">
+      <div class="col-box"><a href="Shop.html"><img src="images/Classic Bob Wig.jfif" alt="Bob Wigs"><div class="label">Bob Wigs <span>→</span></div></a></div>
+      <div class="col-box"><a href="Shop.html"><img src="images/Brazilian Body Wave Wig.jfif" alt="Body Wave"><div class="label">Body Wave <span>→</span></div></a></div>
+      <div class="col-box"><a href="Shop.html"><img src="images/Silk Straight Wig 2.jfif" alt="Straight"><div class="label">Bone Straight <span>→</span></div></a></div>
+      <div class="col-box"><a href="Shop.html"><img src="images/Deep Wave Wig.jfif" alt="Deep Wave"><div class="label">Deep Wave <span>→</span></div></a></div>
+      <div class="col-box"><a href="Shop.html"><img src="images/Curly Wig.jfif" alt="Curly"><div class="label">Curly Wigs <span>→</span></div></a></div>
+    </div>
+  </div>
+
+  <div class="col-sec">
+    <h2>Wig Colours</h2>
+    <div class="sub">From natural shades to bold fashion colours</div>
+    <div class="col-grid">
+      <div class="col-box"><a href="Shop.html"><img src="images/SW.jfif" alt="Natural Black"><div class="label">Natural Black <span>→</span></div></a></div>
+      <div class="col-box"><a href="Shop.html"><img src="images/Ombre Wig.jfif" alt="Brown/Ombre"><div class="label">Brown &amp; Ombré <span>→</span></div></a></div>
+      <div class="col-box"><a href="Shop.html"><img src="images/Blonde Lace Wig.jfif" alt="Blonde"><div class="label">Blonde <span>→</span></div></a></div>
+      <div class="col-box"><a href="Shop.html"><img src="images/Burgundy Wig.jfif" alt="Burgundy"><div class="label">Burgundy <span>→</span></div></a></div>
+    </div>
+  </div>
+
+  <div class="col-sec">
+    <h2>Limited Edition</h2>
+    <div class="sub">Exclusive styles released in limited quantities</div>
+    <div class="col-grid">
+      <div class="col-box"><a href="Shop.html"><img src="images/hero.jpeg" alt="Exclusive Drop"><div class="label">Exclusive Drop <span>→</span></div></a></div>
+      <div class="col-box"><a href="Shop.html"><img src="images/Highlight Wig.jfif" alt="Highlight Wig"><div class="label">Highlight Wig <span>→</span></div></a></div>
+      <div class="col-box"><a href="Shop.html"><img src="images/Platinum Blonde Wig.jfif" alt="Platinum"><div class="label">Platinum Blonde <span>→</span></div></a></div>
+    </div>
+  </div>
+
+  <div class="shop-cta">
+    <h2>Shop the Full Collection</h2>
+    <p>Browse all 24+ premium wigs with search, filter, and sort.</p>
+    <a href="Shop.html" class="btn btn-pink">Shop All Wigs →</a>
+  </div>
 </div>
 
-
-<div class="box">
-<img src="images/Deep Wave Wig.jfif">
-<h3>Deep Wave</h3>
-</div>
-
-</div>
-
-</div>
-
-
-<!-- COLORS -->
-
-<div class="section">
-
-<h2>Wig Colors</h2>
-
-<p>
-Choose from natural shades to bold fashion colors that elevate your
-style and personality.
-</p>
-
-<div class="collections">
-
-<div class="box">
-<img src="images/SW.jfif">
-<h3>Natural Black</h3>
-</div>
-
-<div class="box">
-<img src="images/Ombre Wig.jfif">
-<h3>Brown</h3>
-</div>
-
-<div class="box">
-<img src="images/Blonde Lace Wig.jfif">
-<h3>Blonde</h3>
-</div>
-
-<div class="box">
-<img src="images/Burgundy Wig.jfif">
-<h3>Burgundy</h3>
-</div>
-
-</div>
-
-</div>
-
-
-<!-- AVAILABILITY -->
-
-<div class="section">
-
-<h2>Availability</h2>
-
-<p>
-Browse wigs based on availability to find ready-to-ship or exclusive
-limited releases.
-</p>
-
-<div class="collections">
-
-<div class="box">
-<img src="images/Soft Wave Wig.jfif">
-<h3>In Stock</h3>
-</div>
-
-<div class="box">
-<img src="images/Platinum Blonde Wig.jfif">
-<h3>New Arrivals</h3>
-</div>
-
-<div class="box">
-<img src="images/Silky Straight Wig.jfif">
-<h3>Best Sellers</h3>
-</div>
-
-</div>
-
-</div>
-
-
-<!-- LIMITED EDITION -->
-
-<div class="section">
-
-<h2>Limited Edition</h2>
-
-<p>
-Exclusive wig styles released in limited quantities for a unique
-luxury experience.
-</p>
-
-<div class="collections">
-
-<div class="box">
-<img src="images/hero.jpeg">
-<h3>Exclusive Drop</h3>
-</div>
-
-<div class="box">
-<img src="images/Highlight Wig.jfif">
-<h3>Seasonal Style</h3>
-</div>
-
-</div>
-
-</div>
-
-
-<!-- PREMIUM -->
-
-<div class="section">
-
-<h2>Premium Collection</h2>
-
-<p>
-Our highest quality wigs made with 100% luxury human hair and
-advanced lace technology.
-</p>
-
-<div class="collections">
-
-
-</div>
-
-</div>
-
-
-<!-- SHOP BUTTON -->
-
-<div class="shop">
-<a href="Shop.html">Shop Now</a>
-</div>
-
-
-<footer>
-© 2026 GlamAura Wigs
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-col"><h5>GlamAura Wigs</h5><p>Premium wigs for confident women across Ghana.</p></div>
+    <div class="footer-col"><h5>Shop</h5><a href="Shop.html">All Wigs</a><a href="Collection.html">Collections</a></div>
+    <div class="footer-col"><h5>Account</h5><a href="login.html">Login</a><a href="customer_dashboard.html">My Orders</a></div>
+    <div class="footer-col"><h5>Contact</h5><p>📧 support@glamaurawigs.com</p><p>📱 +233 539 945 5123</p></div>
+  </div>
+  <div class="footer-bottom">© 2026 GlamAura Wigs. All Rights Reserved.</div>
 </footer>
-
+<script src="shared-nav.js"></script>
 </body>
 </html>

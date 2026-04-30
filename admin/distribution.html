@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distribution | GlamAura Admin Panel</title>
+    <link rel="stylesheet" href="admin_theme.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            min-height: 500px;
+        }
+
+        .kanban-column {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+        }
+
+        .kanban-header {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .kanban-header h3 {
+            font-size: 16px;
+            color: var(--glam-pink);
+            margin: 0;
+        }
+
+        .kanban-count {
+            background: var(--glam-pink-light);
+            color: var(--glam-pink);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .kanban-list {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 50px;
+        }
+
+        .kanban-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .kanban-item:hover {
+            transform: translateY(-2px);
+            border-color: var(--glam-pink);
+        }
+
+        .kanban-item-id {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .kanban-item-customer {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .kanban-item-total {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .kanban-item-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .move-btn {
+            background: var(--glam-pink-light);
+            color: var(--glam-pink);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .move-btn:hover {
+            background: var(--glam-pink);
+            color: #fff;
+        }
+
+        .tracking-info {
+            font-size: 11px;
+            color: var(--info);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        @media (max-width: 900px) {
+            .kanban-board {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+        <aside class="gh-sidebar" id="ghSidebar">
+        <div class="gh-sidebar-header">
+            <h2>GlamAura</h2>
+            <span>Admin Panel</span>
+        </div>
+        
+        <div class="gh-nav">
+            <div class="gh-nav-section">Business Overview</div>
+            <a href="dashboard.html"><i class="fa-solid fa-border-all"></i> Dashboard</a>
+            <a href="finance.html"><i class="fa-solid fa-money-bill-trend-up"></i> Finance</a>
+            
+            <div class="gh-nav-section">CRM Module</div>
+            <a href="customers.html"><i class="fa-solid fa-users"></i> Customers</a>
+            <a href="messages.html"><i class="fa-solid fa-envelope"></i> Enquiries & Feedback</a>
+            
+            <div class="gh-nav-section">Sales & Ordering</div>
+            <a href="orders.html"><i class="fa-solid fa-cart-shopping"></i> Orders</a>
+            <a href="distribution.html"><i class="fa-solid fa-truck-fast"></i> Distribution</a>
+            <a href="purchase_orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Purchase Orders</a>
+            
+            <div class="gh-nav-section">SCM & Inventory</div>
+            <a href="products.html"><i class="fa-solid fa-box-open"></i> Products</a>
+            <a href="inventory.html"><i class="fa-solid fa-boxes-stacked"></i> Inventory</a>
+            <a href="suppliers.html"><i class="fa-solid fa-handshake"></i> Suppliers</a>
+            <a href="logistics.html"><i class="fa-solid fa-truck-ramp-box"></i> Logistics Partners</a>
+            <a href="integrations.html"><i class="fa-solid fa-globe"></i> E-Market Integrations</a>
+        </div>
+        
+        <div class="gh-user-card">
+            <div class="gh-user-info">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=ff4fa3&color=fff" alt="Admin">
+                <div>
+                    <strong id="adminUserName">Loading...</strong>
+                    <span>Administrator</span>
+                </div>
+            </div>
+            <button class="gh-logout-btn" onclick="GH_Admin.logout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="gh-main">
+        <!-- TOPBAR -->
+        <header class="gh-topbar">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <button class="mobile-toggle" id="mobileToggle"><i class="fa-solid fa-bars"></i></button>
+                <div class="gh-breadcrumb">
+                    <span>Sales & Logistics /</span> Distribution
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENT -->
+        <div class="gh-content">
+            <div class="gh-card">
+                <div class="gh-card-header">
+                    <h3>Distribution Pipeline</h3>
+                    <button class="gh-btn outline" onclick="loadKanban()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+                </div>
+                
+                <div class="kanban-board">
+                    <!-- WAREHOUSE -->
+                    <div class="kanban-column" id="col-warehouse">
+                        <div class="kanban-header">
+                            <h3><i class="fa-solid fa-warehouse"></i> Warehouse</h3>
+                            <span class="kanban-count" id="count-warehouse">0</span>
+                        </div>
+                        <div class="kanban-list" id="list-warehouse">
+                            <!-- Injected -->
+                        </div>
+                    </div>
+
+                    <!-- IN TRANSIT -->
+                    <div class="kanban-column" id="col-transit">
+                        <div class="kanban-header">
+                            <h3><i class="fa-solid fa-truck-fast"></i> In Transit</h3>
+                            <span class="kanban-count" id="count-transit">0</span>
+                        </div>
+                        <div class="kanban-list" id="list-transit">
+                            <!-- Injected -->
+                        </div>
+                    </div>
+
+                    <!-- DELIVERED -->
+                    <div class="kanban-column" id="col-delivered">
+                        <div class="kanban-header">
+                            <h3><i class="fa-solid fa-circle-check"></i> Delivered</h3>
+                            <span class="kanban-count" id="count-delivered">0</span>
+                        </div>
+                        <div class="kanban-list" id="list-delivered">
+                            <!-- Injected -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- TRACKING MODAL -->
+    <div class="gh-modal-backdrop" id="trackingModal">
+        <div class="gh-modal">
+            <div class="gh-modal-header">
+                <h3>Enter Tracking Details</h3>
+                <button class="gh-modal-close" onclick="GH_Admin.closeModal('trackingModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="gh-modal-body">
+                <input type="hidden" id="modalOrderId">
+                <label>Tracking Number</label>
+                <input type="text" id="modalTracking" class="gh-input" placeholder="e.g. GLAM-123456">
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">
+                    This will be sent to the customer for order tracking.
+                </p>
+            </div>
+            <div class="gh-modal-footer">
+                <button class="gh-btn outline" onclick="GH_Admin.closeModal('trackingModal')">Cancel</button>
+                <button class="gh-btn" onclick="submitTracking()">Ship Order</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            GH_Admin.init();
+            loadKanban();
+        });
+
+        async function loadKanban() {
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'orders_list.php');
+                const data = await res.json();
+                
+                if(!data.orders) return;
+
+                const warehouseList = document.getElementById('list-warehouse');
+                const transitList = document.getElementById('list-transit');
+                const deliveredList = document.getElementById('list-delivered');
+
+                warehouseList.innerHTML = '';
+                transitList.innerHTML = '';
+                deliveredList.innerHTML = '';
+
+                let wCount = 0, tCount = 0, dCount = 0;
+
+                data.orders.forEach(o => {
+                    const itemHtml = `
+                        <div class="kanban-item" onclick="viewOrderDetails(${o.id})">
+                            <span class="kanban-item-id">Order #${o.id}</span>
+                            <span class="kanban-item-customer">${o.full_name}</span>
+                            <span class="kanban-item-total">₵${parseFloat(o.total).toFixed(2)}</span>
+                            
+                            ${o.tracking_number ? `<div class="tracking-info"><i class="fa-solid fa-location-dot"></i> ${o.tracking_number}</div>` : ''}
+
+                            <div class="kanban-item-footer">
+                                <span class="gh-badge ${o.payment_status === 'Paid' ? 'green' : 'pink'}" style="font-size:9px;">${o.payment_status || 'Pending'}</span>
+                                ${o.status === 'Processing' ? `<button class="move-btn" onclick="event.stopPropagation(); shipOrder(${o.id})">Ship <i class="fa-solid fa-arrow-right"></i></button>` : ''}
+                                ${o.status === 'Shipped' || o.status === 'Out for Delivery' ? `<button class="move-btn" onclick="event.stopPropagation(); markDelivered(${o.id})">Deliver <i class="fa-solid fa-check"></i></button>` : ''}
+                            </div>
+                        </div>
+                    `;
+
+                    if(o.status === 'Processing') {
+                        warehouseList.innerHTML += itemHtml;
+                        wCount++;
+                    } else if(o.status === 'Shipped' || o.status === 'Out for Delivery') {
+                        transitList.innerHTML += itemHtml;
+                        tCount++;
+                    } else if(o.status === 'Delivered') {
+                        deliveredList.innerHTML += itemHtml;
+                        dCount++;
+                    }
+                });
+
+                document.getElementById('count-warehouse').innerText = wCount;
+                document.getElementById('count-transit').innerText = tCount;
+                document.getElementById('count-delivered').innerText = dCount;
+
+                if(wCount === 0) warehouseList.innerHTML = '<p style="color:#555; font-size:12px; text-align:center;">No orders in warehouse</p>';
+                if(tCount === 0) transitList.innerHTML = '<p style="color:#555; font-size:12px; text-align:center;">No orders in transit</p>';
+                if(dCount === 0) deliveredList.innerHTML = '<p style="color:#555; font-size:12px; text-align:center;">No delivered orders</p>';
+
+            } catch(e) {
+                console.error(e);
+                GH_Admin.toast("Failed to load distribution board", "error");
+            }
+        }
+
+        function shipOrder(id) {
+            document.getElementById('modalOrderId').value = id;
+            document.getElementById('modalTracking').value = '';
+            GH_Admin.openModal('trackingModal');
+        }
+
+        async function submitTracking() {
+            const id = document.getElementById('modalOrderId').value;
+            const tracking = document.getElementById('modalTracking').value.trim();
+
+            if(!tracking) {
+                alert("Please enter a tracking number");
+                return;
+            }
+
+            updateStatus(id, 'Shipped', tracking);
+            GH_Admin.closeModal('trackingModal');
+        }
+
+        function markDelivered(id) {
+            if(confirm("Mark order #" + id + " as delivered?")) {
+                updateStatus(id, 'Delivered');
+            }
+        }
+
+        async function updateStatus(id, status, tracking = null) {
+            try {
+                const res = await fetch(GH_Admin.apiBase + 'orders_update_status.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({order_id: id, status: status, tracking_number: tracking})
+                });
+                const data = await res.json();
+                if(data.status === 'success') {
+                    GH_Admin.toast("Order moved to " + status);
+                    loadKanban();
+                } else {
+                    GH_Admin.toast(data.message, "error");
+                }
+            } catch(e) {
+                GH_Admin.toast("Error updating order", "error");
+            }
+        }
+
+        function viewOrderDetails(id) {
+            // Redirect to orders page with filter or show modal
+            // For now, let's just toast
+            GH_Admin.toast("Order #" + id + " details could be shown here", "info");
+        }
+    </script>
+</body>
+</html>
+
+
+
+

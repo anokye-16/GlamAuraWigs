@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Market | GlamAura Admin Panel</title>
+    <link rel="stylesheet" href="admin_theme.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        .channel-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.2s;
+        }
+        .channel-card:hover { transform: translateY(-5px); border-color: var(--glam-pink); }
+        .channel-logo { width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff; }
+        .channel-info { flex: 1; }
+        .channel-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 4px; }
+        .channel-status { font-size: 12px; color: var(--success); display: flex; align-items: center; gap: 6px; }
+        .channel-status.offline { color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+        <aside class="gh-sidebar" id="ghSidebar">
+        <div class="gh-sidebar-header">
+            <h2>GlamAura</h2>
+            <span>Admin Panel</span>
+        </div>
+        
+        <div class="gh-nav">
+            <div class="gh-nav-section">Business Overview</div>
+            <a href="dashboard.html"><i class="fa-solid fa-border-all"></i> Dashboard</a>
+            <a href="finance.html"><i class="fa-solid fa-money-bill-trend-up"></i> Finance</a>
+            
+            <div class="gh-nav-section">CRM Module</div>
+            <a href="customers.html"><i class="fa-solid fa-users"></i> Customers</a>
+            <a href="messages.html"><i class="fa-solid fa-envelope"></i> Enquiries & Feedback</a>
+            
+            <div class="gh-nav-section">Sales & Ordering</div>
+            <a href="orders.html"><i class="fa-solid fa-cart-shopping"></i> Orders</a>
+            <a href="distribution.html"><i class="fa-solid fa-truck-fast"></i> Distribution</a>
+            <a href="purchase_orders.html"><i class="fa-solid fa-file-invoice-dollar"></i> Purchase Orders</a>
+            
+            <div class="gh-nav-section">SCM & Inventory</div>
+            <a href="products.html"><i class="fa-solid fa-box-open"></i> Products</a>
+            <a href="inventory.html"><i class="fa-solid fa-boxes-stacked"></i> Inventory</a>
+            <a href="suppliers.html"><i class="fa-solid fa-handshake"></i> Suppliers</a>
+            <a href="logistics.html"><i class="fa-solid fa-truck-ramp-box"></i> Logistics Partners</a>
+            <a href="integrations.html"><i class="fa-solid fa-globe"></i> E-Market Integrations</a>
+        </div>
+        
+        <div class="gh-user-card">
+            <div class="gh-user-info">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=ff4fa3&color=fff" alt="Admin">
+                <div>
+                    <strong id="adminUserName">Loading...</strong>
+                    <span>Administrator</span>
+                </div>
+            </div>
+            <button class="gh-logout-btn" onclick="GH_Admin.logout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </div>
+    </aside>
+
+    <main class="gh-main">
+        <header class="gh-topbar">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <button class="mobile-toggle" id="mobileToggle"><i class="fa-solid fa-bars"></i></button>
+                <div class="gh-breadcrumb">
+                    <span>SCM Module /</span> E-Market Integrations
+                </div>
+            </div>
+        </header>
+
+        <div class="gh-content">
+            <div class="gh-card" style="margin-bottom:var(--gh-gap);">
+                <h3>Multi-Channel Selling Concept</h3>
+                <p style="color:var(--text-muted); margin-top:10px; font-size:14px; line-height:1.6;">
+                    The GlamAura E-Business platform is designed to integrate with global e-marketplaces. 
+                    This module demonstrates the <strong>Supply Chain Integration</strong> concept where stock is synchronized across all active channels.
+                </p>
+            </div>
+
+            <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:var(--gh-gap);">
+                <!-- AMAZON -->
+                <div class="channel-card">
+                    <div class="channel-logo" style="background:#232f3e;"><i class="fa-brands fa-amazon"></i></div>
+                    <div class="channel-info">
+                        <div class="channel-name">Amazon Marketplace</div>
+                        <div class="channel-status"><i class="fa-solid fa-circle-check"></i> Connected & Syncing</div>
+                    </div>
+                    <button class="gh-btn outline" style="padding:6px 12px;">Settings</button>
+                </div>
+
+                <!-- INSTAGRAM -->
+                <div class="channel-card">
+                    <div class="channel-logo" style="background:linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);"><i class="fa-brands fa-instagram"></i></div>
+                    <div class="channel-info">
+                        <div class="channel-name">Instagram Shopping</div>
+                        <div class="channel-status"><i class="fa-solid fa-circle-check"></i> Connected & Syncing</div>
+                    </div>
+                    <button class="gh-btn outline" style="padding:6px 12px;">Settings</button>
+                </div>
+
+                <!-- JUMIA -->
+                <div class="channel-card">
+                    <div class="channel-logo" style="background:#f68b1e;"><strong>J</strong></div>
+                    <div class="channel-info">
+                        <div class="channel-name">Jumia Merchant</div>
+                        <div class="channel-status offline"><i class="fa-solid fa-circle-dot"></i> Setup Pending</div>
+                    </div>
+                    <button class="gh-btn" style="padding:6px 12px;">Configure</button>
+                </div>
+
+                <!-- API -->
+                <div class="channel-card">
+                    <div class="channel-logo" style="background:var(--info);"><i class="fa-solid fa-code"></i></div>
+                    <div class="channel-info">
+                        <div class="channel-name">Custom API Hooks</div>
+                        <div class="channel-status"><i class="fa-solid fa-circle-check"></i> 4 Active Keys</div>
+                    </div>
+                    <button class="gh-btn outline" style="padding:6px 12px;">View Docs</button>
+                </div>
+            </div>
+
+            <div class="gh-card" style="margin-top:var(--gh-gap);">
+                <div class="gh-card-header">
+                    <h3>Recent Synchronization Logs</h3>
+                </div>
+                <div class="gh-table-wrapper">
+                    <table class="gh-table">
+                        <thead>
+                            <tr>
+                                <th>Channel</th>
+                                <th>Action</th>
+                                <th>Result</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Amazon</td>
+                                <td>Inventory Push</td>
+                                <td><span class="gh-badge green">Success (24 Items)</span></td>
+                                <td>5 mins ago</td>
+                            </tr>
+                            <tr>
+                                <td>Instagram</td>
+                                <td>Catalog Update</td>
+                                <td><span class="gh-badge green">Success (12 Items)</span></td>
+                                <td>15 mins ago</td>
+                            </tr>
+                            <tr>
+                                <td>API Hook</td>
+                                <td>Stock Query</td>
+                                <td><span class="gh-badge blue">Authorized</span></td>
+                                <td>1 hour ago</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            GH_Admin.init();
+        });
+    </script>
+</body>
+</html>
+
+
+
